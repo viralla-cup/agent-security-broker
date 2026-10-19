@@ -4,6 +4,7 @@ import argparse
 import json
 import os
 import socket
+import sys
 import time
 
 from broker.broker import Broker
@@ -11,6 +12,15 @@ from broker.filesystem import FileExecutor
 from broker.policy import Policy
 from broker.schema import MAX_MESSAGE
 from .fixtures import prepare
+from security_audit.storage import AuditWriter
+
+
+def handle_request(broker, audit_writer, line):
+    envelope = broker.handle(line)
+    if not audit_writer.append(envelope['audit']):
+        print('Audit persistence failed; execution outcome is unchanged.', file=sys.stderr, flush=True)
+    # Only tool feedback crosses the agent-facing socket, including in B2a.
+    return envelope['response']
 
 
 def main():
@@ -22,6 +32,7 @@ def main():
     policy = Policy.load("/app/policies/filesystem.yaml")
     executor = FileExecutor()
     broker = Broker(policy, executor, args.condition)
+    audit_writer = AuditWriter()
     deadline = time.monotonic() + 300
     with socket.socket(socket.AF_UNIX, socket.SOCK_STREAM) as server:
         server.bind("/channel/broker.sock")
@@ -52,13 +63,14 @@ def main():
                                 break
                             if len(line) > MAX_MESSAGE:
                                 line = b"null"
-                            envelope = broker.handle(line)
-                            stream.write(json.dumps(envelope).encode() + b"\n")
+                            response = handle_request(broker, audit_writer, line)
+                            stream.write(json.dumps(response).encode() + b"\n")
                             stream.flush()
                             if broker.calls >= policy.max_tool_calls or broker.denials >= policy.max_denials:
                                 break
         finally:
             executor.close()
+            audit_writer.close()
 
 
 if __name__ == "__main__":

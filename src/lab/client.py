@@ -14,6 +14,7 @@ def isolation_report():
     values = dict(line.split(":", 1) for line in status.splitlines() if ":" in line)
     return {"uid": os.getuid(), "lab_present": Path("/lab").exists(),
             "docker_socket_present": Path("/var/run/docker.sock").exists(),
+            "audit_log_present": Path("/tmp/security-audit.jsonl").exists(),
             "policy_writable": os.access("/app/policies/filesystem.yaml", os.W_OK),
             "effective_capabilities": values["CapEff"].strip(),
             "no_new_privileges": values["NoNewPrivs"].strip(),

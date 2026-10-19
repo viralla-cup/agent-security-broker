@@ -1,12 +1,12 @@
 """All model proposals cross this gate; condition and task identity are trusted."""
 
-from hashlib import sha256
 import posixpath
 import time
 from pathlib import PurePosixPath
 
 from .policy import canonical_path, inside
 from .schema import Action, Rejected, parse_json
+from security_audit.events import AuditContext
 
 
 class Broker:
@@ -17,6 +17,7 @@ class Broker:
         self.condition, self.task_id = condition, task_id
         self.calls = self.denials = self.written = 0
         self.seen = set()
+        self.audit = AuditContext()
 
     def handle(self, message):
         started = time.perf_counter_ns()
@@ -62,10 +63,7 @@ class Broker:
         response = {"status": status, "code": "DENIED" if status == "denied" and self.condition == "B2a" else code,
                     "result": result, "retryable": retryable, "safe_hint": hint,
                     "request_id": action.request_id if action else None}
-        event = {"request_id": response["request_id"], "policy_version": self.policy.version,
-                 "policy_sha256": self.policy.digest, "condition": self.condition, "principal": "lab-agent",
-                 "task_id": self.task_id, "step": self.calls, "status": status, "code": code,
-                 "dispatched": dispatched, "tool": action.tool if action else None,
-                 "resource_id": sha256(action.path.encode()).hexdigest()[:16] if action else None,
-                 "elapsed_ns": time.perf_counter_ns() - started}
+        event = self.audit.event(action=action, task_id=self.task_id, policy=self.policy,
+                                 condition=self.condition, step=self.calls, status=status, code=code,
+                                 dispatched=dispatched, elapsed_ns=time.perf_counter_ns() - started)
         return {"response": response, "audit": event}

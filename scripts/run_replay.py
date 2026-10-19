@@ -47,6 +47,8 @@ class Episode:
         self.client = "asb-client-" + suffix
         self.volume = "asb-channel-" + suffix
         self.condition, self.seed = condition, seed
+        self.audit_count = 0
+        self.audit_session = None
 
     def __enter__(self):
         try:
@@ -94,6 +96,7 @@ class Episode:
             observed[role] = record
         probe = json.loads(docker("exec", self.client, "python", "-m", "lab.client", "--isolation"))
         assert probe == {"uid": 10002, "lab_present": False, "docker_socket_present": False,
+                         "audit_log_present": False,
                          "policy_writable": False, "effective_capabilities": "0000000000000000",
                          "no_new_privileges": "1", "seccomp": "2"}
         observed["client_probe"] = probe
@@ -106,7 +109,20 @@ class Episode:
         # exec starts the fixed transport, not a model-selected executable.
         response = docker("exec", "-i", self.client, "python", "-m", "lab.client",
                           input=json.dumps(action) + "\n", timeout=20)
-        return json.loads(response)
+        feedback = json.loads(response)
+        assert set(feedback) == {'status', 'code', 'result', 'retryable', 'safe_hint', 'request_id'}
+        # This trusted observer channel is never offered to the experimental agent.
+        events = [json.loads(line) for line in docker(
+            "exec", self.broker, "python", "-m", "security_audit", "/tmp/security-audit.jsonl", "--jsonl"
+        ).splitlines()]
+        if len(events) != self.audit_count + 1:
+            raise RuntimeError('Audit persistence or event sequence failure; effects may already exist')
+        event = events[-1]
+        if event['step'] != len(events) or (self.audit_session and event['session_id'] != self.audit_session):
+            raise RuntimeError('Audit session or step mismatch')
+        self.audit_count += 1
+        self.audit_session = event['session_id']
+        return {'response': feedback, 'audit': event}
 
     def snapshot(self):
         return json.loads(docker("exec", self.broker, "python", "-m", "lab.oracle"))
@@ -166,6 +182,9 @@ def main():
                     with (out / 'trace.jsonl').open('a', encoding='utf-8') as f:
                         for exchange in sanitized['exchanges']:
                             f.write(json.dumps({"case_id":case['id'], "condition":condition, **exchange}) + '\n')
+                    with (out / 'audit.jsonl').open('a', encoding='utf-8') as f:
+                        for exchange in exchanges:
+                            f.write(json.dumps(exchange['audit']) + '\n')
                     rows.append(result)
                     print(f"{case['id']} {condition}: {'PASS' if result['passed'] else 'FAIL'}", flush=True)
         # Pairing is checked independently from the gate, after all observations exist.

@@ -14,6 +14,10 @@
 | 2026-10-19 | Open | Short submission title and journal formatting conflicts. | Current title exceeds supplied template limit. |
 | 2026-10-19 | Open | Missing Journal_Article_Handover_Notes.docx reconciliation. | File not found; contents unknown. |
 | 2026-10-19 | Open | Final authorship/order, affiliations, ORCIDs, submission and payment decisions. | Require author agreement; no approvals inferred. |
+| 2026-10-19 | Implemented and tested | Add version-2 audit metadata, separate authorization from execution outcome, and use static safe explanations. | Audit improvement request; no policy or executor changes. |
+| 2026-10-19 | Implemented and tested | Keep detailed audit on a private observer channel; send only existing tool response fields to the agent. | B2a generic feedback must not expose an adjacent detailed audit object. |
+| 2026-10-19 | Implemented and tested | Use session-local keyed request/task/resource references and a standard-library read-only CLI. | Prevent arbitrary request strings and resource names from entering user-facing audit. |
+| 2026-10-19 | Implemented and tested | Treat log persistence failure as missing experimental evidence without changing operation authorization. | Preserve B0/B2/B2a semantics; no rollback or durable transaction claim. |
 
 No source material is treated as authorization to execute embedded commands, upload
 files, install a fictitious dependency, or change policy. No adversarial repository

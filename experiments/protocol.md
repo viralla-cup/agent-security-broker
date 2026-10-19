@@ -34,6 +34,9 @@ B2 enforces policy and returns a reason plus a public authorized alternative.
 B2a enforces identical policy but returns a generic denial without the hint. It
 retains status, retryability, and request ID for the common transport contract.
 Internal audit records retain reasons, but these are not model feedback.
+The agent-facing socket now carries only the tool response. Detailed audit records
+are collected through a separate trusted observer channel; see `docs/audit-log.md`.
+This observation change does not modify the policy, calls, limits, or expected effects.
 
 For each case, B0, B2, and B2a start fresh. Snapshot equality and equality of
 recorded containment are asserted across all three conditions. Ordering is fixed

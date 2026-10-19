@@ -48,6 +48,8 @@ flowchart LR
   C -->|JSON over Unix socket| B[Broker and executor UID 10001]
   B --> P[Read only YAML policy]
   B --> F[Private synthetic lab tmpfs]
+  B --> A[Private audit JSONL]
+  R -->|Trusted observer only| A
   R --> O[Independent snapshot observer]
   O -->|Trusted Docker exec only| F
 ```
@@ -76,9 +78,57 @@ parent. No tool creates links, renames directories, overwrites, deletes, or exec
 code. External writers are excluded in this deployment. Arbitrary concurrent
 filesystem adversaries and Windows path semantics are outside the current claim.
 
+## Inspect security decisions
+
+Each new replay produces `audit.jsonl`, containing audit metadata only. On PowerShell,
+select the latest exported audit log and inspect it without starting Docker or tools:
+
+```powershell
+$auditLog = Get-ChildItem results/dev-*/audit.jsonl | Sort-Object LastWriteTime | Select-Object -Last 1
+python scripts/inspect_audit.py $auditLog.FullName --decision DENY
+python scripts/inspect_audit.py $auditLog.FullName --condition B2a
+python scripts/inspect_audit.py $auditLog.FullName --execution FAILED
+python scripts/inspect_audit.py $auditLog.FullName --jsonl
+```
+
+The five-case replay has no execution failures, so its `--execution FAILED` view
+is empty. Failure, partial-write, and executor-rejection cases are covered by
+`tests/test_audit.py`. The CLI uses only the Python standard library, reads the
+selected file, and never invokes Docker, changes policy, or dispatches an operation.
+
+| Audit decision and execution | Meaning |
+| --- | --- |
+| `ALLOW -> SUCCEEDED` | The gate allowed dispatch and the executor returned normally. The independent outcome checker is still required. |
+| `DENY -> NOT_STARTED` | The gate rejected the request before calling the executor. |
+| `ALLOW -> FAILED` | Dispatch was allowed, but execution failed; partial effects may exist. |
+| `ALLOW -> REJECTED` | The executor refused an already-dispatched request, for example at a read-size check. |
+| `ERROR -> NOT_STARTED` | Evaluation failed before dispatch; this is not a policy denial or successful execution. |
+
+Events include UTC completion time, unique event/session IDs, request and task
+references, operation, decision/reason/explanation, policy version/hash, and the
+separate execution result. IDs supplied in requests and resource paths are replaced
+with session-local keyed pseudonyms; no arguments, contents, exception messages,
+or denial hints enter the audit. Public policy version labels must not contain secrets.
+
+Detailed audit records stay in the broker's private filesystem and reach only the
+trusted observer. The agent-facing socket returns the original six-field tool
+response. B2a continues to return generic `DENIED` feedback, while its audit retains
+the reason. Logging failures do not add authorization denials; incomplete persistence
+is signaled separately and the harness rejects missing or incomplete evidence.
+
+The viewer also accepts earlier full replay traces and displays only their audit
+fields. It labels missing legacy timestamps `TIME_NOT_RECORDED`; it does not invent
+times or expose the embedded request and response:
+
+```sh
+python scripts/inspect_audit.py results/dev-20261019T104349Z-7e16ab/trace.jsonl --condition B2a --decision DENY
+```
+
+See `docs/audit-log.md` for the schema, privacy boundary, failure semantics, and limits.
+
 ## Evidence and development documents
 
-- `results/dev-<run-id>/`: sanitized JSONL, snapshots, isolation probes, source hashes,
+- `results/dev-<run-id>/`: audit-only JSONL, synthetic replay traces, snapshots, isolation probes, source hashes,
   package versions, policy hashes, image ID, independent outcomes, and CSV summary.
 - `results/checks-<run-id>/`: exact engineering-test command, stdout/stderr, image ID,
   source hashes, and exit code.
@@ -95,6 +145,9 @@ actual read response for the canary, and verifies the expected write content. It
 does not trust a model's success claim or import the broker's policy evaluator.
 No credentials are passed to these containers. The synthetic canary is redacted
 only after evaluation; redaction does not count as enforcement.
+The full research trace retains synthetic request paths and permitted file contents;
+it is not a general-purpose sanitized production log. Use `audit.jsonl` or the audit
+CLI projection for user-facing inspection. Historical result files are preserved.
 
 ## Real model access
 

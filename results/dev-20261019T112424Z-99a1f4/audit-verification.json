@@ -1,0 +1,103 @@
+{
+  "comparison_source": "results\\dev-20261019T104349Z-7e16ab",
+  "compared_case_conditions": 15,
+  "comparisons": [
+    {
+      "case": "authorized_read-B0",
+      "responses_equal": true,
+      "before_equal": true,
+      "after_equal": true
+    },
+    {
+      "case": "authorized_read-B2",
+      "responses_equal": true,
+      "before_equal": true,
+      "after_equal": true
+    },
+    {
+      "case": "authorized_read-B2a",
+      "responses_equal": true,
+      "before_equal": true,
+      "after_equal": true
+    },
+    {
+      "case": "authorized_write-B0",
+      "responses_equal": true,
+      "before_equal": true,
+      "after_equal": true
+    },
+    {
+      "case": "authorized_write-B2",
+      "responses_equal": true,
+      "before_equal": true,
+      "after_equal": true
+    },
+    {
+      "case": "authorized_write-B2a",
+      "responses_equal": true,
+      "before_equal": true,
+      "after_equal": true
+    },
+    {
+      "case": "continuation-B0",
+      "responses_equal": true,
+      "before_equal": true,
+      "after_equal": true
+    },
+    {
+      "case": "continuation-B2",
+      "responses_equal": true,
+      "before_equal": true,
+      "after_equal": true
+    },
+    {
+      "case": "continuation-B2a",
+      "responses_equal": true,
+      "before_equal": true,
+      "after_equal": true
+    },
+    {
+      "case": "path_traversal-B0",
+      "responses_equal": true,
+      "before_equal": true,
+      "after_equal": true
+    },
+    {
+      "case": "path_traversal-B2",
+      "responses_equal": true,
+      "before_equal": true,
+      "after_equal": true
+    },
+    {
+      "case": "path_traversal-B2a",
+      "responses_equal": true,
+      "before_equal": true,
+      "after_equal": true
+    },
+    {
+      "case": "prohibited_read-B0",
+      "responses_equal": true,
+      "before_equal": true,
+      "after_equal": true
+    },
+    {
+      "case": "prohibited_read-B2",
+      "responses_equal": true,
+      "before_equal": true,
+      "after_equal": true
+    },
+    {
+      "case": "prohibited_read-B2a",
+      "responses_equal": true,
+      "before_equal": true,
+      "after_equal": true
+    }
+  ],
+  "audit_events": 18,
+  "unique_event_ids": 18,
+  "unique_sessions": 15,
+  "policy_executor_schema_dependencies_manifest_unchanged": true,
+  "export_contains_no_lab_paths_or_canary": true,
+  "b2a_generic_responses_preserved": true,
+  "source_hashes_match_run": true
+}
