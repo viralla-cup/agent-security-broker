@@ -1,0 +1,102 @@
+[
+  {
+    "filename": "articles/A Survey on Large Language Model (LLM) Security and Privacy The Good, the Bad, and the Ugly.pdf",
+    "sha256": "d1c9e96654429505b9187c79fec811682aa53bc7891bf24c254538c2634d24e7",
+    "pages": 21
+  },
+  {
+    "filename": "articles/A Survey on Large Language Model Based Autonomous Agents.pdf",
+    "sha256": "7bc39a036655ab7523cd56963738a0c0e8eab7790ef43318ff8706c36dc67b8a",
+    "pages": 26
+  },
+  {
+    "filename": "articles/A Survey on Trustworthy LLM Agents Threats and Countermeasures.pdf",
+    "sha256": "d88f294eb5a6f0ab1a3e7931372e96ebbe450e966b75b12917809c81e743c189",
+    "pages": 11
+  },
+  {
+    "filename": "articles/Agent Security Bench (ASB) Formalizing and Benchmarking Attacks and Defenses in LLM-Based Agents.pdf",
+    "sha256": "e2505f8632bfcb6a64a4390a3170b3ca1dfd3f9916d7c3cf9ba2b89887b3a0c9",
+    "pages": 36
+  },
+  {
+    "filename": "articles/AgentDojo A Dynamic Environment to Evaluate Prompt Injection Attacks and Defenses for LLM Agents.pdf",
+    "sha256": "26a3f0426ee1d533e4dd9f62d1343a7a1d231fe718cfaf3a362cc7de829ae913",
+    "pages": 26
+  },
+  {
+    "filename": "articles/Agentic AI Security Threats, Defenses, Evaluation, and Open Challenges.pdf",
+    "sha256": "35c2924aabe7f8e1e2627c081c8b31d3cdd885561bcc5c55b54aff7a46bc3ce1",
+    "pages": 28
+  },
+  {
+    "filename": "articles/AgentSpec Customizable Runtime Enforcement for Safe and Reliable LLM Agents.pdf",
+    "sha256": "554f92c521e5ec2dd20e917899681895b7a15d6d1bcd53e4ddb381e7b46a4315",
+    "pages": 13
+  },
+  {
+    "filename": "articles/AGrail A Lifelong Agent Guardrail with Effective and Adaptive Safety Detection.pdf",
+    "sha256": "3ca48b21d79e1ff7dd7866ce0489fa6d5afc8d31972022faade1ad432f63b9e7",
+    "pages": 36
+  },
+  {
+    "filename": "articles/AI Agents Under Threat A Survey of Key Security Challenges and Future Pathways.pdf",
+    "sha256": "1e4c6ae68344851e861616e700db1805930009525bcac84d6b3f737c6f0a38a8",
+    "pages": 36
+  },
+  {
+    "filename": "articles/Benchmarking and Defending Against Indirect Prompt Injection Attacks on Large Language Models.pdf",
+    "sha256": "31822ba75da2de750cd8f4c69246688d884dafb85c9cce968369d575cf4b6272",
+    "pages": 12
+  },
+  {
+    "filename": "articles/Defeating Prompt Injections by Design.pdf",
+    "sha256": "c3719f6ce73eecf45e3764debef8a3d8ff8c9233b37d128c558b694ec3790cc7",
+    "pages": 125
+  },
+  {
+    "filename": "articles/GuardAgent Safeguard LLM Agents via Knowledge-Enabled Reasoning.pdf",
+    "sha256": "cd2dbd145c3dc95ad04404a4c05ed1e171254e92198434d5ded1beecd3b0edb0",
+    "pages": 27
+  },
+  {
+    "filename": "articles/Identifying the Risks of LM Agents with an LM-Emulated Sandbo.pdf",
+    "sha256": "c7802d68a37cc13bc24ef07370c3d290351888495ae3e8b4ecd25cacab0c061b",
+    "pages": 68
+  },
+  {
+    "filename": "articles/InjecAgent Benchmarking Indirect Prompt Injections in Tool-Integrated Large Language Model Agents.pdf",
+    "sha256": "690a5d14abf0d33002822b531b78fa375da51783ff831ba8ecbb6e22f3d4f382",
+    "pages": 36
+  },
+  {
+    "filename": "articles/Navigating the Risks A Survey of Security, Privacy, and Ethics Threats in LLM-Based Agents.pdf",
+    "sha256": "e6b912cf4790ed0c80b1f7d515fe3a4db540d29a397a08d2f69befe80f2acc29",
+    "pages": 48
+  },
+  {
+    "filename": "articles/Not What You've Signed Up For Compromising Real-World LLM-Integrated Applications with Indirect Prompt Injection.pdf",
+    "sha256": "56b01f1fade2c770cd9d859bea4f80cdd050e6414dbd36600c49d63b3447901d",
+    "pages": 12
+  },
+  {
+    "filename": "articles/Security and Privacy Challenges of Large Language Models A Survey.pdf",
+    "sha256": "1c194386cdc0dd1b7b2484c3d3c651fec8b2063f21e33f00c1647608d4697e20",
+    "pages": 39
+  },
+  {
+    "filename": "articles/The Task Shield Enforcing Task Alignment to Defend Against Indirect Prompt Injection in LLM Agents.pdf",
+    "sha256": "057ff02152c0bb61892b08abdc80f7af22416c03819e526878091ee87d3bf1e6",
+    "pages": 18
+  },
+  {
+    "filename": "articles/Tool Learning with Large Language Models A Survey.pdf",
+    "sha256": "3946c9568b1eb0fe55d83cfd4d0d4c578f16c9f227b438f561ff70791365f735",
+    "pages": 33
+  },
+  {
+    "filename": "articles/ToolSandbox A Stateful, Conversational, Interactive Evaluation Benchmark for LLM Tool Use Capabilities.pdf",
+    "sha256": "3fda75165222b5f9bff198b520b859e03e7bcc17cbd0543a54ee442a479ed8dc",
+    "pages": 24
+  }
+]

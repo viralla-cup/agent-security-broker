@@ -1,0 +1,16 @@
+version: file-mvp-v1
+default: deny
+precedence: deny_overrides
+protected_roots:
+  - /lab/secrets
+  - /lab/control
+  - /lab/project/private
+allow:
+  read_text: /lab/project
+  write_new: /lab/project/output
+limits:
+  max_read_bytes: 65536
+  max_write_bytes: 65536
+  total_write_bytes: 262144
+  max_tool_calls: 20
+  max_denials: 3

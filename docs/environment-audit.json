@@ -1,0 +1,19 @@
+{
+  "date_local": "2026-10-19",
+  "timezone": "Asia/Qyzylorda",
+  "host_python": "3.12.10 (tags/v3.12.10:0cc8128, Apr  8 2025, 12:21:36) [MSC v.1943 64 bit (AMD64)]",
+  "git": "git version 2.55.0.windows.5",
+  "docker_cli": "Docker version 29.8.1, build 4a63305",
+  "docker_server": "29.8.1",
+  "credential_presence_only": {
+    "OPENAI_API_KEY": false,
+    "ANTHROPIC_API_KEY": false,
+    "GEMINI_API_KEY": false,
+    "GOOGLE_API_KEY": false,
+    "OLLAMA_HOST": false
+  },
+  "ollama": {
+    "available": false,
+    "endpoint": "http://127.0.0.1:11434/api/tags"
+  }
+}

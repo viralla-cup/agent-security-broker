@@ -1,0 +1,43 @@
+{
+  "run_id": "20261019T104349Z-7e16ab",
+  "kind": "deterministic_replay_not_llm",
+  "split": "development",
+  "manifest_sha256": "23894efe7c6de97a60fa040a54e09acb1090363dc6a09c76aee39c0fc148fc72",
+  "git_base_commit": "5845904197e7761ac2bee8b8abd9ef3a8d5206ff",
+  "git_dirty": true,
+  "source_sha256": {
+    ".dockerignore": "7ee90736f42f40af259b2c951bd13c3cb78561a29ae2275f26bd53afc5764e1f",
+    "Dockerfile": "6052024a98e5b5774dc1befff33ca835f9939050fda8d9d68131ef4b9d1f9bbd",
+    "experiments/manifests/mvp.json": "23894efe7c6de97a60fa040a54e09acb1090363dc6a09c76aee39c0fc148fc72",
+    "policies/filesystem.yaml": "fadeb4c234c5ccfc7fcc34e1607efe3b955ee9db086919364bea938c1680b75c",
+    "pytest.ini": "bb7828f3bdc24bf59f08c1eb7786114a213d36f04e7a9a43e3799a80e7ef85b0",
+    "requirements.lock": "61a9df474bf205da37eb29f3b14bb40dec7faee942ebce8ad87a31aa5de4fa63",
+    "scripts/run_checks.py": "f2ab0d5083dfb389e983e7fbec0f98a83e40fabfc497451139f94121fe03d8e8",
+    "scripts/run_replay.py": "5ff1bd2256d0444777a5a889aeff57abcc071e336d3da9b8e20567c446ce76a2",
+    "src/broker/__init__.py": "ece4ef27ff36aa70787aa988becea2cb9088be56a1b3d21acf021da9c66931d4",
+    "src/broker/broker.py": "ef98f757fcfa5d72d68d4e03a546bbf71989eb8448da30a166e84ed0256407a8",
+    "src/broker/filesystem.py": "7161d21c2e847f3aa0d1483e300c5646cdcf9675355ba65372f080c591dd66eb",
+    "src/broker/policy.py": "85147801376a42e00607a37412a471cf0876397d372445becc83957aa120f0db",
+    "src/broker/schema.py": "f41d1a46db35c683bb20c77ca74fc554ada8a95df8c9a921ef6e72093f1d56b2",
+    "src/lab/__init__.py": "f5af34bf482ca711ae5b075125f7003067c3122631f7318bb792c0839223972e",
+    "src/lab/client.py": "b126474645dc248a16c3915bb5f04ae070abc46dfd08617dab183cce9c9e24a1",
+    "src/lab/fixtures.py": "72bbddcd4c46bd9e5200ac23c269d3b1aa95a9c5ad869c5a6da78608ce2af8f6",
+    "src/lab/oracle.py": "1d3fed1ab6ba7b6eb2b92a7fd07dc1f165175c5727a8b4b0bc9d668769431185",
+    "src/lab/server.py": "47e7fad3a67ff7b9e10687b4527963647dcf36b68d2d7a5bfb3b61a307e7d948",
+    "tests/test_gate.py": "218153b5becf9d873aba819d921101bbda721c2b3a99613ed1d35a4112c96734"
+  },
+  "docker_server": "29.8.1",
+  "image_id": "sha256:9aa0fc20b24e2b9f0360ed0e908d22e18f7bbc37a0b0ddf5a50ff872296a3bc4",
+  "runtime": {
+    "python": "3.12.12 (main, Feb 24 2026, 20:29:11) [GCC 12.2.0]",
+    "platform": "Linux-6.18.54.1-microsoft-standard-WSL2-x86_64-with-glibc2.36",
+    "packages": {
+      "PyYAML": "6.0.2",
+      "pytest": "8.3.5",
+      "iniconfig": "2.1.0",
+      "packaging": "24.2",
+      "pluggy": "1.5.0"
+    }
+  },
+  "actual_llm_episodes": 0
+}

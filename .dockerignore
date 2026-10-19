@@ -1,0 +1,12 @@
+**
+!Dockerfile
+!requirements.lock
+!src/
+!src/**
+!policies/
+!policies/filesystem.yaml
+!tests/
+!tests/**
+!pytest.ini
+**/__pycache__/
+**/*.pyc
