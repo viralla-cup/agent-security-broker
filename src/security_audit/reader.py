@@ -61,13 +61,18 @@ def project_event(record, line_number, legacy_context):
             operation = None
         request_id = record.get('request_id')
         task_id = record.get('task_id')
+        outcomes = outcome_fields(status, record.get('code'), base['dispatched'], base['condition'])
+        # Preserve historical decision vocabulary; do not relabel old evidence as v3.
+        if outcomes['evaluation_status'] == 'FAILED':
+            outcomes['decision'] = 'ERROR'
         return {**base, 'schema_version': 1, 'timestamp': None,
                 'event_id': f'legacy:{line_number}', 'session_id': None,
                 'request_id': legacy_context.reference('req', request_id) if isinstance(request_id, str) else None,
                 'task_id': legacy_context.reference('task', task_id) if isinstance(task_id, str) else None,
                 'operation': operation, 'resource_id': None,
-                **outcome_fields(status, record.get('code'), base['dispatched'], base['condition'])}
-    if type(record['schema_version']) is not int or record['schema_version'] != 2:
+                **outcomes}
+    version = record['schema_version']
+    if type(version) is not int or version not in (2, 3):
         raise ValueError('Schema version')
     session = record.get('session_id')
     if not _match(session, r'[a-f0-9]{32}') or record.get('event_id') != f"{session}:{base['step']}":
@@ -87,23 +92,34 @@ def project_event(record, line_number, legacy_context):
         raise ValueError('Operation')
     decision = record.get('decision')
     execution = record.get('execution_status')
-    if (decision, execution, base['dispatched']) not in {
+    states = {
         ('ALLOW', 'SUCCEEDED', True), ('ALLOW', 'FAILED', True), ('ALLOW', 'REJECTED', True),
-        ('DENY', 'NOT_STARTED', False), ('ERROR', 'NOT_STARTED', False),
-    }:
+        ('DENY', 'NOT_STARTED', False),
+    }
+    if version == 2:
+        states.add(('ERROR', 'NOT_STARTED', False))
+    if (decision, execution, base['dispatched']) not in states:
         raise ValueError('Decision and execution')
     reason = public_code(record.get('reason_code'))
     execution_code = public_code(record.get('execution_code'))
+    evaluation = record.get('evaluation_status') if version == 3 else ('FAILED' if decision == 'ERROR' else 'COMPLETED')
+    if evaluation not in ('COMPLETED', 'FAILED'):
+        raise ValueError('Evaluation status')
+    if evaluation == 'FAILED':
+        if base['dispatched'] or reason != 'EVALUATION_ERROR':
+            raise ValueError('Evaluation failure')
+    elif reason == 'EVALUATION_ERROR':
+        raise ValueError('Evaluation reason')
     if decision == 'ALLOW' and reason != ('BASELINE_ALLOWED' if base['condition'] == 'B0' else 'AUTHORIZED'):
         raise ValueError('Allow reason')
     if execution == 'SUCCEEDED' and execution_code != 'OK':
         raise ValueError('Success reason')
     if execution == 'NOT_STARTED' and execution_code != 'NOT_DISPATCHED':
         raise ValueError('Non-dispatch reason')
-    return {**base, 'schema_version': 2, 'timestamp': timestamp, 'session_id': session,
+    return {**base, 'schema_version': version, 'timestamp': timestamp, 'session_id': session,
             'event_id': record['event_id'], 'request_id': record.get('request_id'),
             'task_id': record['task_id'], 'resource_id': record.get('resource_id'),
-            'operation': operation, 'decision': decision, 'reason_code': reason,
+            'operation': operation, 'decision': decision, 'evaluation_status': evaluation, 'reason_code': reason,
             'explanation': EXPLANATIONS[reason], 'execution_status': execution,
             'execution_code': execution_code, 'execution_explanation': EXPLANATIONS[execution_code]}
 

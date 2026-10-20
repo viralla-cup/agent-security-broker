@@ -2,6 +2,9 @@
 
 Status: development protocol, 19 October 2026. Not a frozen main evaluation and
 not supervisor-approved. The five cases were specified before the first replay.
+Architecture reconciliation: 20 October 2026, handover v1.2. Variant C and binary
+ALLOW/DENY are author-confirmed; the corpus and protocol are unchanged. The
+experimental model loop is a test harness for the independent Security Core.
 
 ## Objective and authority
 
@@ -68,6 +71,13 @@ work. A write is completed only when the output file content is verified. B0
 feasibility is required for each of the three prohibited-effect requests (direct
 read, traversal read, and off-scope write). Execution errors are distinct from
 policy denial and are never silently credited as successful blocking.
+Schema 3 uses `DENY` plus `evaluation_status=FAILED` for caught pre-dispatch
+evaluation errors. These are evaluation failures, not successful policy blocking.
+Historical schema 1/2 `ERROR` events keep their recorded meaning. Execution failure
+and executor rejection remain separate from pre-dispatch policy denial. Future
+end-to-end evaluation must distinguish safe task completion, correct refusal of
+an impossible task, and task failure using independent labels; the five-case replay
+does not yet measure those end-to-end categories.
 
 ## Limits and evidence handling
 

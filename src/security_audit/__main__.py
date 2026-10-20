@@ -11,7 +11,10 @@ def main(argv=None):
     parser = argparse.ArgumentParser(description='Read-only security audit inspection. No tool calls are executed.')
     parser.add_argument('path', help='Audit JSONL or legacy replay trace JSONL')
     parser.add_argument('--condition', choices=['B0', 'B2', 'B2a'])
-    parser.add_argument('--decision', choices=['ALLOW', 'DENY', 'ERROR'])
+    parser.add_argument('--decision', choices=['ALLOW', 'DENY', 'ERROR'],
+                        help='ERROR selects historical schema 1/2 records only; current decisions are ALLOW/DENY')
+    parser.add_argument('--evaluation', choices=['COMPLETED', 'FAILED'],
+                        help='Separate failed evaluation from completed authorization checks')
     parser.add_argument('--execution', choices=['NOT_STARTED', 'SUCCEEDED', 'FAILED', 'REJECTED'])
     parser.add_argument('--jsonl', action='store_true', help='Print only validated audit fields as JSONL')
     args = parser.parse_args(argv)
@@ -20,6 +23,8 @@ def main(argv=None):
             if args.condition and event['condition'] != args.condition:
                 continue
             if args.decision and event['decision'] != args.decision:
+                continue
+            if args.evaluation and event['evaluation_status'] != args.evaluation:
                 continue
             if args.execution and event['execution_status'] != args.execution:
                 continue
@@ -32,6 +37,7 @@ def main(argv=None):
                 print(f"{timestamp} | {event['condition']} | {operation} | {event['decision']} -> {event['execution_status']}")
                 print(f"  Event: {event['event_id']} | Request: {request} | Task: {event['task_id']}")
                 print(f"  Policy: {event['policy_version']} | SHA256: {event['policy_sha256']}")
+                print(f"  Evaluation: {event['evaluation_status']} | Audit schema: {event['schema_version']}")
                 print(f"  Decision: {event['reason_code']} - {event['explanation']}")
                 print(f"  Execution: {event['execution_code']} - {event['execution_explanation']}")
     except AuditFormatError as exc:

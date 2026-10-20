@@ -1,0 +1,50 @@
+{
+  "kind": "precommit_security_integrity_review",
+  "git_base_commit": "178eb729dccc05485e62d393ff6134f7e38ea08e",
+  "overall": "PASS",
+  "safe_to_commit_reviewed_changes": true,
+  "commit_created": false,
+  "pushed": false,
+  "staged_files": 0,
+  "source_corrections_required": false,
+  "checks": {
+    "git_integrity": "PASS",
+    "secret_scan": "PASS",
+    "research_integrity": "PASS",
+    "variant_c_compliance": "PASS",
+    "regression": "PASS"
+  },
+  "scope": {
+    "initial_changed_or_untracked_files": 18,
+    "secret_scan_text_units_including_archive": 43,
+    "archive_members_scanned": 26,
+    "new_test_evidence_scanned": true
+  },
+  "integrity": {
+    "preserved_manifest_hashes": 82,
+    "pre_review_results_and_raw_file_hashes": 121,
+    "raw_records_matching_immutable_sanitized_exports": 45,
+    "archived_source_hashes_verified": 71,
+    "source_archives": 3,
+    "current_test_source_hashes_verified": true
+  },
+  "regression": {
+    "command": "python scripts/run_checks.py",
+    "passed": 94,
+    "pytest_reported_seconds": 1.16,
+    "exit_code": 0
+  },
+  "architecture": [
+    "Independent broker/executor boundary unchanged",
+    "Current audit schema uses only ALLOW/DENY; ERROR supported only for historical audit viewing",
+    "No runtime ASK or interactive approval path",
+    "Immutable policy and bounded recovery unchanged",
+    "B0/B2/B2a gate behavior and agent feedback unchanged"
+  ],
+  "limitations": [
+    "Secret detection uses pattern scanning and review, not a proof of absence",
+    "Ignored historical raw files have no original byte-hash manifest; their parsed records match historical exports after known synthetic-canary redaction, and their bytes remained unchanged during this review",
+    "No new replay or real-model episode; historical replay evidence is preserved",
+    "This review does not establish general system security"
+  ]
+}

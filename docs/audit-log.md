@@ -1,6 +1,6 @@
 # Security audit log
 
-Updated 19 October 2026. This change improves observation without modifying YAML,
+Updated 20 October 2026. This change improves observation without modifying YAML,
 authorization order, path checks, execution, budgets, or agent denial feedback.
 No dependency, dashboard, database, authentication service, or model backend is added.
 
@@ -21,7 +21,14 @@ response was generic, but its reason was visible in the adjacent audit object.
 No model backend had yet consumed that transport. The full synthetic research
 trace was not suitable as a content-free user-facing security log.
 
-## Schema version 2
+## Schema version 3
+
+Commit `178eb72` introduced schema 2. The v1.2 reconciliation changes the audit
+classification of caught pre-dispatch evaluation errors from `ERROR` to `DENY`
+with `evaluation_status=FAILED` and `reason_code=EVALUATION_ERROR`. This implements
+the author-confirmed binary decision vocabulary. No authorization check, executor
+call, agent response, retryability, or denial counter is changed. Schema 2 exports
+and their verified results are retained as historical evidence.
 
 One final audit event is generated for each request handled by `Broker.handle`.
 It describes the observed completion of that call, not a durable pre-dispatch
@@ -30,7 +37,7 @@ commitment. The internal method still returns an envelope to trusted callers; on
 
 | Field | Meaning |
 | --- | --- |
-| `schema_version` | Integer `2`; legacy input is projected as version `1`. |
+| `schema_version` | Integer `3` for new events; historical input keeps version `1` or `2`. |
 | `timestamp` | UTC completion time with microseconds and `Z`; wall clocks can move. |
 | `session_id`, `step`, `event_id` | Random broker-instance ID, call sequence, and their unique combination. Use sequence for ordering within an instance. |
 | `request_id` | Keyed pseudonym of the validated request ID; null if parsing never produced a valid Action. |
@@ -40,6 +47,7 @@ commitment. The internal method still returns an envelope to trusted callers; on
 | `policy_version`, `policy_sha256` | Public policy label and exact loaded-policy digest. Version/hash identify applicable configuration; no fabricated per-rule ID is added. |
 | `resource_id` | Session-local keyed resource reference, without the path. |
 | `decision`, `reason_code`, `explanation` | Gate decision and static public explanation. |
+| `evaluation_status` | `COMPLETED` for ordinary allow/deny checks; `FAILED` for a caught pre-dispatch evaluation error. This is separate from authorization and execution. |
 | `dispatched` | Whether `FileExecutor.execute` was invoked. |
 | `execution_status`, `execution_code`, `execution_explanation` | Separate observed executor result; no raw exception string. |
 | `elapsed_ns` | Existing broker measurement through execution, before event construction, JSONL persistence, and host observation. Not total request latency. |
@@ -54,9 +62,15 @@ Gate decision `ALLOW` means dispatch was permitted, not that execution succeeded
 I/O, decoding, or value errors; a file may have been partially created.
 `ALLOW/REJECTED` covers an executor guard rejection, such as `READ_LIMIT` or
 `UNSUPPORTED_OBJECT`. The existing agent status and denial counter are preserved
-even for those post-dispatch rejections. `ERROR/NOT_STARTED` distinguishes a caught
-evaluation error from a deliberate policy denial. `SUCCEEDED` means the executor
+even for those post-dispatch rejections. `DENY/NOT_STARTED` with failed evaluation
+distinguishes a fail-closed error from an ordinary policy denial; do not count this
+error as successful policy blocking. `SUCCEEDED` means the executor
 returned normally, not that the agent's task or every security objective is proven.
+An executor error has `evaluation_status=COMPLETED` and `execution_status=FAILED`.
+There is no runtime `ASK`, approval path, or authority expansion. The unchanged
+agent response can still say `status=error` with `code=EXECUTION_ERROR` for a caught
+pre-dispatch error; this is legacy transport status, not a third authorization
+decision. The proposed richer adapter Result in v1.2 is not yet the wire contract.
 
 ## Separate channels and privacy
 
@@ -95,12 +109,13 @@ From the repository root, after `python scripts/run_replay.py`, use PowerShell:
 $auditLog = Get-ChildItem results/dev-*/audit.jsonl | Sort-Object LastWriteTime | Select-Object -Last 1
 python scripts/inspect_audit.py $auditLog.FullName --condition B2a --decision DENY
 python scripts/inspect_audit.py $auditLog.FullName --execution FAILED
+python scripts/inspect_audit.py $auditLog.FullName --evaluation FAILED
 python scripts/inspect_audit.py $auditLog.FullName --jsonl
 ```
 
 On any supported host, supply the literal file path instead of `$auditLog.FullName`.
 The CLI needs no PyYAML, pytest, running Docker, model credentials, or write access
-to the log. Filters are exact condition, decision, and execution status selectors.
+to the log. Filters select condition, decision, evaluation status, and execution status.
 The current five-case replay does not induce execution errors, so `--execution FAILED`
 normally returns no events; real executor failure paths are exercised by the tests.
 
@@ -114,6 +129,10 @@ Legacy timestamps and session IDs are unknown. The viewer prints `TIME_NOT_RECOR
 and uses `legacy:<line>` for location. Legacy raw identifiers are pseudonymized with
 a fresh viewer key on each invocation; their reuse across episodes is ambiguous and
 does not establish episode identity. The original files are never rewritten.
+Schema 1/2 evaluation errors retain `decision=ERROR` in the read-only projection;
+`evaluation_status` is derived from those historical fields, not a new observation.
+`--decision ERROR` selects these historical errors only. Schema 3 rejects `ERROR`,
+`ASK`, absent evaluation status, and contradictory evaluation/outcome fields.
 
 Malformed, duplicate-key, contradictory, oversized, or incomplete input produces
 a nonzero exit status and a line number without echoing private input. The viewer

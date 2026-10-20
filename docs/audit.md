@@ -3,6 +3,10 @@
 Date: 19 October 2026, Asia/Qyzylorda. Research documentation is in English;
 conversation with the author is in Russian.
 
+Historical starting-state record. Current architecture context is handover v1.2,
+reconciled on 20 October in `architecture-reconciliation.md`. Implementation and
+commit status below describe the initial inspection, not the current repository.
+
 ## Confirmed requirements
 
 The current user request governs this work. Build and actually test the Section 17

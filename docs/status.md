@@ -1,14 +1,49 @@
 # Project status
 
-Updated 19 October 2026, Asia/Qyzylorda. The local Section 17 engineering slice is
+Updated 20 October 2026, Asia/Qyzylorda. The local Section 17 engineering slice is
 implemented and passing. The required real-model stage remains pending access and
 adapter integration. The article, full experiment, and supervisor approval are not
 complete.
 
+## v1.2 reconciliation and binary audit
+
+Handover v1.2 is the current architecture context; v1.1 remains historical.
+Variant C is author-confirmed: the independent Security Core owns authority,
+runtime decisions are ALLOW/DENY without ASK, and recovery cannot expand permissions.
+The experimental API/local-model agent is only a test harness; future product
+adapters are a separate layer. See `docs/architecture-reconciliation.md` and the
+20 October decision-register entries for the source-to-code mapping and remaining gaps.
+
+The worktree was clean at commit `178eb72`, which committed the prior security-audit
+implementation after `0300686`. New local reconciliation changes are uncommitted.
+No push was performed. The new audit schema 3 corrects the old pre-dispatch ERROR
+decision to DENY with `evaluation_status=FAILED` and `EVALUATION_ERROR`. Broker
+behavior, agent feedback, policy, executor, counters, and experimental conditions
+remain unchanged. Historical ERROR events remain readable as historical events.
+
+The regression suite passed **94 tests**, exit 0, reported test time **1.26 seconds**:
+`results/checks-20261020T053816Z-edbdba/`. It covers evaluation failures in B0/B2/B2a,
+no executor invocation or state change, unchanged responses/counters, version 1/2/3
+viewing, and invalid binary-decision/evaluation combinations. Docker was initially
+stopped; the installed Docker Desktop was started and the existing image rebuilt
+with cached dependencies. No new dependency was added.
+
+The earlier Section 17 replay was not repeated. Historical evidence below is
+retained for its original code/schema; real LLM episodes remain **0**. The only
+architectural representation mismatch corrected here was audit ERROR as a third
+decision. Remaining gaps include a common model adapter/loop, a future versioned
+product contract, product integration coverage, and real recovery/portability
+measurements. The shorter title in v1.2 is a candidate pending confirmation, not
+an automatic replacement for the user's explicit working title.
+Preservation evidence is in `results/reconciliation-20261020T054102Z-ed980d/`:
+all 82 baseline file digests match, including earlier results and the unchanged
+execution components. All four historical audit/trace CLI views passed. Exact
+current executable sources are archived with the new engineering-test result.
+
 ## Security audit update
 
-The starting implementation is now committed as `0300686`. The current audit changes
-are local and uncommitted; no push was performed. See `docs/audit-log.md` for the
+Historical 19 October record: the starting implementation was committed as `0300686`.
+The audit update below was subsequently committed as `178eb72`. See `docs/audit-log.md` for the
 starting-state review, schema, CLI, channel separation, and persistence limitations.
 
 The final suite passed **84 tests**, exit code 0, in pytest's reported **0.86 seconds**:
@@ -34,9 +69,9 @@ were archived in the new run's `source_snapshot.zip`. Policy SHA-256 remains
 `fadeb4c234c5ccfc7fcc34e1607efe3b955ee9db086919364bea938c1680b75c`.
 No test failure occurred; injected failures were expected test cases.
 
-Events now separate gate authorization from executor outcome. B2a details stay
+That audit update separated gate authorization from executor outcome. B2a details stay
 in the private observer channel rather than accompanying generic agent feedback.
-The new CLI reads both version-2 audit-only exports and the audit portion of legacy
+At that revision the CLI read both version-2 audit-only exports and the audit portion of legacy
 traces without executing tools or echoing raw requests/responses. UTC timestamps
 are recorded for new events; historical timestamps remain unknown.
 
@@ -91,8 +126,8 @@ The initial-slice image ID is
 `sha256:9aa0fc20b24e2b9f0360ed0e908d22e18f7bbc37a0b0ddf5a50ff872296a3bc4`.
 The base image is pinned by digest in Dockerfile. Runtime package versions and the
 policy SHA-256 are in run metadata and events. The Git base is
-`5845904197e7761ac2bee8b8abd9ef3a8d5206ff`; implementation changes remain uncommitted
-on the existing `main` branch. Exact final source hashes were rechecked against the
+`5845904197e7761ac2bee8b8abd9ef3a8d5206ff`; implementation changes were uncommitted
+at measurement time and were later committed as `0300686` on `main`. Exact final source hashes were rechecked against the
 run metadata, then the owned executable sources, tests, manifest, and build files
 were retained in that run's `source_snapshot.zip`.
 
@@ -129,8 +164,9 @@ No unrestricted concurrent writer or Linux kernel/Docker escape is modeled.
 
 ## Next concrete task
 
-Select and expose one real programmatic model backend, implement its bounded JSON
-proposal adapter, and run one independently checked task through the same transport
+Implement the common bounded experimental-model interface and loop using the
+existing transport. Select and expose one real programmatic model backend, add its
+JSON proposal adapter, and run one independently checked task through the same transport
 and broker: read the synthetic measurements and create `Mean: 4\n` in output.
 Then add a separately labeled controlled-denial recovery task. Do not substitute
 a scripted agent or this development chat for a model run.

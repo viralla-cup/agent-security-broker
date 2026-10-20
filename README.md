@@ -1,12 +1,24 @@
 # Agent security broker
 
-A development testbed for runtime authorization of two filesystem tools, `read_text`
-and `write_new`. The current evidence is deterministic replay, not an LLM evaluation.
+An independent Security Core prototype with a Docker filesystem testbed. The core
+authorizes two tools, `read_text` and `write_new`; the experimental agent is only a
+test harness. Variant C was author-confirmed on 20 October 2026: a trusted
+broker/executor owns authority, with product adapters planned after the article.
+The current evidence is deterministic replay, not an LLM evaluation.
+
+Runtime authorization is strictly `ALLOW` or `DENY`, without `ASK` or manual
+override. Recovery must use existing grants or stop; it cannot expand permissions.
+Handover v1.2 supersedes v1.1 as architecture context. See
+[the reconciliation](docs/architecture-reconciliation.md) for verified coverage,
+remaining gaps, and the next work; completed Section 17 work is retained.
 
 Working article title: **Model-Agnostic Runtime Policy Enforcement for LLM Agents:
 Experimental Evaluation of File-Operation Security and Autonomous Task Continuation**.
 Title and experimental plan await supervisor approval. Submission deadline:
 31 October 2026 (author supplied; Asia/Qyzylorda).
+Handover v1.2 lists a shorter title, "Runtime Policy Enforcement for Language Model
+Agents: File Access and Safe Task Continuation". It is recorded as a candidate;
+the earlier explicit user-supplied title above has not been silently replaced.
 
 ## Reproduce the first slice
 
@@ -62,7 +74,7 @@ CLI access belongs exclusively to the trusted host harness. A future model suppl
 JSON proposals, never Docker commands. The host harness and observer are part of
 the trusted computing base, not the experimental agent.
 
-Both conditions retain non-root users, read-only root filesystems, no network,
+All three conditions retain non-root users, read-only root filesystems, no network,
 dropped capabilities, no-new-privileges, default seccomp, private PID namespaces,
 memory/CPU/process limits, and disposable synthetic files. B0 removes internal
 resource-policy checks but still confines execution to `/lab`; no host protection
@@ -88,6 +100,7 @@ $auditLog = Get-ChildItem results/dev-*/audit.jsonl | Sort-Object LastWriteTime 
 python scripts/inspect_audit.py $auditLog.FullName --decision DENY
 python scripts/inspect_audit.py $auditLog.FullName --condition B2a
 python scripts/inspect_audit.py $auditLog.FullName --execution FAILED
+python scripts/inspect_audit.py $auditLog.FullName --evaluation FAILED
 python scripts/inspect_audit.py $auditLog.FullName --jsonl
 ```
 
@@ -99,16 +112,20 @@ selected file, and never invokes Docker, changes policy, or dispatches an operat
 | Audit decision and execution | Meaning |
 | --- | --- |
 | `ALLOW -> SUCCEEDED` | The gate allowed dispatch and the executor returned normally. The independent outcome checker is still required. |
-| `DENY -> NOT_STARTED` | The gate rejected the request before calling the executor. |
+| `DENY -> NOT_STARTED` | Dispatch was refused. `evaluation_status=COMPLETED` means a normal denial; `FAILED` with `EVALUATION_ERROR` means a failed mandatory evaluation, not successful policy blocking. |
 | `ALLOW -> FAILED` | Dispatch was allowed, but execution failed; partial effects may exist. |
 | `ALLOW -> REJECTED` | The executor refused an already-dispatched request, for example at a read-size check. |
-| `ERROR -> NOT_STARTED` | Evaluation failed before dispatch; this is not a policy denial or successful execution. |
 
 Events include UTC completion time, unique event/session IDs, request and task
 references, operation, decision/reason/explanation, policy version/hash, and the
 separate execution result. IDs supplied in requests and resource paths are replaced
 with session-local keyed pseudonyms; no arguments, contents, exception messages,
 or denial hints enter the audit. Public policy version labels must not contain secrets.
+New events use schema 3 with only `ALLOW/DENY` decisions. Evaluation and execution
+failures are separate fields. Historical schema 1/2 events retain their original
+vocabulary when viewed, including `ERROR`; `--decision ERROR` is a legacy-only filter.
+Neither an evaluation failure nor an executor failure counts as a demonstrated
+policy blocking success. Existing research exports are never rewritten.
 
 Detailed audit records stay in the broker's private filesystem and reach only the
 trusted observer. The agent-facing socket returns the original six-field tool
@@ -138,6 +155,7 @@ See `docs/audit-log.md` for the schema, privacy boundary, failure semantics, and
 - `experiments/protocol.md`: definitions and limits of the current comparison.
 - `docs/audit.md`, `docs/decisions.md`, `docs/status.md`: starting evidence, decisions,
   current results, unresolved work, and next task.
+- `docs/architecture-reconciliation.md`: v1.2 architecture mapping and staged roadmap.
 - `docs/literature_evidence.md`: narrow source-to-claim matrix, not a novelty claim.
 
 The checker compares before/after file inventories and content hashes, tests the
@@ -161,6 +179,10 @@ transfer, credentials through the environment, and a bounded call/cost budget.
 Do not paste keys into chat or Git. A backend adapter and bounded loop must be
 integrated and tested before a real model run; this slice currently supplies the
 validated JSON transport and executor, not a completed model adapter.
+Test-model backends drive the experiment. Future Codex, Claude Code, and local-agent
+product adapters are separate integrations and may use their own agent. No such
+adapter is implemented or verified. Each will need evidence that alternate execution
+paths are disabled or mediated; an MCP connection alone does not establish coverage.
 
 Only synthetic task data may be sent to a future backend. The executor remains
 offline and the model receives no shell, Docker, policy, or filesystem-volume access.

@@ -1,0 +1,107 @@
+{
+  "kind": "architecture_reconciliation_not_llm",
+  "source_filename": "Journal_Article_Project_Handover_EN_v1.2_2026-10-20.docx",
+  "source_sha256": "abe21270688b87bf19192dc9abbfeedc6f14102acb0f6f2fb8c31a31145a1e0b",
+  "git_base_commit": "178eb729dccc05485e62d393ff6134f7e38ea08e",
+  "new_audit_schema": 3,
+  "preserved_files_count": 82,
+  "all_preserved_hashes_match": true,
+  "current_test_source_hashes_match": true,
+  "engineering_checks": "results/checks-20261020T053816Z-edbdba",
+  "engineering_exit_code": 0,
+  "historical_view_checks": [
+    {
+      "path": "results/dev-20261019T103949Z-c1c93b/trace.jsonl",
+      "command": [
+        "python",
+        "scripts/inspect_audit.py",
+        "results\\dev-20261019T103949Z-c1c93b\\trace.jsonl",
+        "--jsonl"
+      ],
+      "exit_code": 0,
+      "events": 18,
+      "schema_versions": [
+        1
+      ],
+      "decisions": {
+        "ALLOW": 12,
+        "DENY": 6
+      }
+    },
+    {
+      "path": "results/dev-20261019T104349Z-7e16ab/trace.jsonl",
+      "command": [
+        "python",
+        "scripts/inspect_audit.py",
+        "results\\dev-20261019T104349Z-7e16ab\\trace.jsonl",
+        "--jsonl"
+      ],
+      "exit_code": 0,
+      "events": 18,
+      "schema_versions": [
+        1
+      ],
+      "decisions": {
+        "ALLOW": 12,
+        "DENY": 6
+      }
+    },
+    {
+      "path": "results/dev-20261019T112424Z-99a1f4/trace.jsonl",
+      "command": [
+        "python",
+        "scripts/inspect_audit.py",
+        "results\\dev-20261019T112424Z-99a1f4\\trace.jsonl",
+        "--jsonl"
+      ],
+      "exit_code": 0,
+      "events": 18,
+      "schema_versions": [
+        2
+      ],
+      "decisions": {
+        "ALLOW": 12,
+        "DENY": 6
+      }
+    },
+    {
+      "path": "results/dev-20261019T112424Z-99a1f4/audit.jsonl",
+      "command": [
+        "python",
+        "scripts/inspect_audit.py",
+        "results\\dev-20261019T112424Z-99a1f4\\audit.jsonl",
+        "--jsonl"
+      ],
+      "exit_code": 0,
+      "events": 18,
+      "schema_versions": [
+        2
+      ],
+      "decisions": {
+        "ALLOW": 12,
+        "DENY": 6
+      }
+    }
+  ],
+  "historical_replay_case_conditions": 15,
+  "new_replay_episodes": 0,
+  "new_llm_episodes": 0,
+  "limitations": [
+    "No model or product adapter coverage",
+    "Historical ERROR retained only for schema 1/2 display",
+    "No new replay or end-to-end effectiveness measurement"
+  ],
+  "git_diff_check_exit_code": 0,
+  "environment_note": "Docker Engine was initially stopped; existing Docker Desktop was started. No dependency changes.",
+  "current_document_sha256": {
+    "README.md": "1abb34b676bf6bd12ea715b765b9070a1e21bdefeb213820b59774a8c34504f1",
+    "docs/architecture-reconciliation.md": "950a4fa6421253faa275ae34210dcc165a67bcc59f2d6bd317bbaf21dbac73e2",
+    "docs/audit-log.md": "85e757eef97e6139865e106a7ad2b833fcfa5a655d02be8425f5ac4f0d862eee",
+    "docs/audit.md": "038cdd461067feef4ae2085f21948b490d7dbd0db3a285da15b4e9287087a131",
+    "docs/decisions.md": "02c973c09259aa9306d4104ba02a850e31d0a7985c409dee95a2096797ce1181",
+    "docs/literature_evidence.md": "820dc4ab45fdf8e6736d63babf8dff21052e49c18765dc77c4d0989d728ee68b",
+    "docs/status.md": "0e7d94112c19d0310ccba1231a4d6de1e05db35ac143c6ac9ec48b3feb09b6e8",
+    "docs/source_inventory.json": "c42424e54c4f5a1a05fa73caba30da7a0187693bcee807ecb0a097ef0667ab53",
+    "experiments/protocol.md": "92256ca78f2cdf152aaa660b7ee1bc9efcad77b552b95f6c61faa466fc59e57f"
+  }
+}

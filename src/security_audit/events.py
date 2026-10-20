@@ -7,7 +7,7 @@ import re
 import secrets
 import uuid
 
-SCHEMA_VERSION = 2
+SCHEMA_VERSION = 3
 OPERATIONS = {'read_text', 'write_new'}
 CONDITIONS = {'B0', 'B2', 'B2a'}
 EXPLANATIONS = {
@@ -45,13 +45,15 @@ def public_version(value):
 
 def outcome_fields(status, code, dispatched, condition):
     code = public_code(code)
-    decision = 'ALLOW' if dispatched else ('DENY' if status == 'denied' else 'ERROR')
+    decision = 'ALLOW' if dispatched else 'DENY'
+    evaluation = 'FAILED' if not dispatched and status != 'denied' else 'COMPLETED'
     reason = ('BASELINE_ALLOWED' if condition == 'B0' else 'AUTHORIZED') if dispatched else code
-    if decision == 'ERROR':
+    if evaluation == 'FAILED':
         reason = 'EVALUATION_ERROR'
     execution = ('SUCCEEDED' if status == 'ok' else 'REJECTED' if status == 'denied' else 'FAILED') if dispatched else 'NOT_STARTED'
     execution_code = ('OK' if status == 'ok' else code) if dispatched else 'NOT_DISPATCHED'
-    return {'decision': decision, 'reason_code': reason, 'explanation': EXPLANATIONS[reason],
+    return {'decision': decision, 'evaluation_status': evaluation,
+            'reason_code': reason, 'explanation': EXPLANATIONS[reason],
             'execution_status': execution, 'execution_code': execution_code,
             'execution_explanation': EXPLANATIONS[execution_code]}
 

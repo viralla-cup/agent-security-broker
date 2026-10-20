@@ -13,6 +13,7 @@ from broker.filesystem import FileExecutor
 from broker.policy import Policy
 from broker.schema import Rejected
 from lab.fixtures import prepare, canary_for
+from lab.oracle import snapshot
 from lab.server import handle_request
 from security_audit.__main__ import main as inspect_main
 from security_audit.events import AuditContext
@@ -122,16 +123,75 @@ def test_partial_write_is_a_failure_not_a_success(runtime):
     assert SECRET not in json.dumps(envelope)
 
 
-def test_evaluation_failure_is_neither_allow_nor_policy_denial(runtime, monkeypatch):
-    broker, _ = runtime
-    broker.condition = 'B0'
-    def fail_resolution(_):
+@pytest.mark.parametrize('condition', ['B0', 'B2', 'B2a'])
+def test_evaluation_failure_denies_dispatch_without_changing_feedback(runtime, monkeypatch, condition):
+    broker, root = runtime
+    broker.condition = condition
+    before = snapshot(root)
+    def fail_resolution(*_):
         raise ValueError(SECRET)
-    monkeypatch.setattr('broker.broker.canonical_path', fail_resolution)
-    event = broker.handle(request())['audit']
-    assert event['decision'] == 'ERROR' and not event['dispatched']
+    if condition == 'B0':
+        monkeypatch.setattr('broker.broker.canonical_path', fail_resolution)
+    else:
+        monkeypatch.setattr(Policy, 'authorize', fail_resolution)
+    def forbidden_execution(*_):
+        pytest.fail('Failed evaluation reached the executor')
+    monkeypatch.setattr(broker.executor, 'execute', forbidden_execution)
+    envelope = broker.handle(request())
+    event = envelope['audit']
+    assert event['schema_version'] == 3
+    assert event['decision'] == 'DENY' and not event['dispatched']
+    assert event['evaluation_status'] == 'FAILED'
     assert event['reason_code'] == 'EVALUATION_ERROR' and event['execution_status'] == 'NOT_STARTED'
-    assert SECRET not in json.dumps(event)
+    assert envelope['response'] == {'status':'error', 'code':'EXECUTION_ERROR', 'result':None,
+                                    'retryable':False, 'safe_hint':None, 'request_id':'r1'}
+    assert broker.calls == 1 and broker.denials == 0 and broker.written == 0
+    assert snapshot(root) == before
+    assert SECRET not in json.dumps(envelope)
+
+
+@pytest.mark.parametrize('version', [1, 2, 3])
+def test_evaluation_error_versions_remain_traceable_and_read_only(runtime, tmp_path, capsys, version):
+    broker, _ = runtime
+    event = broker.handle(request('/lab/secrets/canary.txt'))['audit']
+    event.update(reason_code='EVALUATION_ERROR', evaluation_status='FAILED')
+    if version == 2:
+        event.update(schema_version=2, decision='ERROR')
+        del event['evaluation_status']
+    elif version == 1:
+        event = {k:event[k] for k in ('condition','step','elapsed_ns','dispatched','policy_version','policy_sha256')}
+        event.update(status='error', code='EXECUTION_ERROR', request_id=SECRET, task_id=SECRET)
+    path = tmp_path/'evaluation.jsonl'
+    path.write_text(json.dumps(event)+'\n')
+    before = path.read_bytes()
+    assert inspect_main([str(path),'--evaluation','FAILED','--jsonl']) == 0
+    output = capsys.readouterr().out
+    projected = json.loads(output)
+    assert projected['schema_version'] == version
+    assert projected['decision'] == ('DENY' if version == 3 else 'ERROR')
+    assert projected['evaluation_status'] == 'FAILED'
+    assert projected['reason_code'] == 'EVALUATION_ERROR'
+    assert projected['execution_status'] == 'NOT_STARTED'
+    assert path.read_bytes() == before and SECRET not in output
+    assert inspect_main([str(path),'--evaluation','COMPLETED']) == 0
+    assert capsys.readouterr().out == ''
+
+
+@pytest.mark.parametrize('changes', [
+    {'decision':'ERROR', 'evaluation_status':'FAILED', 'reason_code':'EVALUATION_ERROR'},
+    {'decision':'ASK'},
+    {'evaluation_status':None},
+    {'evaluation_status':'FAILED'},
+    {'evaluation_status':'COMPLETED', 'reason_code':'EVALUATION_ERROR'},
+])
+def test_v3_viewer_rejects_nonbinary_or_contradictory_evaluation(runtime, tmp_path, changes):
+    broker, _ = runtime
+    event = broker.handle(request('/lab/secrets/canary.txt'))['audit']
+    event.update(changes)
+    path = tmp_path/'invalid-evaluation.jsonl'
+    path.write_text(json.dumps(event)+'\n')
+    with pytest.raises(AuditFormatError, match='line 1'):
+        list(read_events(path))
 
 
 def test_audit_never_copies_payload_or_untrusted_identifiers(runtime):
