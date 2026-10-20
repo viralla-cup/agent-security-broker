@@ -4,7 +4,9 @@ An independent Security Core prototype with a Docker filesystem testbed. The cor
 authorizes two tools, `read_text` and `write_new`; the experimental agent is only a
 test harness. Variant C was author-confirmed on 20 October 2026: a trusted
 broker/executor owns authority, with product adapters planned after the article.
-The current evidence is deterministic replay, not an LLM evaluation.
+The current evidence is deterministic replay and fake-backend engineering tests,
+not an LLM evaluation. A restricted experimental loop and OpenAI Responses adapter
+are implemented; live model access and approval of a paid pilot remain pending.
 
 Runtime authorization is strictly `ALLOW` or `DENY`, without `ASK` or manual
 override. Recovery must use existing grants or stop; it cannot expand permissions.
@@ -173,12 +175,13 @@ No actual LLM run is claimed. Initial checks found no standard API credential
 environment variables and no model served at `127.0.0.1:11434`. This is not a search
 of credential stores. The development chat is not an experimental backend.
 
-To run the next task, provide either a locally served model with an exact model ID
-and reachable endpoint, or authorize a provider endpoint/model, synthetic-data
-transfer, credentials through the environment, and a bounded call/cost budget.
-Do not paste keys into chat or Git. A backend adapter and bounded loop must be
-integrated and tested before a real model run; this slice currently supplies the
-validated JSON transport and executor, not a completed model adapter.
+For the first real pilot, configure an exact OpenAI model ID and API key through
+the trusted host environment, then approve synthetic-data transfer and a bounded
+call/cost budget. Do not paste keys into chat or Git. A future local-model pilot
+will require an Ollama adapter; that adapter is not implemented. The current implementation includes
+the bounded loop, an offline stdio inference relay, a deterministic fake backend,
+and an OpenAI Responses adapter tested with HTTP doubles. Live API compatibility
+has not yet been verified.
 Test-model backends drive the experiment. Future Codex, Claude Code, and local-agent
 product adapters are separate integrations and may use their own agent. No such
 adapter is implemented or verified. Each will need evidence that alternate execution
@@ -189,3 +192,23 @@ offline and the model receives no shell, Docker, policy, or filesystem-volume ac
 Two real backends and controlled B2/B2a episodes are still needed to assess the
 proposed portability and feedback hypotheses. Publication and submission require
 separate author authorization.
+
+## Experimental agent pilot
+
+The loop runs inside the existing offline client container. Credentials stay with
+the trusted host adapter; only `read_text` and `write_new` can reach the broker.
+Every post-denial action is proposed by the backend under unchanged policy. The
+independent oracle, not the model's completion claim, determines the result.
+
+```powershell
+docker build --tag agent-security-broker:mvp .
+python scripts/run_checks.py
+python scripts/run_agent_pilot.py --backend fake --condition all --task all
+python scripts/run_agent_pilot.py --backend openai --plan
+```
+
+Fake episodes are engineering checks, never LLM evidence. The real plan makes no
+API calls. Read [the pilot guide](docs/agent-pilot.md) for the contract, limits,
+privacy boundary, exact credential setup, and separately approved first paid run.
+Public pilot traces omit model arguments/content and pseudonymize file names;
+complete synthetic exchanges remain under ignored `.local/pilot/`.

@@ -4,6 +4,9 @@ Date: 20 October 2026, Asia/Qyzylorda. Repository inspected from clean commit
 `178eb72` (`feat: add structured security audit logging and CLI`), following
 `0300686` (initial filesystem broker). This is a reconciliation and a narrow audit
 contract correction, not a new Section 17 implementation or main experiment.
+This document records the reconciliation checkpoint subsequently committed as
+`290aff3`. For the later experimental-agent implementation, see `agent-pilot.md`
+and the current section of `status.md`; the checkpoint findings below are preserved.
 
 ## Source and decision authority
 

@@ -103,3 +103,15 @@ Before the main evaluation, the authors must cross-review the independent labels
 add difficult benign and adversarial cases, integrate real backends, run a cost pilot,
 freeze all versions, and approve sampling/analysis. The handover's 60-case replay and
 432-episode grid are proposals, not completed or approved work.
+
+## Subsequent agent-loop development pilot
+
+The original five cases and expectations above are preserved. A separate manifest,
+`experiments/manifests/pilot.json`, adds a clean mean-report task and a constructed
+off-scope destination opportunity for the experimental loop. See `docs/agent-pilot.md`
+for the common prompt/history contract, limits, inference relay, outcome definitions,
+and explicit fake-versus-real labels. This is a development pilot, not a frozen
+main evaluation or a natural attack corpus. No real model episode has yet run.
+Additional task-level oracle checks extend observation without importing policy
+logic or changing B0/B2/B2a enforcement. Recovery efficacy requires real model-driven
+B2/B2a continuation; the deterministic fake is only an engineering control.

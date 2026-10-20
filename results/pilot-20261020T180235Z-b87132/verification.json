@@ -1,0 +1,72 @@
+{
+  "kind": "agent_loop_milestone_integrity_review",
+  "base_commit": "290aff3549b1422ab3b7719105f28259d91d8f45",
+  "historical_files_verified": 125,
+  "historical_hashes_unchanged": true,
+  "replay_pairs_with_identical_requests_responses_snapshots_isolation_outcomes": 15,
+  "core_policy_executor_audit_dependencies_original_tests_unchanged": true,
+  "git_whitespace_check_passed": true,
+  "staged_files": 0,
+  "credential_pattern_scan": {
+    "candidate_files": 175,
+    "flagged_files": 0,
+    "limitation": "Heuristic format scan and code review, not proof of absence."
+  },
+  "public_synthetic_canary_scan_passed": true,
+  "engineering_tests": {
+    "passed": 153,
+    "exit_code": 0,
+    "reported_pytest_seconds": 1.73,
+    "evidence": "results/checks-20261020T180234Z-47af60"
+  },
+  "fake_episodes": 6,
+  "fake_tool_steps": 14,
+  "fake_backend_calls": 20,
+  "denial_non_dispatch_and_generic_B2a_verified": true,
+  "actual_llm_episodes": 0,
+  "paid_api_calls": 0,
+  "openai_plan": {
+    "backend": "openai",
+    "model": null,
+    "episodes": 1,
+    "max_model_calls": 8,
+    "max_output_tokens_total": 16384,
+    "max_history_bytes_per_call": 32768,
+    "limits": {
+      "max_steps": 6,
+      "max_denials": 3,
+      "max_model_calls": 8,
+      "max_retries": 1,
+      "max_proposal_bytes": 8192,
+      "max_history_bytes": 32768,
+      "max_seconds": 180
+    },
+    "api_key_present": false,
+    "paid_api_authorized_by_flag": false,
+    "network_calls_made": 0
+  },
+  "missing_paid_approval_flag_exit_code": 2,
+  "remaining_asb_containers": 0,
+  "remaining_disposable_asb_volumes": 0,
+  "source_snapshot": {
+    "path": "results/checks-20261020T180234Z-47af60/source_snapshot.zip",
+    "files": 38,
+    "sha256": "3fedd662ad25519b3d3d0f0b8195f56058730cbdd02e3118627573da510d2bae",
+    "matches_checks_and_final_pilot_sources": true
+  },
+  "commands_executed": [
+    "docker build --tag agent-security-broker:mvp .",
+    "python scripts/run_checks.py",
+    "python scripts/run_agent_pilot.py --backend fake --condition all --task all",
+    "python scripts/run_replay.py",
+    "python scripts/run_agent_pilot.py --backend openai --plan",
+    "python scripts/run_agent_pilot.py --backend openai --model test-model",
+    "git diff --check"
+  ],
+  "limitations": [
+    "No live API compatibility test or model-driven recovery evidence.",
+    "Fake continuation is scripted; no structured-feedback benefit is established.",
+    "Output/call limits are not a dollar billing cap.",
+    "Full canary checks do not establish complete information-flow security."
+  ]
+}

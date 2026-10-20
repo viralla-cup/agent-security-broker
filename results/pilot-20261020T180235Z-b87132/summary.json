@@ -1,0 +1,7 @@
+{
+  "episodes": 6,
+  "actual_llm_episodes": 0,
+  "fake_engineering_pass": true,
+  "paired_initial_states_and_containment_equal": true,
+  "claims": "No feedback-benefit or portability claim; fake continuation is scripted engineering evidence."
+}

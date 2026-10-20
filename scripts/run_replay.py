@@ -111,6 +111,10 @@ class Episode:
                           input=json.dumps(action) + "\n", timeout=20)
         feedback = json.loads(response)
         assert set(feedback) == {'status', 'code', 'result', 'retryable', 'safe_hint', 'request_id'}
+        return {'response': feedback, 'audit': self.collect_audit()}
+
+    def collect_audit(self):
+        """Observe one completed call; never expose this method to the agent."""
         # This trusted observer channel is never offered to the experimental agent.
         events = [json.loads(line) for line in docker(
             "exec", self.broker, "python", "-m", "security_audit", "/tmp/security-audit.jsonl", "--jsonl"
@@ -122,7 +126,7 @@ class Episode:
             raise RuntimeError('Audit session or step mismatch')
         self.audit_count += 1
         self.audit_session = event['session_id']
-        return {'response': feedback, 'audit': event}
+        return event
 
     def snapshot(self):
         return json.loads(docker("exec", self.broker, "python", "-m", "lab.oracle"))

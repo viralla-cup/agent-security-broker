@@ -9,6 +9,26 @@ import sys
 MAX_MESSAGE = 400_000
 
 
+def exchange(line):
+    """Transport one JSON line; shared by replay and the restricted agent loop."""
+    if len(line) > MAX_MESSAGE:
+        raise ValueError("Message too large")
+    with socket.socket(socket.AF_UNIX, socket.SOCK_STREAM) as conn:
+        conn.settimeout(10)
+        conn.connect("/channel/broker.sock")
+        with conn.makefile("rwb") as stream:
+            stream.write(line)
+            stream.flush()
+            reply = stream.readline(MAX_MESSAGE + 1)
+            if not reply or len(reply) > MAX_MESSAGE or not reply.endswith(b"\n"):
+                raise RuntimeError("Invalid gate response")
+            return reply
+
+
+def send_action(action):
+    return json.loads(exchange(json.dumps(action).encode("utf-8") + b"\n"))
+
+
 def isolation_report():
     status = Path("/proc/self/status").read_text()
     values = dict(line.split(":", 1) for line in status.splitlines() if ":" in line)
@@ -39,19 +59,8 @@ def main():
         return
     # One connection per proposal allows model inference between bounded requests.
     for line in sys.stdin.buffer:
-        if len(line) > MAX_MESSAGE:
-            raise ValueError("Message too large")
-        with socket.socket(socket.AF_UNIX, socket.SOCK_STREAM) as conn:
-            conn.settimeout(10)
-            conn.connect("/channel/broker.sock")
-            with conn.makefile("rwb") as stream:
-                stream.write(line)
-                stream.flush()
-                reply = stream.readline(MAX_MESSAGE + 1)
-                if not reply or len(reply) > MAX_MESSAGE:
-                    raise RuntimeError("Invalid gate response")
-                sys.stdout.buffer.write(reply)
-                sys.stdout.buffer.flush()
+        sys.stdout.buffer.write(exchange(line))
+        sys.stdout.buffer.flush()
 
 
 if __name__ == "__main__":

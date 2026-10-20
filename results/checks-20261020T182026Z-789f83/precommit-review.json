@@ -1,0 +1,130 @@
+{
+  "kind": "experimental_agent_loop_precommit_review",
+  "base_commit": "290aff3549b1422ab3b7719105f28259d91d8f45",
+  "overall": "PASS_WITH_WARNINGS",
+  "blocking_findings": [],
+  "git": {
+    "staged_files": 0,
+    "tracked_and_new_file_whitespace_checks": "PASS",
+    "unexpected_files_found": false
+  },
+  "minimal_correction": {
+    "file": "src/lab/pilot_evidence.py",
+    "change": "Remove trailing blank lines at EOF; executable AST unchanged."
+  },
+  "secrets": {
+    "status": "PASS",
+    "files_and_archive_members_scanned": 463,
+    "archives": [
+      {
+        "path": "results/checks-20261020T180234Z-47af60/source_snapshot.zip",
+        "members": 38,
+        "checksums_match_metadata": true
+      },
+      {
+        "path": "results/checks-20261020T182026Z-789f83/source_snapshot.zip",
+        "members": 38,
+        "checksums_match_metadata": true
+      },
+      {
+        "path": "results/checks-20261020T053816Z-edbdba/source_snapshot.zip",
+        "members": 26,
+        "checksums_match_metadata": true
+      },
+      {
+        "path": "results/dev-20261019T104349Z-7e16ab/source_snapshot.zip",
+        "members": 19,
+        "checksums_match_metadata": true
+      },
+      {
+        "path": "results/dev-20261019T112424Z-99a1f4/source_snapshot.zip",
+        "members": 26,
+        "checksums_match_metadata": true
+      }
+    ],
+    "findings": [],
+    "dot_env_present": false,
+    "scope": "Git candidate files, ZIP member content/names, and ignored raw replay/pilot logs; heuristic credential formats plus manual review."
+  },
+  "security_boundary": {
+    "status": "PASS",
+    "tools": [
+      "read_text",
+      "write_new"
+    ],
+    "worker_uid": 10002,
+    "worker_lab_mount": false,
+    "worker_docker_socket": false,
+    "worker_external_network": false,
+    "worker_credential_environment": false,
+    "model_shell_or_eval_tool": false,
+    "model_selected_host_commands": false,
+    "policy_and_core_unchanged": true,
+    "trusted_broker_mediates_tool_effects": true,
+    "runtime_decisions": [
+      "ALLOW",
+      "DENY"
+    ],
+    "runtime_ASK": false
+  },
+  "limits": {
+    "status": "PASS_WITH_WARNINGS",
+    "max_steps": 6,
+    "max_denials": 3,
+    "max_model_calls": 8,
+    "combined_retries": 1,
+    "proposal_bytes": 8192,
+    "history_bytes": 32768,
+    "provider_response_bytes": 262144,
+    "output_tokens_per_call": 2048,
+    "API_socket_timeout_seconds": 20,
+    "loop_deadline_seconds": 180,
+    "host_frame_wait_deadline_seconds": 210,
+    "automatic_HTTP_retry": false,
+    "uncertain_tool_retry": false
+  },
+  "research_integrity": {
+    "status": "PASS",
+    "preexisting_evidence_files_unchanged": 198,
+    "replay_pairs_unchanged": 15,
+    "pilot_pairs_unchanged": 6,
+    "B0_prohibited_write_observed": true,
+    "B2_B2a_denial_before_dispatch": true,
+    "B2a_feedback_generic": true,
+    "paired_initial_state_and_containment_equal": true,
+    "actual_llm_episodes": 0
+  },
+  "verification": {
+    "tests_passed": 153,
+    "test_seconds": 1.64,
+    "test_exit_code": 0,
+    "test_run": "results/checks-20261020T182026Z-789f83",
+    "pilot_run": "results/pilot-20261020T182026Z-60aae8",
+    "pilot_episodes_passed": 6,
+    "replay_run": "results/dev-20261020T181744Z-37eb8d",
+    "replay_passed": 15,
+    "audit_viewer_exit_code": 0,
+    "paid_api_guard_exit_code": 2,
+    "final_test_and_pilot_source_hashes_match": true,
+    "final_test_and_pilot_image_id_match": true,
+    "remaining_experiment_containers": 0,
+    "remaining_experiment_volumes": 0
+  },
+  "warnings": [
+    {
+      "code": "LIVE_API_UNVERIFIED",
+      "blocking": false,
+      "detail": "HTTP mocks and fake episodes only; live API compatibility and autonomous LLM recovery remain unverified."
+    },
+    {
+      "code": "COOPERATIVE_WALL_CLOCK_DEADLINE",
+      "blocking": false,
+      "detail": "Socket timeout bounds idle I/O, not total response duration. The host deadline is checked between frames; an in-flight synchronous HTTP read is not forcibly interrupted at 180/210 seconds. A model response received after the loop deadline cannot dispatch a new tool. Calls/output remain bounded; no hard dollar cap."
+    }
+  ],
+  "paid_API_calls_made": 0,
+  "commit_performed": false,
+  "push_performed": false,
+  "recommendation": "Ready to commit the offline experimental MVP with the documented limitations.",
+  "recommended_commit_message": "feat: add experimental agent loop and OpenAI backend"
+}
