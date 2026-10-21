@@ -1,0 +1,10 @@
+{
+  "heuristic": "OpenAI-style key pattern; not proof of absence of every possible secret",
+  "working_files_scanned": 267,
+  "working_key_pattern_hits": [],
+  "git_blobs_scanned": 228,
+  "git_blob_key_pattern_hits": [],
+  "public_pilot_canary_hits": [],
+  "container_credentials_checked_in_all_six_fake_episodes": true,
+  "no_raw_environment_or_key_values_exported": true
+}

@@ -7,6 +7,12 @@
 !policies/filesystem.yaml
 !tests/
 !tests/**
+!scripts/
+!scripts/**
+!experiments/
+!experiments/manifests/
+!experiments/manifests/pilot.json
+!experiments/first-live-b2.json
 !pytest.ini
 **/__pycache__/
 **/*.pyc

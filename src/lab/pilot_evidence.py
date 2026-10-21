@@ -19,6 +19,7 @@ def export_episode(task, condition, backend, limits, episode, loop, exchanges, c
     infrastructure_ok = healthy and loop["stop_reason"] not in {
         "INFRASTRUCTURE_ERROR", "TRANSPORT_ERROR", "BACKEND_ERROR", "BACKEND_TIMEOUT",
         "BACKEND_HTTP_ERROR", "BACKEND_RESPONSE_LIMIT",
+        "API_USAGE_ERROR", "CREDENTIAL_LEAK_BLOCKED", "TIME_LIMIT",
     }
     observed = evaluate_pilot(task, episode.before, after, exchanges, canary,
                               model_proposals=[c.get("proposal") for c in calls], infrastructure_ok=infrastructure_ok)
@@ -37,7 +38,8 @@ def export_episode(task, condition, backend, limits, episode, loop, exchanges, c
                         "retryable": e["response"]["retryable"]} for e in exchanges],
         "actual_llm_episodes": int(backend.name != "deterministic-fake"
                                    and any(c["metadata"].get("response_received") for c in calls)),
-        "real_api_attempts": len(calls) if backend.name != "deterministic-fake" else 0,
+        "real_api_attempts": sum(c["metadata"].get("request_sent", True) for c in calls)
+        if backend.name != "deterministic-fake" else 0,
         "evidence_kind": "fake_backend_engineering" if backend.name == "deterministic-fake" else "real_model_pilot",
     }
     raw = {"task": task, "loop": loop, "exchanges": exchanges, "model_calls": calls,

@@ -1,0 +1,75 @@
+{
+  "verified_at_utc": "2026-10-21T17:50:08.768760+00:00",
+  "docker_engine": "29.8.1",
+  "image_tag": "agent-security-broker:mvp",
+  "image_id": "sha256:cca4a51580f760f37258a4b50d504007dab736257e93e40f8df936be2716f7a2",
+  "image_created_utc": "2026-10-21T17:40:08.657287004Z",
+  "all_three_final_runs_use_current_image": true,
+  "current_source_matches_all_three_runs": true,
+  "archived_source_verified": true,
+  "source_manifest_files": 40,
+  "fresh_image_smoke_exit_code": 0,
+  "image_file_hashes_verified": 37,
+  "fresh_client_probe": {
+    "uid": 10002,
+    "lab_present": false,
+    "docker_socket_present": false,
+    "audit_log_present": false,
+    "policy_writable": false,
+    "effective_capabilities": "0000000000000000",
+    "no_new_privileges": "1",
+    "seccomp": "2"
+  },
+  "python_assertions_enabled": true,
+  "tests": {
+    "passed": 199,
+    "exit_code": 0,
+    "stderr_empty": true
+  },
+  "run_verification": {
+    "fake": {
+      "episodes": 6,
+      "audit_events": 14,
+      "unique_new_sessions": 6,
+      "unique_new_event_ids": 14,
+      "no_overlap_with_earlier_runs": true,
+      "first_event_utc": "2026-10-21T17:40:27.001431+00:00",
+      "last_event_utc": "2026-10-21T17:41:22.585665+00:00",
+      "first_event_local": "2026-10-21T22:40:27.001431+05:00",
+      "last_event_local": "2026-10-21T22:41:22.585665+05:00",
+      "all_saved_isolation_checks_pass": true,
+      "failure_file_present": false
+    },
+    "replay": {
+      "episodes": 15,
+      "audit_events": 18,
+      "unique_new_sessions": 15,
+      "unique_new_event_ids": 18,
+      "no_overlap_with_earlier_runs": true,
+      "first_event_utc": "2026-10-21T17:40:27.923864+00:00",
+      "last_event_utc": "2026-10-21T17:42:36.818062+00:00",
+      "first_event_local": "2026-10-21T22:40:27.923864+05:00",
+      "last_event_local": "2026-10-21T22:42:36.818062+05:00",
+      "all_saved_isolation_checks_pass": true,
+      "failure_file_present": false
+    }
+  },
+  "outcomes_independently_recomputed": {
+    "fake": 6,
+    "replay": 15
+  },
+  "original_files_unchanged": 54,
+  "remaining_containers": [],
+  "remaining_volumes": [],
+  "earlier_connection_error": {
+    "message": "failed to connect to the docker API at npipe:////./pipe/dockerDesktopLinuxEngine: The system cannot find the file specified.",
+    "source": "Prior turn diagnostic docker version call, before successful builds and runs",
+    "effect": "Initial engine availability probe failed; no success inferred from its surrounding PowerShell exit status. Final executions occurred afterward on available Linux engine."
+  },
+  "reruns": "No experiment or suite rerun needed. Only one fresh offline read-only image/source/isolation probe was run.",
+  "implementation_modified": false,
+  "paid_api_calls": 0,
+  "commit_or_push": false,
+  "ready_for_secure_api_configuration": true,
+  "live_api_approval": "Still required separately; account access and actual API behavior unverified."
+}

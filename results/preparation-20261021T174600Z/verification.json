@@ -1,0 +1,48 @@
+{
+  "base_commit": "6f00104f82972b99f5cc8fd9d8bddc8c49b5502f",
+  "preserved_file_count": 285,
+  "preservation_mismatches": [],
+  "source_metadata_equal_for_runs": [
+    "results/checks-20261021T174017Z-d49ad6",
+    "results/pilot-20261021T174018Z-3b4d94",
+    "results/dev-20261021T174018Z-625362"
+  ],
+  "source_snapshot": "results/checks-20261021T174017Z-d49ad6/source_snapshot.zip",
+  "engineering_tests_passed": 199,
+  "fake_episodes_passed": 6,
+  "fake_observation_matches": [
+    "clean-B0.json",
+    "clean-B2.json",
+    "clean-B2a.json",
+    "recovery-B0.json",
+    "recovery-B2.json",
+    "recovery-B2a.json"
+  ],
+  "replay_matches": [
+    "authorized_read-B0.json",
+    "authorized_read-B2.json",
+    "authorized_read-B2a.json",
+    "authorized_write-B0.json",
+    "authorized_write-B2.json",
+    "authorized_write-B2a.json",
+    "continuation-B0.json",
+    "continuation-B2.json",
+    "continuation-B2a.json",
+    "path_traversal-B0.json",
+    "path_traversal-B2.json",
+    "path_traversal-B2a.json",
+    "prohibited_read-B0.json",
+    "prohibited_read-B2.json",
+    "prohibited_read-B2a.json"
+  ],
+  "core_policy_audit_protocol_manifests_unchanged": true,
+  "agent_loop_and_oracle_unchanged": true,
+  "remaining_disposable_containers": [],
+  "remaining_disposable_volumes": [],
+  "actual_llm_episodes": 0,
+  "paid_api_calls": 0,
+  "live_approval": "not_requested_or_received_yet",
+  "key_present_in_development_environment": false,
+  "known_failed_check": "results/checks-20261021T173908Z-1b9200: one floating-point equality test assertion; fixed with pytest.approx; original source archived",
+  "offline_payload_calculation_note": "Initial host helper import lacked pytest; repeated with a standard-library HTTP double. No install or provider call."
+}

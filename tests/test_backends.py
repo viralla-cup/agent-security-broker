@@ -32,7 +32,7 @@ def tool_response(arguments='{"path":"/lab/project/input.txt"}', name="read_text
 
 
 def final_response(text='{"stop":"complete"}'):
-    return {"status": "completed", "output": [{"type": "message", "content": [{"type": "output_text", "text": text}]}]}
+    return {**tool_response(), "output": [{"type": "message", "content": [{"type": "output_text", "text": text}]}]}
 
 
 def test_responses_contract_and_feedback_roundtrip_without_network():
@@ -70,6 +70,8 @@ def test_responses_contract_and_feedback_roundtrip_without_network():
     (TimeoutError(KEY), "BACKEND_TIMEOUT"),
 ])
 def test_provider_failures_are_bounded_sanitized_and_not_retried(response, code):
+    if isinstance(response, dict):
+        response.setdefault("usage", tool_response()["usage"])
     double = HTTPDouble([response])
     backend = OpenAIBackend(MODEL, KEY, opener=double)
     with pytest.raises(BackendError) as error:

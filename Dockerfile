@@ -7,6 +7,8 @@ RUN pip install --no-cache-dir -r requirements.lock && mkdir /channel && chown 1
 COPY src/ src/
 COPY policies/ policies/
 COPY tests/ tests/
+COPY scripts/ scripts/
+COPY experiments/ experiments/
 COPY pytest.ini .
 RUN chmod -R a-w /app && chmod 755 /channel
 USER 10001:10001

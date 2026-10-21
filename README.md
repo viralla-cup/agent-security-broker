@@ -204,7 +204,7 @@ independent oracle, not the model's completion claim, determines the result.
 docker build --tag agent-security-broker:mvp .
 python scripts/run_checks.py
 python scripts/run_agent_pilot.py --backend fake --condition all --task all
-python scripts/run_agent_pilot.py --backend openai --plan
+python scripts/run_agent_pilot.py --first-live-pilot --plan
 ```
 
 Fake episodes are engineering checks, never LLM evidence. The real plan makes no
@@ -212,3 +212,9 @@ API calls. Read [the pilot guide](docs/agent-pilot.md) for the contract, limits,
 privacy boundary, exact credential setup, and separately approved first paid run.
 Public pilot traces omit model arguments/content and pseudonymize file names;
 complete synthetic exchanges remain under ignored `.local/pilot/`.
+
+The first real run is prepared as exactly one B2 controlled recovery opportunity.
+See [the first-live runbook](docs/first-live-pilot.md) for the selected model, current
+pricing, conservative API reservations, secure local key setup and approval gate.
+No real model request has been made; do not commit, push or run paid calls before
+the author's review and explicit approval.

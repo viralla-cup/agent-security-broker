@@ -1,0 +1,13 @@
+{
+  "kind": "hypothetical_four_call_offline_payloads_not_model_behavior",
+  "input_reservations": [
+    2937,
+    3249,
+    3608,
+    3928
+  ],
+  "total_input_reserved": 13722,
+  "output_reserved": 4096,
+  "estimated_usd": 0.00376325,
+  "network_requests": 0
+}

@@ -1,17 +1,71 @@
 # Project status
 
-Updated 20 October 2026, Asia/Qyzylorda. The local Section 17 engineering slice is
-implemented and passing. The experimental loop and first API adapter now have
-offline engineering coverage; real-model execution remains pending access and
-explicit paid-pilot approval. The article, full experiment, and supervisor approval are not
-complete.
+Updated 21 October 2026, Asia/Qyzylorda. The latest reviewed and pushed commit is
+`6f00104` (`feat: add experimental agent loop and OpenAI backend`), as confirmed by
+the author; local HEAD matches. The working tree was clean at session start. No
+remote fetch, commit, push or paid API call was performed in this preparation session.
+The article, full experiment and supervisor approval remain incomplete.
 
-## Experimental agent-loop milestone
+## First live-pilot preparation
+
+The existing implementation, README, pilot/status/decision/protocol documents and
+local extracted Handover v1.2 were inspected. No Security Core rebuilding occurred.
+Added only host API pre-request call/input/output reservations, remaining-deadline
+socket timeouts, late-response rejection, uncertain-failure reuse prevention,
+credential contamination checks, container environment checks, and one explicit
+B2 recovery pilot profile. Provider error bodies/headers remain unlogged. The
+Docker image includes the trusted runner and profile solely to test the CLI offline;
+there is still no Docker socket, network or general execution tool in the agent.
+
+The selected model is `gpt-6-luna`; the documented first-live command selects only
+the existing `recovery` task in B2. The constructed off-scope preference is labeled a
+controlled recovery opportunity. Recovery is never programmed: no denial means no
+recovery result. The oracle still verifies actual state and legitimate output.
+The original protocol, both original manifests, loop, oracle, policy, broker,
+executor and audit implementation remain unchanged. See
+[the first-live runbook](first-live-pilot.md) for current API sources, cost calculation,
+limits, secure PowerShell setup, exact command and remaining limitations.
+
+Offline verification on the final executable sources:
+
+- **199 tests passed**, pytest 2.05 seconds, exit 0:
+  `results/checks-20261021T174017Z-d49ad6/`. This includes the 153 existing cases
+  and 46 additional deadline, usage-budget, failure, credential and CLI cases.
+- **6/6 fake engineering episodes passed**:
+  `results/pilot-20261021T174018Z-3b4d94/`. All six raw observations and tool
+  exchanges match the previous final fake run.
+- **15/15 original replay checks passed**:
+  `results/dev-20261021T174018Z-625362/`. Requests, responses, before/after
+  snapshots, containment and outcome checks match the previous replay exactly.
+- All **285** starting evidence/component hashes match. Exact executable-source
+  hashes agree across all three new runs; the source archive is retained in the
+  final checks directory. No disposable containers or volumes remain.
+  Verification and no-network plan: `results/preparation-20261021T174600Z/`.
+
+The first 194-test run had one failing floating-point equality assertion in a new
+timeout test (0.010000000000005116 versus 0.01). The assertion now uses a numeric
+tolerance; code behavior was correct. The failed stdout, metadata and exact source
+archive remain in `results/checks-20261021T173908Z-1b9200/`. An auxiliary host payload
+calculation initially imported pytest, which is intentionally installed only in the
+Linux test image; it was rerun using a standard-library double without installing
+anything or contacting a provider.
+
+**Actual LLM episodes: 0. Paid API calls: 0.** Presence-only inspection found no
+`OPENAI_API_KEY` in this development process. No credential stores were searched.
+Account access and live schema acceptance remain unknown. Pending author review:
+6 requests, 49,152 locally estimated input tokens, 6,144 reserved output tokens,
+120-second episode deadline, and a conservative estimated **$0.009216** upper cost
+at the checked Standard/cache-write prices, excluding taxes. This is not a guaranteed
+monetary cap; urllib does not provide hard total wall-clock cancellation. Stop here
+until explicit approval and secure host configuration.
+
+## Historical experimental agent-loop milestone
 
 Started from clean `290aff3`, which committed the v1.2 reconciliation and pre-commit
 review. The author confirms it was pushed; the local `origin/main` tracking ref
-also points to `290aff3` (no remote fetch was performed here). The following new
-milestone changes are local and uncommitted; no commit or push was performed.
+also points to `290aff3` (no remote fetch was performed here). The following record describes the 20 October pre-commit checkpoint. Those
+changes were subsequently reviewed and pushed as `6f00104`; the current session
+adds the preparation changes described above, still uncommitted.
 
 Implemented the provider-neutral proposal contract, bounded agent loop inside the
 existing offline client, trusted stdio inference relay, deterministic fake backend,
@@ -225,22 +279,19 @@ No unrestricted concurrent writer or Linux kernel/Docker escape is modeled.
 
 ## Next concrete task
 
-Select an exact OpenAI model and configure its key only in the trusted host
-environment. Review the no-network `--plan`, estimate cost from current model
-pricing, and obtain explicit author approval before one clean B2 API pilot:
-read the synthetic measurements and create `Mean: 4\n` in output. Then consider
-separately approved paired B0/B2/B2a recovery pilots using the existing task manifest.
-Do not substitute
-a scripted agent or this development chat for a model run.
+Review the uncommitted preparation diff and `docs/first-live-pilot.md`. After explicit
+author approval of the exact model, synthetic-data transfer and stated budget,
+configure the key securely in a local host terminal and run exactly:
 
-Required access is an exact model identifier and reachable local endpoint, or a
-provider endpoint/model with credentials supplied through the environment, an
-explicit synthetic-data transfer authorization, and a call/cost limit. Credentials
-must remain outside fixtures, prompts, logs, Git, and executor containers. The
-standard environment-key checks and default local Ollama probe were unavailable;
-their sanitized audit is `docs/environment-audit.json`. No model purchase, external
-upload, publication, or submission was performed.
+```powershell
+python scripts/run_agent_pilot.py --first-live-pilot --allow-paid-api
+```
 
-Before scaling: confirm the provisional title/scope with the supervisor, cross-review
-the manifest with the co-author, resolve missing handover notes when supplied, and
-freeze a practical main-evaluation protocol. The deadline remains 31 October 2026.
+No live call may precede approval. Inspect all resulting evidence, including
+failure/no-denial outcomes, before separately considering another run. Do not claim
+improvement over B2a or use this development conversation as a model episode.
+Do not commit or push before the author's review.
+
+Before scaling: confirm scope with the supervisor, cross-review independent labels
+with the co-author, reconcile missing notes when supplied, and freeze the main
+protocol. The author-supplied deadline remains 31 October 2026.

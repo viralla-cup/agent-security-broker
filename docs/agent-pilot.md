@@ -1,6 +1,7 @@
 # Restricted experimental agent pilot
 
-Implemented from commit `290aff3`, 20 October 2026. This is the first model-loop
+Initially implemented from commit `290aff3`, 20 October 2026. Live-pilot safety
+preparation continues from reviewed commit `6f00104`, 21 October 2026. This is the first model-loop
 milestone, not a Codex/Claude Code product adapter or a main evaluation. No real
 model episode has been run. API-contract tests use HTTP doubles; pilot engineering
 runs use an explicitly deterministic fake backend.
@@ -58,13 +59,14 @@ Each `next_action` request sends the complete bounded normalized history afresh.
 Earlier tool results are included as JSON data, rather than provider conversation
 IDs or persisted hidden state. This deliberately stateless design can support a
 future Ollama adapter, but is not evidence of tested portability. It does not carry
-provider reasoning items between requests. Generation parameters other than the
-recorded output limit use provider defaults; no deterministic seed is claimed.
+provider reasoning items between requests. The first-live profile additionally
+records reasoning effort, Standard service tier and cache settings; see the current preparation guide. No deterministic seed is claimed.
 
 API fields were checked against the official
 [function calling guide](https://developers.openai.com/api/docs/guides/function-calling)
-on 20 October 2026. Live authentication, model availability, schema compatibility
-for the selected model, and model behavior still require an approved real pilot.
+on 20 October 2026 and rechecked on 21 October 2026; see
+[the first-live guide](first-live-pilot.md) for the selected model and sources.
+Live authentication, model availability, schema compatibility for the selected model, and model behavior still require an approved real pilot.
 `store=false` is a request setting, not a claim about all provider retention.
 
 ## Limits and failure handling
@@ -79,9 +81,15 @@ for the selected model, and model behavior still require an approved real pilot.
 | Serialized normalized history | 32,768 bytes |
 | Provider output | 2,048 tokens per call |
 | Provider HTTP response | 262,144 bytes |
-| API socket timeout | 20 seconds |
+| API socket timeout | min(20 seconds, remaining host episode deadline) |
 | Loop deadline | 180 seconds, checked before inference and before dispatch |
 | Host relay deadline | 210 seconds while awaiting worker frames |
+
+The table above describes generic loop defaults. The dedicated first-live
+profile reduces model calls to 6, duration to 120 seconds, output to 1,024 tokens per
+call and retries to zero. The host adapter additionally enforces configurable
+pre-request input/output reservations; details and limitations are in the
+[first-live guide](first-live-pilot.md).
 
 The existing tool transport timeout and 300-second broker lifetime remain.
 In-flight I/O is bounded by its own timeout; deadlines are not transactional
@@ -142,43 +150,19 @@ commands do not contact a model provider.
 
 ## Prepare the first real pilot
 
-At implementation time, the trusted host environment contained neither
-`OPENAI_API_KEY` nor `OPENAI_MODEL`. No credential store was searched and no
-credential value was printed. No paid call or model-endpoint probe was made.
-
-Required: an exact model ID supporting Responses function tools, an API key with
-access and billing, permission to transmit synthetic task/tool data, and approval
-of the model and call/output-token budget. A ChatGPT/Codex development conversation
-is not backend access. Do not place a key in prompts, fixtures, Git, or a container.
-
-On the trusted host only, set the approved model and securely enter the key:
+The current author request selects exactly one **B2 controlled recovery opportunity**,
+using the existing `recovery` task. It supersedes the earlier clean-first proposal.
+Follow [the first-live preparation guide](first-live-pilot.md) for the exact model,
+verified pricing, reservations, secure key entry, execution command and limitations.
+The original protocol and task prompts remain unchanged.
 
 ```powershell
-$env:OPENAI_MODEL = '<exact-approved-model-id>'
-$pilotCredential = Read-Host 'OpenAI API key' -AsSecureString
-$env:OPENAI_API_KEY = [System.Net.NetworkCredential]::new('', $pilotCredential).Password
-Remove-Variable pilotCredential
-python scripts/run_agent_pilot.py --backend openai --condition B2 --task clean --plan
+python scripts/run_agent_pilot.py --first-live-pilot --plan
 ```
 
-Replace the placeholder before running. The plan makes no API calls and reports
-only the model label, configuration presence, and limits. One default episode has
-at most eight requests and 16,384 output tokens in aggregate. Each request includes
-at most 32,768 history bytes plus fixed instructions/schema; this is not an exact
-input-token estimate. Dollar cost must be estimated from the chosen model's current
-pricing before approval. The runner limits calls/output, not dollar billing.
-
-Only after explicit author approval:
-
-```powershell
-python scripts/run_agent_pilot.py --backend openai --condition B2 --task clean --allow-paid-api
-Remove-Item Env:OPENAI_API_KEY
-```
-
-There is no interactive approval inside an episode. The flag records pre-run
-authorization; it is not authority for the model to expand policy. Start with one
-clean B2 episode, inspect its independent outcome, then separately authorize paired
-recovery pilots. Do not run all paid conditions merely because the flag exists.
+This makes no API calls and does not require a key or Docker. Only after explicit
+approval, the live command is `python scripts/run_agent_pilot.py --first-live-pilot
+--allow-paid-api` (on one line). No live request was made during preparation.
 
 ## Evidence and limits
 

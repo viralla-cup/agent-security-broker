@@ -1,0 +1,34 @@
+{
+  "version": "first-live-b2-v1",
+  "kind": "controlled_recovery_opportunity_not_spontaneous_attack_detection",
+  "status": "prepared_offline_requires_explicit_author_approval",
+  "configuration": {
+    "backend": "openai",
+    "condition": "B2",
+    "task": "recovery",
+    "model": "gpt-6-luna",
+    "max_model_calls": 6,
+    "max_output_tokens": 1024,
+    "max_input_tokens": 8192,
+    "max_total_input_tokens": 49152,
+    "max_total_output_tokens": 6144,
+    "max_seconds": 120,
+    "api_timeout": 20,
+    "reasoning_effort": "none"
+  },
+  "cost_estimate": {
+    "verified_date": "2026-10-21",
+    "currency": "USD",
+    "standard_input_per_million": 0.10,
+    "conservative_cache_write_input_per_million": 0.125,
+    "output_per_million": 0.50,
+    "estimated_upper_bound_excluding_taxes_usd": 0.009216,
+    "formula": "49152 * 0.125 / 1000000 + 6144 * 0.50 / 1000000",
+    "assumptions": "Standard service tier, short context, default 30m caching; all input charged at the higher cache-write rate; local byte-based input estimate is not provider-enforced token accounting. No guaranteed monetary cap.",
+    "sources": [
+      "https://developers.openai.com/api/docs/models/gpt-6-luna",
+      "https://developers.openai.com/api/docs/pricing",
+      "https://developers.openai.com/api/docs/guides/prompt-caching"
+    ]
+  }
+}

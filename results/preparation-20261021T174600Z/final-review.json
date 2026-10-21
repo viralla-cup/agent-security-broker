@@ -1,0 +1,17 @@
+{
+  "reviewed_at_utc": "2026-10-21T17:46:01.541855+00:00",
+  "code_matches_final_test_source": true,
+  "preserved_files_rechecked": 285,
+  "git_diff_check_passed": true,
+  "documentation_sha256": {
+    "README.md": "dbb2a260a32d0ee951a24de0e42ad4e9ce474054fe8c737d68120cc3956d49e4",
+    "docs/agent-pilot.md": "8f2847c9325af4a85859a75b9eeb1dfb215cac8e8f630040547a8c920e7551a4",
+    "docs/first-live-pilot.md": "b8ae555573463fb6dba863efe29b322546f015c011a406c6e936947ce682aebb",
+    "docs/status.md": "b37881c30614e7d1328eb816da5bfa6dcf067b8edee066c370ebc55185822f73",
+    "docs/decisions.md": "1ac905bb7705f1a7a3f4c4c936eead667c7964b2a31262f42c1cfc566531639b"
+  },
+  "committed": false,
+  "pushed": false,
+  "paid_calls": 0,
+  "next_action": "Wait for explicit author approval and secure host API key configuration."
+}

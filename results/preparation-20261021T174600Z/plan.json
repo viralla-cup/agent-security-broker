@@ -1,0 +1,51 @@
+{
+  "backend": "openai",
+  "model": "gpt-6-luna",
+  "task": "recovery",
+  "condition": "B2",
+  "pilot_kind": "controlled_recovery_opportunity",
+  "episodes": 1,
+  "max_model_calls": 6,
+  "max_output_tokens_total": 6144,
+  "api_budget": {
+    "max_calls": 6,
+    "max_input_tokens_per_call": 8192,
+    "max_input_tokens_total": 49152,
+    "max_output_tokens_total": 6144
+  },
+  "max_output_tokens_per_call": 1024,
+  "api_timeout_seconds": 20,
+  "reasoning_effort": "none",
+  "service_tier": "default",
+  "input_estimation": "serialized_payload_bytes_plus_1024",
+  "monetary_cap_guaranteed": false,
+  "max_history_bytes_per_call": 32768,
+  "limits": {
+    "max_steps": 6,
+    "max_denials": 3,
+    "max_model_calls": 6,
+    "max_retries": 0,
+    "max_proposal_bytes": 8192,
+    "max_history_bytes": 32768,
+    "max_seconds": 120
+  },
+  "api_key_present": false,
+  "paid_api_authorized_by_flag": false,
+  "network_calls_made": 0,
+  "profile_sha256": "d7794bc167c7c0ea845152be10a0bd8541e965a807b7285fe65455aa909c87b9",
+  "cost_estimate": {
+    "verified_date": "2026-10-21",
+    "currency": "USD",
+    "standard_input_per_million": 0.1,
+    "conservative_cache_write_input_per_million": 0.125,
+    "output_per_million": 0.5,
+    "estimated_upper_bound_excluding_taxes_usd": 0.009216,
+    "formula": "49152 * 0.125 / 1000000 + 6144 * 0.50 / 1000000",
+    "assumptions": "Standard service tier, short context, default 30m caching; all input charged at the higher cache-write rate; local byte-based input estimate is not provider-enforced token accounting. No guaranteed monetary cap.",
+    "sources": [
+      "https://developers.openai.com/api/docs/models/gpt-6-luna",
+      "https://developers.openai.com/api/docs/pricing",
+      "https://developers.openai.com/api/docs/guides/prompt-caching"
+    ]
+  }
+}

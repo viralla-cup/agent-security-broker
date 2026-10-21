@@ -1,0 +1,20 @@
+........................................................................ [ 37%]
+........................................................................ [ 74%]
+...F..............................................                       [100%]
+=================================== FAILURES ===================================
+_________ test_http_timeout_is_capped_by_remaining_episode[0.01-0.01] __________
+
+remaining = 0.01, expected = 0.01
+
+    @pytest.mark.parametrize("remaining,expected", [(30, 20), (2.5, 2.5), (0.01, 0.01)])
+    def test_http_timeout_is_capped_by_remaining_episode(remaining, expected):
+        double = HTTPDouble([tool_response()])
+        backend = OpenAIBackend(MODEL, KEY, opener=double, deadline=100 + remaining, clock=lambda: 100)
+        backend.next_action([], TOOL_SCHEMA)
+>       assert double.requests[0][1] == expected
+E       assert 0.010000000000005116 == 0.01
+
+tests/test_live_preparation.py:23: AssertionError
+=========================== short test summary info ============================
+FAILED tests/test_live_preparation.py::test_http_timeout_is_capped_by_remaining_episode[0.01-0.01]
+1 failed, 193 passed in 1.99s
