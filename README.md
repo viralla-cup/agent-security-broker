@@ -4,9 +4,10 @@ An independent Security Core prototype with a Docker filesystem testbed. The cor
 authorizes two tools, `read_text` and `write_new`; the experimental agent is only a
 test harness. Variant C was author-confirmed on 20 October 2026: a trusted
 broker/executor owns authority, with product adapters planned after the article.
-The current evidence is deterministic replay and fake-backend engineering tests,
-not an LLM evaluation. A restricted experimental loop and OpenAI Responses adapter
-are implemented; live model access and approval of a paid pilot remain pending.
+Evidence includes deterministic replay, fake-backend engineering tests and one
+real OpenAI B2 pilot: safe completion, 3 API requests, 2 ALLOW, 0 DENY. Autonomous
+recovery was not observed. See [the reporting clarification](docs/pilot-reporting.md)
+and [the proposed next experiment](docs/controlled-recovery-proposal.md).
 
 Runtime authorization is strictly `ALLOW` or `DENY`, without `ASK` or manual
 override. Recovery must use existing grants or stop; it cannot expand permissions.
@@ -171,17 +172,17 @@ CLI projection for user-facing inspection. Historical result files are preserved
 
 ## Real model access
 
-No actual LLM run is claimed. Initial checks found no standard API credential
-environment variables and no model served at `127.0.0.1:11434`. This is not a search
-of credential stores. The development chat is not an experimental backend.
+The first real pilot is preserved in `results/pilot-20261021T182800Z-bb01b6/`,
+committed in `ec43834`. It used `gpt-6-luna`; the development chat is not the
+experimental backend. Historical initial checks described access before that run.
 
 For the first real pilot, configure an exact OpenAI model ID and API key through
 the trusted host environment, then approve synthetic-data transfer and a bounded
 call/cost budget. Do not paste keys into chat or Git. A future local-model pilot
 will require an Ollama adapter; that adapter is not implemented. The current implementation includes
 the bounded loop, an offline stdio inference relay, a deterministic fake backend,
-and an OpenAI Responses adapter tested with HTTP doubles. Live API compatibility
-has not yet been verified.
+and an OpenAI Responses adapter tested with HTTP doubles and that one live pilot.
+Further paid calls require separate explicit approval.
 Test-model backends drive the experiment. Future Codex, Claude Code, and local-agent
 product adapters are separate integrations and may use their own agent. No such
 adapter is implemented or verified. Each will need evidence that alternate execution

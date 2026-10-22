@@ -49,6 +49,7 @@ class Episode:
         self.condition, self.seed = condition, seed
         self.audit_count = 0
         self.audit_session = None
+        self.receipts = []
 
     def __enter__(self):
         try:
@@ -111,7 +112,22 @@ class Episode:
                           input=json.dumps(action) + "\n", timeout=20)
         feedback = json.loads(response)
         assert set(feedback) == {'status', 'code', 'result', 'retryable', 'safe_hint', 'request_id'}
-        return {'response': feedback, 'audit': self.collect_audit()}
+        event = self.collect_audit()
+        self.collect_receipt(event)
+        return {'response': feedback, 'audit': event}
+
+    def collect_receipt(self, event):
+        """Private service record; never read through the worker or model channel."""
+        rows = json.loads(docker("exec", self.broker, "python", "-m", "lab.pilot_observation"))
+        if (len(rows) != self.audit_count or rows[:-1] != self.receipts
+                or rows[-1]["event_id"] != event["event_id"]):
+            raise RuntimeError("Private operation association missing or out of sequence")
+        self.receipts = rows
+
+    def verify_observation_complete(self):
+        rows = json.loads(docker("exec", self.broker, "python", "-m", "lab.pilot_observation"))
+        if rows != self.receipts:
+            raise RuntimeError("Unobserved broker operation")
 
     def collect_audit(self):
         """Observe one completed call; never expose this method to the agent."""

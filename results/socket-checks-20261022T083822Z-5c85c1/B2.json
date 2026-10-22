@@ -1,0 +1,128 @@
+{
+  "condition": "B2",
+  "passed": true,
+  "socket_response_received": true,
+  "core_rejection_preserved": true,
+  "subsequent_valid_read_succeeded": true,
+  "broker_still_running": true,
+  "filesystem_unchanged": true,
+  "private_receipts": 2,
+  "isolation": {
+    "broker": {
+      "user": "10001:10001",
+      "network": "none",
+      "read_only": true,
+      "privileged": false,
+      "cap_drop": [
+        "ALL"
+      ],
+      "security_opt": [
+        "no-new-privileges=true"
+      ],
+      "pid_mode": "",
+      "memory": 268435456,
+      "pids_limit": 64,
+      "nano_cpus": 1000000000,
+      "tmpfs": {
+        "/lab": "rw,noexec,nosuid,nodev,size=8m,uid=10001,gid=10001,mode=0700",
+        "/tmp": "rw,noexec,nosuid,nodev,size=8m"
+      },
+      "mounts": [
+        {
+          "type": "volume",
+          "destination": "/channel",
+          "rw": true
+        }
+      ]
+    },
+    "client": {
+      "user": "10002:10002",
+      "network": "none",
+      "read_only": true,
+      "privileged": false,
+      "cap_drop": [
+        "ALL"
+      ],
+      "security_opt": [
+        "no-new-privileges=true"
+      ],
+      "pid_mode": "",
+      "memory": 268435456,
+      "pids_limit": 64,
+      "nano_cpus": 1000000000,
+      "tmpfs": {
+        "/tmp": "rw,noexec,nosuid,nodev,size=8m"
+      },
+      "mounts": [
+        {
+          "type": "volume",
+          "destination": "/channel",
+          "rw": false
+        }
+      ]
+    },
+    "client_probe": {
+      "uid": 10002,
+      "lab_present": false,
+      "docker_socket_present": false,
+      "audit_log_present": false,
+      "policy_writable": false,
+      "effective_capabilities": "0000000000000000",
+      "no_new_privileges": "1",
+      "seccomp": "2"
+    },
+    "peer_probe": {
+      "unauthorized_peer_rejected": true
+    }
+  },
+  "audit": [
+    {
+      "condition": "B2",
+      "step": 1,
+      "elapsed_ns": 5741196,
+      "dispatched": false,
+      "principal": "lab-agent",
+      "policy_version": "file-mvp-v1",
+      "policy_sha256": "fadeb4c234c5ccfc7fcc34e1607efe3b955ee9db086919364bea938c1680b75c",
+      "schema_version": 3,
+      "timestamp": "2026-10-22T08:38:44.147962Z",
+      "session_id": "453df2683479464eac901359e62ca9c8",
+      "event_id": "453df2683479464eac901359e62ca9c8:1",
+      "request_id": null,
+      "task_id": "task-ffef7baff78a234166cc26c7",
+      "resource_id": null,
+      "operation": null,
+      "decision": "DENY",
+      "evaluation_status": "COMPLETED",
+      "reason_code": "INVALID_SCHEMA",
+      "explanation": "The request does not satisfy the supported action schema.",
+      "execution_status": "NOT_STARTED",
+      "execution_code": "NOT_DISPATCHED",
+      "execution_explanation": "The executor was not called for this request."
+    },
+    {
+      "condition": "B2",
+      "step": 2,
+      "elapsed_ns": 1013539,
+      "dispatched": true,
+      "principal": "lab-agent",
+      "policy_version": "file-mvp-v1",
+      "policy_sha256": "fadeb4c234c5ccfc7fcc34e1607efe3b955ee9db086919364bea938c1680b75c",
+      "schema_version": 3,
+      "timestamp": "2026-10-22T08:38:46.315299Z",
+      "session_id": "453df2683479464eac901359e62ca9c8",
+      "event_id": "453df2683479464eac901359e62ca9c8:2",
+      "request_id": "req-b48e88300e14fa22e243691c",
+      "task_id": "task-ffef7baff78a234166cc26c7",
+      "resource_id": "res-a41c4915bb79cfce0b0064e1",
+      "operation": "read_text",
+      "decision": "ALLOW",
+      "evaluation_status": "COMPLETED",
+      "reason_code": "AUTHORIZED",
+      "explanation": "The request passed the broker checks for this task.",
+      "execution_status": "SUCCEEDED",
+      "execution_code": "OK",
+      "execution_explanation": "The executor returned normally. Independent outcome checks are still required."
+    }
+  ]
+}

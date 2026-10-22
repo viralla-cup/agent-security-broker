@@ -1,0 +1,5 @@
+Auxiliary behavior comparison exited 1 at public_a == public_b for clean-B0.json.
+The public exports differ in per-run pseudonyms, event IDs, timestamps and elapsed time.
+Raw requests, responses, filesystem snapshots, observed outcomes and backend proposals had matched before this assertion.
+The comparison is corrected to compare behavior and isolation while explicitly excluding only per-run audit identifiers/timing and comparing raw unpseudonymized snapshots.
+No implementation or test change was needed. The original helper is retained privately as verify-initial.py.

@@ -1,6 +1,142 @@
 # Project status
 
-Updated 21 October 2026, Asia/Qyzylorda. The latest reviewed and pushed commit is
+Updated 22 October 2026, Asia/Qyzylorda. The two final-review blockers are fixed
+on the existing uncommitted working tree above `ec43834`. The receipt path no
+longer reparses Core-rejected inputs without a parsed operation and catches
+`RecursionError`. The pilot oracle now independently requires complete, unique,
+ordered correspondence between private receipts and exchanges. See
+[root causes, changes and limits](final-review-blockers.md).
+
+Verification on the final executable sources:
+
+- **91 focused tests passed**, including **21 new cases** for the two blockers.
+- **282 full engineering tests passed**, exit 0:
+  `results/checks-20261022T083822Z-e502a0/`.
+- **6/6 fresh deterministic fake episodes passed**, exit 0:
+  `results/pilot-20261022T083822Z-6b6811/`.
+- **15/15 fresh replay checks passed**, exit 0:
+  `results/dev-20261022T083822Z-b12939/`.
+- **3/3 production socket checks passed** in B0/B2/B2a, exit 0:
+  `results/socket-checks-20261022T083822Z-5c85c1/`. Each sent 10,000-level JSON,
+  received the original Core rejection and completed a subsequent valid read
+  through the same running broker. Filesystem state was unchanged.
+- All **426** prior evidence files and **23** Core/backend/protocol/worker
+  component hashes match the starting baseline. The four first-live artifacts
+  remain byte-identical to the session start and match their committed content
+  under the existing Git newline conversion. No earlier result was overwritten.
+- Final source hashes match across all checks and the tested archive; **42**
+  copied source files were independently verified inside the rebuilt image.
+- All six fake and fifteen replay observations match prior requests, responses,
+  filesystem snapshots, audit decisions, outcomes and containment. The new runs
+  have **38 distinct fresh events**: 14 fake, 18 replay and 6 socket-regression
+  events. Docker engine 29.8.1 was accessible; no disposable containers or volumes
+  remain after teardown.
+
+Focused outputs, source archive and preservation/behavior verification:
+`results/final-blockers-20261022T083649Z-6295e7/`. Only the receipt observer and
+pilot oracle production code changed in this step. Authorization, executor,
+policy, B0/B2/B2a behavior, origin attribution and the original protocol remain
+unchanged. Existing uncommitted reporting and review corrections are preserved.
+An initial auxiliary comparison incorrectly required equality of per-run public
+pseudonyms and event/timing fields. Its failed assertion is retained separately;
+the corrected raw-behavior comparison passes. No engineering test run failed.
+
+Both blockers are ready for final independent verification before any commit.
+No paid API call, commit or push occurred. The full controlled-denial runner
+remains unimplemented; no autonomous recovery or B2 benefit is claimed.
+
+## Historical four-findings correction (22 October 2026)
+
+Updated 22 October 2026, Asia/Qyzylorda. This earlier request addressed four
+independent review findings on the existing uncommitted reporting revision.
+The complete controlled-denial runner is still unimplemented. The proposal now
+requires exact setup/receipt/reason association, verifiable action origins,
+bounded read-effect observation and explicit valid-budget/invalid-infrastructure
+classification. See [the corrections and limitations](review-findings.md).
+
+New observation v2 prevents harness writes from counting as model recovery, checks
+the actual task-delivering write after DENY and detects protected returned reads
+without a canary. It records only private fingerprints at the broker service
+boundary; policy, authorization, executor, model backend and agent loop are unchanged.
+The prior reporting improvements remain in place. No historical artifacts are
+regenerated, and no paid API call, commit or push is authorized or performed.
+
+Verification on the final executable sources:
+
+- **147 focused tests passed**, exit 0, covering the four findings plus existing
+  report, loop and API-preparation regressions.
+- **261 full engineering tests passed** (213 existing plus 48 new), exit 0:
+  `results/checks-20261021T192006Z-a360c6/`.
+- **6/6 fresh deterministic fake episodes passed**, with 14 fresh audit events:
+  `results/pilot-20261021T192020Z-563a87/`.
+- **15/15 fresh replay checks passed**, with 18 fresh audit events:
+  `results/dev-20261021T192020Z-4a5a8f/`.
+- Requests, broker responses, snapshots, containment and existing outcome labels
+  match the preceding fake/replay runs. All **365** prior evidence files and
+  **23** Core/backend/protocol/worker component hashes match the session baseline.
+  All four first-live artifacts remain byte-identical to the session start and
+  match their committed content under the existing Git newline conversion.
+- Docker engine 29.8.1 was accessible. Final focused/full/fake/replay runs share
+  exact source hashes and one rebuilt image; 40 copied source files were checked
+  independently inside it. No disposable containers or volumes remain.
+
+Focused outputs, tested source archive and verification:
+`results/review-findings-20261021T191846Z-b540a6/`. An initial focused pass of 143
+tests is retained there; four malformed-input/storage regressions were then added
+and the final 147-test and full 261-test runs passed. No failed test run is hidden.
+All model interfaces were doubles; no provider was contacted.
+
+The proposal is ready for a separate reviewed implementation step. Remaining work
+is bounded seeded-history/counter/deadline initialization and pair orchestration
+using the tested gate and classification. It is not ready for live execution;
+model/pricing review and explicit paid approval remain separate. Read-observation
+and ambiguous BACKEND_TIMEOUT limits are documented in `docs/review-findings.md`.
+
+## Historical reporting revision (21 October 2026)
+
+Updated 21 October 2026, Asia/Qyzylorda. Current development starts from main
+`ec438343c9fc8b01f471ef45ab90dfe57ecf75a6`. The first real B2 pilot used `gpt-6-luna`:
+**1 real episode, 3 API requests, 2 ALLOW, 0 DENY, safe task completion**. Recovery
+was not eligible or observed. Its four committed artifacts remain unchanged.
+See [the historical clarification and revised report definitions](pilot-reporting.md).
+
+The reporting revision separates pre-run plans from recorded API attempts and
+safe completion from denial/continuation outcomes. Fake-only claims no longer
+appear in real-backend summaries. No Core, policy, oracle, loop, backend or original
+protocol/manifest changes are included. The next [paired controlled-denial pilot](controlled-recovery-proposal.md)
+is proposed only; its seeded-history mechanism is not implemented or approved for
+paid execution. No paid calls, commit or push are performed in this revision.
+
+Offline verification of this reporting revision:
+
+- **68 focused tests passed**, including fake/real summaries, no-DENY completion,
+  denied stop, incorrect post-denial output, correct continuation, evaluation
+  failure, write-before-denial ordering and sent-versus-unsent API attempts.
+- **213 full engineering tests passed** (199 existing plus 14 new), exit 0:
+  `results/checks-20261021T185244Z-99e0b3/`.
+- **6/6 fresh fake episodes passed**, exit 0:
+  `results/pilot-20261021T185244Z-123084/`. The six sessions produced 14 new audit
+  events. Requests, broker responses, snapshots, existing oracle outcomes and
+  isolation match the previous fake run. Five episodes safely complete; the B0
+  recovery fixture intentionally writes outside the internal grant and remains
+  an expected engineering result, not safe completion.
+- All **363** baseline evidence/component byte hashes match, including the four
+  first-live files. Git's LF blobs and the existing CRLF checkout normalize to
+  identical content; no evidence file or line ending was rewritten.
+- Docker engine 29.8.1 was accessible; all runs used the same rebuilt image and
+  exact source hashes, with 38 copied source files independently checked inside
+  the image. No disposable containers or volumes remain. The unchanged original
+  replay was not rerun: full Core tests and paired fake episodes cover this report
+  change; its prior evidence is preserved.
+
+Focused output, tested source archive and preservation/behavior verification:
+`results/reporting-review-20261021T185237Z-b9e92e/`. All tests used network-disabled
+containers and API doubles; this revision made zero paid calls. The seeded-denial
+proposal still requires reviewed implementation and separate live approval.
+
+## Historical preparation record (before the first live run)
+
+At that preparation stage, the latest reviewed and pushed commit was
 `6f00104` (`feat: add experimental agent loop and OpenAI backend`), as confirmed by
 the author; local HEAD matches. The working tree was clean at session start. No
 remote fetch, commit, push or paid API call was performed in this preparation session.

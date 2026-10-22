@@ -21,7 +21,8 @@ from backends.fake import FakeBackend
 from backends.openai import APIBudget, OpenAIBackend
 from broker.schema import parse_json
 from lab.agent_worker import MAX_FRAME
-from lab.pilot_evidence import export_episode
+from lab.pilot_evidence import export_episode, summarize_episodes
+from lab.pilot_observation import associated, history_event_ids, proposal_of
 
 
 def check_credential_isolation(episode):
@@ -46,6 +47,7 @@ def run_worker(episode, backend, task, limits):
         backend.deadline = deadline - 30
     result = {"stop_reason": "INFRASTRUCTURE_ERROR"}
     healthy = False
+    pending_call = None
 
     def read_frames():
         while True:
@@ -79,13 +81,16 @@ def run_worker(episode, backend, task, limits):
                     raise ValueError("Relay call limit or schema mismatch")
                 if encoded_size(frame["history"]) > limits.max_history_bytes:
                     raise ValueError("Relay history limit")
-                call = {"number": len(calls) + 1}
+                call = {"number": len(calls) + 1,
+                        "observed_tool_event_ids": history_event_ids(frame["history"], exchanges)}
+                pending_call = None
                 calls.append(call)
                 try:
                     proposal = backend.next_action(frame["history"], TOOL_SCHEMA)
                     if encoded_size(proposal) > limits.max_proposal_bytes:
                         raise BackendError("BACKEND_RESPONSE_LIMIT")
                     call.update(outcome="PROPOSAL", proposal=proposal)
+                    pending_call = call
                     send({"proposal": proposal})
                 except BackendError as exc:
                     call.update(outcome=exc.code)
@@ -96,11 +101,19 @@ def run_worker(episode, backend, task, limits):
                 if len(exchanges) >= limits.max_steps:
                     raise ValueError("Relay step limit")
                 event = episode.collect_audit()
-                exchanges.append({"request": frame["request"], "response": frame["response"], "audit": event})
+                episode.collect_receipt(event)
+                exchange = {"request": frame["request"], "response": frame["response"], "audit": event}
+                if (pending_call is None or pending_call["proposal"] != proposal_of(frame["request"])
+                        or not associated(exchange, episode.receipts)):
+                    raise ValueError("Tool execution does not match the pending backend proposal")
+                pending_call["executed_event_id"] = event["event_id"]
+                pending_call = None
+                exchanges.append(exchange)
             elif frame["kind"] == "done":
                 result = frame["outcome"]
                 process.stdin.close()
                 healthy = process.wait(timeout=10) == 0
+                episode.verify_observation_complete()
                 break
             else:
                 raise ValueError("Unexpected relay frame")
@@ -186,7 +199,8 @@ def main(argv=None):
             "monetary_cap_guaranteed": False,
             "max_history_bytes_per_call": limits.max_history_bytes, "limits": asdict(limits),
             "api_key_present": bool(os.environ.get("OPENAI_API_KEY")),
-            "paid_api_authorized_by_flag": args.allow_paid_api, "network_calls_made": 0}
+            "paid_api_authorized_by_flag": args.allow_paid_api,
+            "report_phase": "pre_run", "pre_run_network_calls_made": 0}
     if args.first_live_pilot:
         plan["profile_sha256"] = hashlib.sha256(profile_path.read_bytes()).hexdigest()
         plan["cost_estimate"] = profile["cost_estimate"]
@@ -234,7 +248,11 @@ def main(argv=None):
                         for exchange in exchanges:
                             stream.write(json.dumps(exchange["audit"]) + "\n")
                     rows.append(public)
-                    print(f"{name}: stop={loop['stop_reason']}, completed={public['observed']['task_completed']}, safe={public['observed']['safe_task_completed']}")
+                    observed = public["observed"]
+                    print(f"{name}: stop={loop['stop_reason']}, safe={observed['safe_task_completed']}, "
+                          f"deny={observed['deny_event_observed']}, eligible={observed['recovery_eligible']}, "
+                          f"continued={observed['continued_after_denial']}, "
+                          f"safe_after_denial={observed['safe_completion_after_denial']}")
         # Fixed fake fixtures have specified engineering outcomes. Real outcomes are never tuned to match.
         engineering_pass = None
         if args.backend == "fake":
@@ -243,10 +261,9 @@ def main(argv=None):
                 and r["observed"]["prohibited_effect"] == (r["task"] == "recovery" and r["condition"] == "B0")
                 and (r["task"] != "recovery" or r["condition"] == "B0" or r["observed"]["safe_completion_after_denial"])
                 for r in rows)
-        summary = {"episodes": len(rows), "actual_llm_episodes": sum(r["actual_llm_episodes"] for r in rows),
-                   "fake_engineering_pass": engineering_pass,
-                   "paired_initial_states_and_containment_equal": True if len(conditions) > 1 else None,
-                   "claims": "No feedback-benefit or portability claim; fake continuation is scripted engineering evidence."}
+        summary = summarize_episodes(
+            rows, fake_engineering_pass=engineering_pass,
+            paired_initial_states_and_containment_equal=True if len(conditions) > 1 else None)
         write_json(out / "summary.json", summary)
         print("Evidence:", out)
         if engineering_pass is False or any(not r["observed"]["infrastructure_ok"] for r in rows):

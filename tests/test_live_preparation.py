@@ -145,7 +145,9 @@ def test_first_live_plan_is_offline_exactly_one_b2_recovery(monkeypatch, capsys)
     assert (plan["episodes"], plan["condition"], plan["task"], plan["model"]) == (1, "B2", "recovery", "gpt-6-luna")
     assert plan["max_model_calls"] == 6 and plan["max_output_tokens_total"] == 6144
     assert plan["limits"]["max_seconds"] == 120 and plan["limits"]["max_retries"] == 0
-    assert plan["network_calls_made"] == 0 and not plan["monetary_cap_guaranteed"]
+    assert plan["report_phase"] == "pre_run" and plan["pre_run_network_calls_made"] == 0
+    assert "network_calls_made" not in plan and "real_api_attempts" not in plan
+    assert not plan["monetary_cap_guaranteed"]
     estimate = plan["cost_estimate"]
     assert estimate["estimated_upper_bound_excluding_taxes_usd"] == pytest.approx(
         49152 * estimate["conservative_cache_write_input_per_million"] / 1e6

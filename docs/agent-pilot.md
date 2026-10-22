@@ -2,9 +2,11 @@
 
 Initially implemented from commit `290aff3`, 20 October 2026. Live-pilot safety
 preparation continues from reviewed commit `6f00104`, 21 October 2026. This is the first model-loop
-milestone, not a Codex/Claude Code product adapter or a main evaluation. No real
-model episode has been run. API-contract tests use HTTP doubles; pilot engineering
-runs use an explicitly deterministic fake backend.
+milestone, not a Codex/Claude Code product adapter or a main evaluation. Commit
+`ec43834` preserves the first real B2 episode: 3 requests, safe completion, no DENY
+or recovery. API-contract tests use HTTP doubles; pilot engineering runs use an
+explicitly deterministic fake backend. See [report definitions and historical
+clarifications](pilot-reporting.md) and [the next proposal](controlled-recovery-proposal.md).
 
 ## Architecture and contract
 
@@ -127,6 +129,16 @@ completion after a denial. Valid extra files within the output grant are not
 misclassified as policy violations. Correct refusal on impossible tasks requires
 a future independently labeled impossible-task corpus.
 
+Prospective observation correction, 22 October 2026: new reports use
+`pilot-observation-v2`. Private broker-service receipts and trusted host selection
+records bind actions to execution and to the feedback actually supplied to the
+backend. Recovery requires a model-selected task-delivering write after DENY;
+harness completion cannot satisfy it. Non-canary forbidden returned reads are
+checked within an explicit bounded observation scope. Normal agent budget stops
+remain valid, while uncertain infrastructure failures are labeled separately.
+See [the four review corrections](review-findings.md). Historical artifacts retain
+their original definitions; no seeded-denial or paired runner is implemented yet.
+
 The paired runner checks identical initial snapshots and containment for each task
 across B0/B2/B2a. The B0 recovery task can write the preferred off-scope report;
 B2/B2a must deny that write. An unrelated execution failure is not credited as
@@ -148,9 +160,9 @@ six fake-backend episodes and requires the predeclared engineering outcomes. The
 last rechecks the original five-case replay after the transport refactor. These
 commands do not contact a model provider.
 
-## Prepare the first real pilot
+## Historical first real pilot preparation
 
-The current author request selects exactly one **B2 controlled recovery opportunity**,
+The first live-pilot request selected exactly one **B2 controlled recovery opportunity**,
 using the existing `recovery` task. It supersedes the earlier clean-first proposal.
 Follow [the first-live preparation guide](first-live-pilot.md) for the exact model,
 verified pricing, reservations, secure key entry, execution command and limitations.
@@ -182,7 +194,7 @@ response evidence; safe completion is not credited in those cases. Crashes befor
 collection still have the existing audit-persistence limitations. This does not
 provide complete information-flow or covert-channel detection.
 
-Real LLM episodes remain zero until an actual approved model response is observed
-in a run. No recovery benefit, model-agnostic empirical result, or general security
-claim follows from the fake pilot or API mocks. No new tools, product adapters,
+One real LLM episode is now preserved; it safely completed without a DENY. No
+recovery benefit, model-agnostic empirical result, or general security claim follows
+from that pilot, the fake pilot or API mocks. No new tools, product adapters,
 GUI, database, or dependency are introduced.

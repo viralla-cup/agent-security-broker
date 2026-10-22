@@ -1,5 +1,9 @@
 # First controlled real-model pilot: preparation only
 
+Historical preparation record. The subsequent completed experiment is preserved
+in commit `ec43834`; see [the reporting clarification](pilot-reporting.md). The
+limits/prices below are dated preparation data, not approval for another paid run.
+
 Prepared 21 October 2026 from reviewed commit `6f00104`. No live request has been
 made. This document supersedes the earlier recommendation to start with a clean
 task, following the author's explicit request for one recovery-oriented B2 pilot.

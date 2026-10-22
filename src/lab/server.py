@@ -12,13 +12,26 @@ from broker.filesystem import FileExecutor
 from broker.policy import Policy
 from broker.schema import MAX_MESSAGE
 from .fixtures import prepare
+from .pilot_observation import RECEIPT_LOG, operation_receipt
 from security_audit.storage import AuditWriter
 
 
-def handle_request(broker, audit_writer, line):
+def handle_request(broker, audit_writer, line, receipt_writer=None):
     envelope = broker.handle(line)
     if not audit_writer.append(envelope['audit']):
         print('Audit persistence failed; execution outcome is unchanged.', file=sys.stderr, flush=True)
+    if receipt_writer is not None:
+        try:
+            # No parsed Action means the Core already rejected the input. Do not
+            # parse that untrusted (possibly deeply nested) JSON a second time.
+            request = None
+            if envelope['audit']['operation'] is not None:
+                request = json.loads(line, parse_constant=lambda _: None)
+            receipt = operation_receipt(request, envelope)
+        except (ValueError, UnicodeError, TypeError, RecursionError):
+            receipt = operation_receipt(None, envelope)
+        if not receipt_writer.append(receipt):
+            print('Private observation persistence failed; execution outcome is unchanged.', file=sys.stderr, flush=True)
     # Only tool feedback crosses the agent-facing socket, including in B2a.
     return envelope['response']
 
@@ -33,6 +46,7 @@ def main():
     executor = FileExecutor()
     broker = Broker(policy, executor, args.condition)
     audit_writer = AuditWriter()
+    receipt_writer = AuditWriter(RECEIPT_LOG)
     deadline = time.monotonic() + 300
     with socket.socket(socket.AF_UNIX, socket.SOCK_STREAM) as server:
         server.bind("/channel/broker.sock")
@@ -63,7 +77,7 @@ def main():
                                 break
                             if len(line) > MAX_MESSAGE:
                                 line = b"null"
-                            response = handle_request(broker, audit_writer, line)
+                            response = handle_request(broker, audit_writer, line, receipt_writer)
                             stream.write(json.dumps(response).encode() + b"\n")
                             stream.flush()
                             if broker.calls >= policy.max_tool_calls or broker.denials >= policy.max_denials:
@@ -71,6 +85,7 @@ def main():
         finally:
             executor.close()
             audit_writer.close()
+            receipt_writer.close()
 
 
 if __name__ == "__main__":

@@ -1,0 +1,9 @@
+{
+  "passed": 3,
+  "conditions": [
+    "B0",
+    "B2",
+    "B2a"
+  ],
+  "paid_api_calls": 0
+}
