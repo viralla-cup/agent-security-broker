@@ -1,0 +1,59 @@
+{
+  "report_phase": "pre_run",
+  "pre_run_network_calls_made": 0,
+  "pilot_kind": "controlled_denial_seeded_recovery",
+  "backend": "openai",
+  "conditions": [
+    "B2",
+    "B2a"
+  ],
+  "episodes": 2,
+  "model": "gpt-6-luna",
+  "proposed_real_model": "gpt-6-luna",
+  "reasoning_effort": "none",
+  "service_tier": "default",
+  "prompt_cache_options": {
+    "ttl": "30m"
+  },
+  "limits_per_episode": {
+    "max_steps": 6,
+    "max_denials": 3,
+    "max_model_calls": 6,
+    "max_retries": 0,
+    "max_proposal_bytes": 8192,
+    "max_history_bytes": 32768,
+    "max_seconds": 120
+  },
+  "setup_consumes": {
+    "steps": 1,
+    "denials": 1,
+    "model_calls": 0
+  },
+  "api_budget_per_episode": {
+    "max_calls": 6,
+    "max_input_tokens_per_call": 8192,
+    "max_input_tokens_total": 49152,
+    "max_output_tokens_total": 6144
+  },
+  "max_output_tokens_per_request": 1024,
+  "api_timeout_seconds": 20,
+  "max_api_requests": 12,
+  "max_input_tokens_reserved_pair": 98304,
+  "max_output_tokens_reserved_pair": 12288,
+  "deadline_origin": "setup_start_per_episode",
+  "max_episode_seconds_pair": 240,
+  "input_estimation": "serialized_payload_bytes_plus_1024",
+  "monetary_cap_guaranteed": false,
+  "cost_assumptions": {
+    "checked_date": "2026-10-22",
+    "currency": "USD",
+    "standard_input_per_million": 0.1,
+    "conservative_30m_cache_write_input_per_million": 0.125,
+    "output_per_million": 0.5,
+    "estimated_pair_ceiling_excluding_taxes": 0.018432,
+    "source": "https://developers.openai.com/api/docs/pricing"
+  },
+  "public_output": "results/controlled-pair-<unique-id>/{B2,B2a}/",
+  "private_output": ".local/controlled-pair/<unique-id>/{B2,B2a}/",
+  "paid_approval_required": true
+}
