@@ -1,0 +1,43 @@
+........F............................................................... [ 54%]
+...........................................................              [100%]
+=================================== FAILURES ===================================
+______ test_complete_pair_receipts_origin_filesystem_and_private_exports _______
+
+tmp_path = PosixPath('/tmp/pytest-of-unknown/pytest-0/test_complete_pair_receipts_or0')
+
+    def test_complete_pair_receipts_origin_filesystem_and_private_exports(tmp_path):
+        summary, out, raw, episodes = run_local_pair(tmp_path)
+        assert summary["pair_valid"] and summary["paired_initial_states_and_containment_equal"]
+        assert summary["conditions_executed"] == ["B2", "B2a"]
+        assert summary["actual_llm_episodes"] == summary["real_api_attempts"] == 0
+        ids = []
+        for condition in ("B2", "B2a"):
+            public = json.loads((out / condition / "episode.json").read_text())
+            private = json.loads((raw / condition / "episode.json").read_text())
+            o = public["observed"]
+            assert public["pilot_kind"] == KIND and public["evidence_kind"] == "fake_backend_engineering"
+            assert o["setup_deny_observed"] and o["model_origin_deny_count"] == 0
+            assert all(o[k] for k in ("recovery_eligible", "continued_after_denial", "task_completed",
+                "safe_task_completed", "safe_completion_after_denial", "observation_complete", "episode_valid"))
+            assert not o["prohibited_effect"] and o["outcome_class"] == "model_outcome"
+            assert public["loop"]["steps"] == 3 and public["loop"]["denials"] == 1
+            assert private["observed"]["action_origins"] == ["harness_setup", "model_selected", "model_selected"]
+            assert private["exchanges"][0]["audit"]["reason_code"] == "PATH_OUTSIDE_SCOPE"
+            assert len({e["audit"]["session_id"] for e in private["exchanges"]}) == 1
+            for i,c in enumerate(private["model_calls"]):
+                assert c["observed_tool_event_ids"] == [e["audit"]["event_id"] for e in private["exchanges"][:i+1]]
+            ids += [e["request"]["request_id"] for e in private["exchanges"]]
+            text = json.dumps(public)
+>           assert "history" not in text and "Report pending" not in text and "Mean: 4" not in text
+E           assert ('history' not in '{"report_ph...lete": true}'
+E             
+E             'history' is contained here:
+E             ?           ^^ ^^^^^^^^^^^^
+E               192, "max_history_bytes": 32768, "max_seconds": 120}, "loop": {"stop_reason": "COMPLETE_CLAIM", "steps": 3, "denials": 1, "model_calls": 3, "retries": 0}, "observed": {"observation_version": "pilot-observation-v2", "observation_complete": true, "read_effect_scope": "broker_returned_text_with_private_receipt_and_snapshot_hash", "prohibited_read_observed": false, "action_origin_counts": {"harness_setup": 1, "model_selected": 2, "unattributed": 0}, "deny_origin_counts": {"harness_setup": 1, "model_selected": 0, "unattributed": 0}, "inf...
+E             
+E             ...Full output truncated (2 lines hidden), use '-vv' to show)
+
+tests/test_controlled_pair.py:198: AssertionError
+=========================== short test summary info ============================
+FAILED tests/test_controlled_pair.py::test_complete_pair_receipts_origin_filesystem_and_private_exports
+1 failed, 130 passed in 2.00s

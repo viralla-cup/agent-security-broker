@@ -42,19 +42,27 @@ def summarize_episodes(rows, *, fake_engineering_pass, paired_initial_states_and
     }
 
 
-def export_episode(task, condition, backend, limits, episode, loop, exchanges, calls, healthy, after):
+def export_episode(task, condition, backend, limits, episode, loop, exchanges, calls, healthy, after,
+                   *, setup_valid=True, observation_complete=True):
     canary = canary_for(episode.seed)
-    classification = classify_episode(loop["stop_reason"], healthy=healthy)
+    classification = classify_episode(loop["stop_reason"], healthy=healthy, setup_valid=setup_valid is not False)
     receipts = getattr(episode, "receipts", ())
     harness_requests = getattr(episode, "harness_requests", ())
     observed = evaluate_pilot(task, episode.before, after, exchanges, canary,
                               model_proposals=[c.get("proposal") for c in calls], model_calls=calls,
                               receipts=receipts, harness_requests=harness_requests,
                               infrastructure_ok=classification["episode_valid"])
+    observed["observation_complete"] = observed["observation_complete"] and observation_complete
+    observed["safe_task_completed"] = observed["safe_task_completed"] and observation_complete
+    observed["safe_completion_after_denial"] = observed["safe_completion_after_denial"] and observation_complete
     classification = classify_episode(loop["stop_reason"], healthy=healthy,
-                                      observation_complete=observed["observation_complete"])
+                                      observation_complete=observed["observation_complete"], setup_valid=setup_valid is not False)
     observed["infrastructure_ok"] = classification["episode_valid"]
     observed.update(classification)
+    if task.get("pilot_kind") == "controlled_denial_seeded_recovery":
+        observed.update(setup_valid=setup_valid,
+                        setup_deny_observed=setup_valid is True and observed["deny_origin_counts"]["harness_setup"] == 1,
+                        model_origin_deny_count=observed["deny_origin_counts"]["model_selected"])
     # Reporting only: keep the independent oracle's eligibility/continuation labels.
     # A fail-closed evaluation error is a DENY event, not a completed policy denial.
     denials = [e["audit"] for e in exchanges if e["audit"].get("decision") == "DENY"]
@@ -73,7 +81,7 @@ def export_episode(task, condition, backend, limits, episode, loop, exchanges, c
         "observed_steps": len(exchanges), "observed_model_calls": len(calls),
         "before": public_snapshot(episode.before, references),
         "after": public_snapshot(after, references),
-        "model_calls": [{key: value for key, value in call.items() if key != "proposal"} for call in calls],
+        "model_calls": [{key: value for key, value in call.items() if key not in ("proposal", "history")} for call in calls],
         "tool_trace": [{"audit": e["audit"], "feedback_status": e["response"]["status"],
                         "retryable": e["response"]["retryable"], "origin": observed["action_origins"][i]}
                        for i, e in enumerate(exchanges)],
@@ -86,4 +94,6 @@ def export_episode(task, condition, backend, limits, episode, loop, exchanges, c
     raw = {"task": task, "loop": loop, "exchanges": exchanges, "model_calls": calls,
            "operation_receipts": receipts, "harness_requests": harness_requests,
            "before": episode.before, "after": after, "observed": observed}
+    if "pilot_kind" in task:
+        public["pilot_kind"] = raw["pilot_kind"] = task["pilot_kind"]
     return public, raw

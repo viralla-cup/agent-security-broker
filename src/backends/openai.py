@@ -79,8 +79,8 @@ class OpenAIBackend:
         self._opener = opener or build_opener(ProxyHandler({}), HTTPSHandler(), NoRedirect())
         self.last_call = {}
 
-    def next_action(self, history, tool_schema):
-        self.last_call = {"request_sent": False}
+    def preflight(self, history, tool_schema):
+        """Check the next reservation/deadline without sending or reserving a call."""
         if self._halted:
             raise BackendError("BACKEND_ERROR")
         if tool_schema != TOOL_SCHEMA or len(json.dumps(history, ensure_ascii=True).encode()) > 131072:
@@ -115,6 +115,11 @@ class OpenAIBackend:
             if not math.isfinite(remaining) or remaining <= 0:
                 raise BackendError("BACKEND_TIMEOUT")
             timeout = min(timeout, remaining)
+        return body, reserved, timeout
+
+    def next_action(self, history, tool_schema):
+        self.last_call = {"request_sent": False}
+        body, reserved, timeout = self.preflight(history, tool_schema)
         request = Request("https://api.openai.com/v1/responses",
                           data=body, method="POST",
                           headers={"Authorization": "Bearer " + self._key, "Content-Type": "application/json"})

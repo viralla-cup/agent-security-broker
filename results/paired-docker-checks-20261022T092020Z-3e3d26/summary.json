@@ -1,0 +1,8 @@
+{
+  "checks": {
+    "valid_stop": true,
+    "backend_timeout": true,
+    "invalid_setup": true
+  },
+  "paid_api_calls": 0
+}

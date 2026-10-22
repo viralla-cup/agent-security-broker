@@ -214,8 +214,10 @@ privacy boundary, exact credential setup, and separately approved first paid run
 Public pilot traces omit model arguments/content and pseudonymize file names;
 complete synthetic exchanges remain under ignored `.local/pilot/`.
 
-The first real run is prepared as exactly one B2 controlled recovery opportunity.
-See [the first-live runbook](docs/first-live-pilot.md) for the selected model, current
-pricing, conservative API reservations, secure local key setup and approval gate.
-No real model request has been made; do not commit, push or run paid calls before
-the author's review and explicit approval.
+The first-live entry point retains its original single-B2 profile and historical
+artifacts. The separate [controlled-denial pair runbook](docs/controlled-pair-runbook.md)
+documents the new fixed B2/B2a setup, offline checks, prospective budget and approval
+requirements. Run `python scripts/run_controlled_pair.py --backend fake` for
+engineering evidence or `python scripts/run_controlled_pair.py --backend openai --plan`
+for an offline plan. No further real model request, commit or push is authorized
+by this preparation step.

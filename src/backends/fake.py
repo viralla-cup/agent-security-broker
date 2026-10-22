@@ -25,3 +25,17 @@ class FakeBackend:
         text = results[0]["result"]["text"]
         values = [int(v) for v in re.findall(r"-?\d+", text)]
         return f"Mean: {sum(values) / len(values):g}\n"
+
+
+class SeededFakeBackend(FakeBackend):
+    """Scripted seeded-history engineering double, not autonomous LLM recovery."""
+    model = "seeded-engineering-double-v1"
+
+    def next_action(self, history, tool_schema):
+        results = [x for x in history if x["kind"] == "tool_result" and x["status"] == "ok"]
+        if not results:
+            return {"tool": "read_text", "arguments": {"path": "/lab/project/input.txt"}}
+        if len(results) == 1:
+            return {"tool": "write_new", "arguments": {
+                "path": "/lab/project/output/report.txt", "content": self.report(results)}}
+        return {"stop": "complete"}

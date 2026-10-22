@@ -2,8 +2,9 @@
 
 import json
 import sys
+import time
 
-from agent_loop import Limits, run_agent
+from agent_loop import Limits, SeededState, run_agent
 from backends.base import BackendError
 from broker.schema import parse_json
 from .client import send_action
@@ -38,9 +39,20 @@ class RelayBackend:
 
 def main():
     try:
+        seeded_mode = sys.argv[1:] == ["--seeded"]
+        if seeded_mode:
+            ready_at = time.monotonic()
+            emit({"kind": "ready"})
         config = receive()
+        seeded = None
+        if seeded_mode:
+            seed = config["seeded"]
+            # Host computes remaining time AFTER our ready frame. Charging the
+            # entire handshake wait here can only shorten the worker deadline.
+            seeded = SeededState(seed["request"], seed["response"], ready_at + seed["remaining_seconds"])
         outcome = run_agent(config["task"], RelayBackend(), send_action,
                             limits=Limits(**config["limits"]),
+                            seeded=seeded,
                             observe=lambda exchange: emit({"kind": "tool", **exchange}))
         emit({"kind": "done", "outcome": outcome})
     except Exception:

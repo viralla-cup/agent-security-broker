@@ -13,6 +13,7 @@ class BackendError(Exception):
             "BACKEND_ERROR", "INVALID_PROPOSAL", "MODEL_REFUSAL", "MODEL_INCOMPLETE",
             "BACKEND_TIMEOUT", "BACKEND_HTTP_ERROR", "BACKEND_RESPONSE_LIMIT",
             "API_BUDGET_LIMIT", "API_USAGE_ERROR", "CREDENTIAL_LEAK_BLOCKED",
+            "TIME_LIMIT",  # Unambiguous trusted relay deadline; not an uncertain API timeout.
         } else "BACKEND_ERROR"
         super().__init__(self.code)
 

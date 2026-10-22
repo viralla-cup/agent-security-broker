@@ -15,7 +15,7 @@ import time
 import uuid
 
 from run_replay import ROOT, IMAGE, Episode, command, docker, source_manifest, write_json
-from agent_loop import Limits, encoded_size
+from agent_loop import Limits, SeededState, encoded_size
 from backends.base import BackendError, TOOL_SCHEMA
 from backends.fake import FakeBackend
 from backends.openai import APIBudget, OpenAIBackend
@@ -33,18 +33,22 @@ def check_credential_isolation(episode):
             raise ValueError("Provider configuration present in isolated container")
 
 
-def run_worker(episode, backend, task, limits):
+def run_worker(episode, backend, task, limits, *, seeded_exchange=None, episode_deadline=None,
+               exchanges=None, calls=None, checkpoint=lambda: None):
     """Relay inference only; detailed audit and snapshots never enter model history."""
     frames = Queue(maxsize=1)
     process = subprocess.Popen(
-        ["docker", "exec", "-i", episode.client, "python", "-m", "lab.agent_worker"],
+        ["docker", "exec", "-i", episode.client, "python", "-m", "lab.agent_worker"]
+        + (["--seeded"] if seeded_exchange is not None else []),
         stdin=subprocess.PIPE, stdout=subprocess.PIPE, stderr=subprocess.DEVNULL,
     )
-    exchanges, calls = [], []
-    deadline = time.monotonic() + limits.max_seconds + 30
+    exchanges = [] if exchanges is None else exchanges
+    calls = [] if calls is None else calls
+    model_deadline = episode_deadline if episode_deadline is not None else time.monotonic() + limits.max_seconds
+    deadline = model_deadline + 30  # Collection grace, never additional inference time.
     if isinstance(backend, OpenAIBackend):
         # Starts before the worker receives its config: conservative host deadline.
-        backend.deadline = deadline - 30
+        backend.deadline = model_deadline
     result = {"stop_reason": "INFRASTRUCTURE_ERROR"}
     healthy = False
     pending_call = None
@@ -67,7 +71,18 @@ def run_worker(episode, backend, task, limits):
         process.stdin.flush()
 
     try:
-        send({"task": task["prompt"], "limits": asdict(limits)})
+        config = {"task": task["prompt"], "limits": asdict(limits)}
+        if seeded_exchange is not None:
+            ready = parse_json(frames.get(timeout=max(0.001, deadline - time.monotonic())))
+            if ready != {"kind": "ready"}:
+                raise ValueError("Missing seeded worker handshake")
+            config["seeded"] = {"request": seeded_exchange["request"], "response": seeded_exchange["response"],
+                                "remaining_seconds": model_deadline - time.monotonic()}
+            episode.seed_transfer = {"host_deadline_monotonic": model_deadline,
+                                     "remaining_seconds_at_config": config["seeded"]["remaining_seconds"],
+                                     "uses_ready_handshake": True}
+            checkpoint()
+        send(config)
         while True:
             remaining = deadline - time.monotonic()
             if remaining <= 0:
@@ -81,11 +96,25 @@ def run_worker(episode, backend, task, limits):
                     raise ValueError("Relay call limit or schema mismatch")
                 if encoded_size(frame["history"]) > limits.max_history_bytes:
                     raise ValueError("Relay history limit")
+                if seeded_exchange is not None:
+                    prefix = SeededState(seeded_exchange["request"], seeded_exchange["response"],
+                                         model_deadline).history(task["prompt"])
+                    if frame["history"][:len(prefix)] != prefix:
+                        raise ValueError("Seeded history changed")
+                    if time.monotonic() >= model_deadline:
+                        send({"error": "TIME_LIMIT"})
+                        continue
                 call = {"number": len(calls) + 1,
+                        "metadata": {"request_sent": False},
                         "observed_tool_event_ids": history_event_ids(frame["history"], exchanges)}
+                if seeded_exchange is not None:
+                    call["history"] = frame["history"]  # Private checkpoint only.
                 pending_call = None
                 calls.append(call)
+                invoked = False
                 try:
+                    checkpoint()  # Preserve the attempt before uncertain provider I/O.
+                    invoked = True
                     proposal = backend.next_action(frame["history"], TOOL_SCHEMA)
                     if encoded_size(proposal) > limits.max_proposal_bytes:
                         raise BackendError("BACKEND_RESPONSE_LIMIT")
@@ -96,7 +125,9 @@ def run_worker(episode, backend, task, limits):
                     call.update(outcome=exc.code)
                     send({"error": exc.code})
                 finally:
-                    call["metadata"] = backend.last_call
+                    if invoked:
+                        call["metadata"] = backend.last_call
+                    checkpoint()
             elif frame["kind"] == "tool":
                 if len(exchanges) >= limits.max_steps:
                     raise ValueError("Relay step limit")
@@ -109,6 +140,7 @@ def run_worker(episode, backend, task, limits):
                 pending_call["executed_event_id"] = event["event_id"]
                 pending_call = None
                 exchanges.append(exchange)
+                checkpoint()
             elif frame["kind"] == "done":
                 result = frame["outcome"]
                 process.stdin.close()

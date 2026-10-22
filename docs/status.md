@@ -1,5 +1,55 @@
 # Project status
 
+Updated 22 October 2026, Asia/Qyzylorda. The minimal fixed B2/B2a controlled-denial
+paired runner is implemented above reviewed `490c9413db0c9a99075aa7ee3079646e553f8a7e`.
+It executes the declared harness setup through the real broker, verifies the
+private receipt and full fixture, and transfers the actual public feedback,
+consumed step/denial, proposal signature and original deadline into the existing
+loop. Every subsequent action uses the normal backend interface. The authoritative
+proposal, Core, policy, executor, oracle, receipt attribution and first-live
+profile remain unchanged. See [the paired runbook](controlled-pair-runbook.md).
+
+Final offline verification:
+
+- **329 engineering tests passed**, including **47 new controlled-pair cases**:
+  `results/checks-20261022T092019Z-db6467/`.
+- **2/2 fresh fake paired episodes** completed safely after the harness denial:
+  `results/controlled-pair-20261022T092020Z-243b52/`. Each used 3 fake backend calls,
+  1 harness DENY and 2 model-interface ALLOW operations, with no model-origin DENY.
+  Both reports verify the required read and exact `Mean: 4\n` delivery. This is
+  scripted engineering evidence, not autonomous LLM recovery.
+- **3/3 production Docker stop/fault checks passed**: valid unsuccessful B2 still
+  runs B2a; uncertain backend timeout stops the pair; corrupted setup receipt
+  prevents inference. `results/paired-docker-checks-20261022T092020Z-3e3d26/`.
+- **6/6 existing fake episodes passed**:
+  `results/pilot-20261022T092020Z-034e4f/`.
+- **15/15 existing replay checks passed**:
+  `results/dev-20261022T092019Z-4fd4be/`.
+
+Final source archive, offline fake/OpenAI plans and preservation/behavior checks:
+`results/paired-verification-20261022T092155Z-449bbc/`. The common prompt matches
+the proposal verbatim after Markdown paragraph joining. The copied image sources
+match the host before paired runs. Private setup timing shows a 120-second
+deadline from setup start and about 115 seconds remaining at worker initialization.
+An intermediate 144-test focused pass and the initial privacy-assertion failure
+are retained and explained in the runbook; no experimental evidence is replaced.
+All **491** pre-existing evidence files, the four first-live artifacts and **24**
+Core/oracle/policy/protocol/build component hashes match the starting baseline.
+All 21 prior fake/replay behaviors match. The five final verification runs share
+one image and exact source hashes; 46 copied files were verified inside the image.
+Docker engine 29.8.1 was accessible. The new runs contain 44 fresh audit events in
+27 sessions; no disposable containers or volumes remain after teardown.
+
+The runner is ready for independent review before any paid execution. The proposed
+model remains `gpt-6-luna`, reasoning `none`, Standard tier: at most 12 API requests,
+98,304 estimated input-token reservations and 12,288 output-token reservations
+per pair. At the stated 22 October prices, the conservative estimate is $0.018432
+excluding taxes; this is not a guaranteed monetary cap. No real OpenAI requests,
+commit or push occurred in this implementation step. A fixed-order easy pair
+cannot establish a B2 advantage or spontaneous attack detection.
+
+## Historical final-blocker correction (22 October 2026)
+
 Updated 22 October 2026, Asia/Qyzylorda. The two final-review blockers are fixed
 on the existing uncommitted working tree above `ec43834`. The receipt path no
 longer reparses Core-rejected inputs without a parsed operation and catches
