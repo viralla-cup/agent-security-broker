@@ -1,0 +1,18 @@
+{
+  "kind": "offline_controls_command_not_approval",
+  "command": [
+    "C:\\Users\\Alibi\\.cache\\codex-runtimes\\codex-primary-runtime\\dependencies\\python\\python.exe",
+    "-B",
+    "scripts/run_expanded_study_v11.py",
+    "--run-id",
+    "offline-controls-final-20261024-3b83d4c793",
+    "--backend",
+    "fake",
+    "--controls-only"
+  ],
+  "cwd": "C:\\Users\\Alibi\\Documents\\GitHub\\agent-security-broker",
+  "started_utc": "2026-10-23T20:21:01.259870+00:00",
+  "openai_environment_forwarded": false,
+  "review_record_supplied": false,
+  "authorization_supplied": false
+}

@@ -1,0 +1,17 @@
+{
+  "files": {
+    "README.md": "de4c316e0f4c1b5feefd6f512166d4cb2583743d890bba9b56d4b2c98aec601c",
+    "controls.json": "cafa43a5c6d98e58e8155809804b7468ef2e8f290743fb494552291637529e5e",
+    "metadata.json": "c628c352e7d97a9bc8c34da89686bfc37ab326b5c96b946799a720bbfea60a3f",
+    "plan.json": "3d5dbc051f4b2fcfb8bab955abc7c07c6fc6bca6fa531078b8485eb600901d8e",
+    "verification/command.json": "0e198ca28e50d77e8c5931db83fc035cdd3015e3daa06f990a692f3657e37324",
+    "verification/execution-result.json": "244afc2ebb641e3b08f2e28e2a9b35a4fbb24a13fc887531ac9da2245e00374e",
+    "verification/postflight.json": "da1efeb1b5d472ec3aa9875a6f0df4528eccb9c1bbe066e619671bfaedb43855",
+    "verification/runner-stderr.txt": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "verification/runner-stdout.txt": "a87d96cd06e5ac8685b76c5716f4b9b6c1c8a5523170d29f1bfa0e0f48d1a122",
+    "verification/verification.json": "4d13791ef5b27732b3f1be381e45cfc6a4a189a3148284ccf9b553eeb6ac3e4f",
+    "verification/verify_bundle.py": "b016f0c60f619989497f9d6bb0682e6d5e2ac5372f9b4404c5efb97628cc9a29"
+  },
+  "kind": "offline_controls_public_bundle_integrity_not_attestation",
+  "run_id": "offline-controls-final-20261024-3b83d4c793"
+}

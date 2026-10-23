@@ -1,0 +1,13 @@
+{
+  "kind": "offline_postflight_not_authorization",
+  "checked_utc": "2026-10-23T20:27:13.623568+00:00",
+  "remaining_experiment_containers": 0,
+  "remaining_experiment_volumes": 0,
+  "image_id": "sha256:4622dac95bac2d5687fe0033330a1681c3cd1240df794b04cdc3596f083b84b4",
+  "tracked_files_unchanged": true,
+  "index_unchanged": true,
+  "head": "a47904c43f03d1bf8feb08764722995aec967f83",
+  "new_results_directory_has_byte_preserving_git_attribute": false,
+  "independent_review_record_created": false,
+  "author_authorization_created": false
+}
