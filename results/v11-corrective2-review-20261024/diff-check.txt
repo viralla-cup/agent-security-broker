@@ -1,0 +1,2 @@
+exit_code=0
+warning: in the working copy of 'scripts/run_expanded_study.py', LF will be replaced by CRLF the next time Git touches it

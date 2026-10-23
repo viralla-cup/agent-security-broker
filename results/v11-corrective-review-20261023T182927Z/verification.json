@@ -1,0 +1,68 @@
+{
+  "actual_provider_calls": 0,
+  "baseline_commit": "3be02741ad3a8f0edf298e5b0cf80266fd07f0d8",
+  "changed_existing_inputs": [
+    "docs/expanded-study-v1.1-runbook.md",
+    "experiments/expanded-study-v1.1.md",
+    "scripts/run_expanded_study.py",
+    "scripts/run_expanded_study_v11.py",
+    "src/lab/study_journal.py",
+    "tests/test_study_v11.py"
+  ],
+  "changed_historical_evidence_files": 0,
+  "changed_plan_fields": [
+    "execution_rules",
+    "plan_sha256",
+    "protocol_sha256",
+    "source_sha256"
+  ],
+  "copied_source_files_verified": 60,
+  "docker_engine": "29.8.1",
+  "experiment_launches": 0,
+  "fresh_production_controls_executed": false,
+  "full_fake_main_launched": false,
+  "full_suite_directory": "results/checks-20261023T183528Z-2e2990",
+  "full_suite_passed": 508,
+  "image_id": "sha256:b1013b52baf567f68a070a5d504f3fc0ae01890d77242177ee9ce39de33a0d3b",
+  "independent_review_passed": false,
+  "kind": "author_agent_engineering_evidence_not_independent_attestation",
+  "new_input_files": [
+    "tests/test_study_v11_corrective.py"
+  ],
+  "new_live_approval_record_created": false,
+  "new_tests": 22,
+  "plan_sha256": "b827ff2cbad77dbe0e7fb101c2a093ac6e24ff56abfda9bda11ca258a2c177b6",
+  "planned_episodes": 56,
+  "preserved_historical_evidence_files": 7735,
+  "prior_plan_sha256": "0dd712482d29c323306d0430675ab3659f609c191cdaf60b4fbea69c6d777a6b",
+  "remaining_asb_containers": 0,
+  "remaining_disposable_volumes": 0,
+  "scientific_design_unchanged": true,
+  "snapshot_sha256": "0935c236e590213cf513607960a57f5df9bd1aec4e12a1e3c733d0840f666bd3",
+  "source_files": 62,
+  "source_manifest_digest": "74d40799a26be7745f7e65063a5231235419bd476d5a681abda7111b978c24dc",
+  "targeted_tests_passed": 70,
+  "test_isolation": [
+    "--network",
+    "none",
+    "--read-only",
+    "--cap-drop",
+    "ALL",
+    "--security-opt",
+    "no-new-privileges=true",
+    "--memory",
+    "256m",
+    "--cpus",
+    "1",
+    "--pids-limit",
+    "64",
+    "--tmpfs",
+    "/tmp:rw,noexec,nosuid,nodev,size=8m",
+    "--log-driver",
+    "none"
+  ],
+  "tracked_changes_since_task_start": [
+    "scripts/run_expanded_study.py"
+  ],
+  "unchanged_existing_input_files": 76
+}

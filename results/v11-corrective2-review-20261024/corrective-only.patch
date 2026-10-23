@@ -1,0 +1,706 @@
+--- before/docs/expanded-study-v1.1-runbook.md
++++ after/docs/expanded-study-v1.1-runbook.md
+@@ -2,7 +2,7 @@
+ 
+ This runbook implements the [prospective amendment](../experiments/expanded-study-v1.1.md).
+ Status: offline preparation only; independent review and paid authorization pending.
+-The initial v1.1 review failed (P1/P2). Corrective code requires a new independent
++The initial and first corrective v1.1 reviews failed (P1/P2). Corrective code requires a new independent
+ verification; previous offline results or approval files do not attest this revision.
+ v1 sources/results are not migrated. The article title and scientific protocol
+ remain unchanged except for the explicitly documented execution amendment.
+@@ -27,9 +27,9 @@
+ 
+ Main always has 56 positions; there is no v1.1 fallback or matrix override. The
+ offline stop-after option is rejected for OpenAI. A new run ID never reuses an
+-existing evidence directory. Status is read-only for valid state; detecting corrupt
+-checkpoint state persists a permanent resume block. Do not use it concurrently with
+-an active writer. Never edit checkpoint files to force progress.
++existing evidence directory. Status takes the run lock and creates/removes durable
++verification state even for valid checkpoints. Interrupted verification or detected
++corruption blocks resume. Never edit checkpoint files to force progress.
+ 
+ ## Independent review and author authorization
+ 
+@@ -109,11 +109,25 @@
+ it for review together with the partial journal. A lagging HEAD without a detected
+ violation can still recover its complete, valid chain tail after an ordinary crash.
+ 
++`VERIFYING/` is created durably BEFORE integrity-sensitive reads and removed only
++after success, before writing the next journal event. Its presence also blocks
++resume, even without `RESUME_BLOCKED/` or its reason file. This closes termination
++between detection and error persistence. A crash during a valid but unfinished
++check is conservatively blocked too. Preserve both markers for review. Ordinary
++interrupted event/HEAD writes after completed verification retain valid-tail
++recovery; no started position or reserved request is replayed.
++
+ An automatic timeout continuation additionally requires `operational_health` flags
+ in public/private episode records and a matching saved private service-evidence
+ digest. Fresh Docker availability does not repair a worker, execution, observation
+ or evidence-persistence failure in the timed-out episode. Such collisions stop the
+ segment, retain the invalid position, and never retry it automatically.
++
++Hashes alone are insufficient: the gate now rechecks the frozen task, model-call
++history/metadata, reservation journal, independently collected audit/receipt logs,
++oracle outcomes and public/private report consistency. It reruns the existing
++oracle, without changing task definitions or scientific labels. An inconsistent
++episode cannot qualify for the isolated-timeout exception.
+ 
+ Analyze the latest saved summary using the existing analyzer (new output only):
+ 
+--- before/experiments/expanded-study-v1.1.md
++++ after/experiments/expanded-study-v1.1.md
+@@ -141,3 +141,37 @@
+ rollback cannot be solved by a local marker; preserve evidence and require external
+ review in such a case. New source/plan hashes, independent corrective review, fresh
+ matching offline controls and separate author approval remain mandatory for paid use.
++
++## Second corrective clarification (24 October)
++
++The subsequent review found contradictory private evidence accepted by the timeout
++gate, and process death between detecting HEAD corruption and creating the block.
++The first corrective evidence remains historical; it does not attest this revision.
++
++Before timeout continuation, validate the private task against the frozen task hash,
++the saved public record against the returned row, all private/public call metadata
++against the reservation/result journal, and each call history against the common
++prompt and preceding broker feedback. Reconcile service audit/receipt logs with
++retained exchanges and receipts, including pending-write status. Recompute the
++existing oracle and report from these inputs; require agreement with both saved
++observation records, public outcomes and anonymized snapshot relationships. Missing,
++unreadable, incomplete or contradictory evidence stops automatic continuation even
++if its bytes have a hash. This validation does not alter scientific outcome rules.
++
++Integrity-sensitive reads now follow durable creation of `VERIFYING/` under the
++private run root. Only successful verification removes it; journal persistence
++then occurs as a separate phase. Any interrupted verification blocks ordinary
++resume, whether or not `RESUME_BLOCKED/` could be written. This deliberately also
++blocks crashes during an ultimately valid but unfinished check. It is not possible
++to infer success from a missing error record. Status inspection uses the run lock
++and the same write-capable verification protocol. Never delete either marker to
++reopen a run. Crashes before verification is armed perform no integrity-sensitive
++reads; crashes after successful verification while writing a journal event/HEAD
++can still recover a fully valid unanchored tail without replaying a position.
++
++The protocol covers process termination and local I/O boundaries under the trusted
++host assumption. It does not guarantee power-loss durability on every filesystem,
++or protection against unrestricted host modification, marker deletion or total
++storage rollback. New review/source/plan bindings and separate paid authorization
++are still required. All 56 positions, 28 planned pairs, budgets and scientific
++definitions remain unchanged.
+--- before/scripts/run_expanded_study_v11.py
++++ after/scripts/run_expanded_study_v11.py
+@@ -20,7 +20,7 @@
+ from lab.study import catalog, digest, plan, seal_plan, FrozenStudy, validate_plan
+ from lab.study_fake import StudyFakeBackend
+ from lab.study_journal import (Journal, JournalError, RunLock, atomic_json,
+-                               artifact_hashes, file_hash, verified_timeout_evidence)
++                               artifact_hashes, file_hash)
+ 
+ PROTOCOL = ROOT / 'experiments/expanded-study-v1.1.md'
+ 
+@@ -34,6 +34,7 @@
+                             'resume_unstarted_only': True, 'new_paid_segment_authorization': True,
+                             'authorization_before_preflight': True, 'unique_segment_metadata': True,
+                             'independent_timeout_health': True, 'sticky_integrity_stop': True,
++                            'timeout_semantic_consistency': True, 'durable_verification_intent': True,
+                             'batch_seconds_scope': 'per_authorized_segment', 'journal_format': 1}})
+ 
+ 
+@@ -123,7 +124,10 @@
+                 check_environment=environment_check, clock=time.monotonic, stop_after=None):
+     """Caller holds the run lock and has verified fresh approval/controls."""
+     frozen, state = journal.plan, journal.state
+-    snapshot = capture(frozen)
++    external_check = input_check
++    def input_check(snapshot, task=None):
++        return journal.verify_integrity(lambda: external_check(snapshot, task))
++    snapshot = journal.verify_integrity(lambda: capture(frozen))
+     input_check(snapshot)
+     if state['terminal']:
+         raise JournalError('Terminal logical-run stop cannot be resumed')
+@@ -177,7 +181,7 @@
+                 stop = 'UNCERTAIN_REQUEST'; break
+             environment_ok = False
+             environment_hash = None
+-            if verified_timeout_evidence(row, journal.private / relative) and not journal.state['terminal']:
++            if journal.timeout_isolated(row, index) and not journal.state['terminal']:
+                 try:
+                     checked = check_environment(frozen, runtime['image_id'])
+                     atomic_json(folder / f'timeout-environment-{index:03d}.json', checked)
+@@ -242,8 +246,9 @@
+     out = ROOT / 'results' / ('study-v1.1-' + args.run_id)
+     raw = ROOT / '.local/study-v1.1' / args.run_id
+     if args.status:
+-        journal = Journal(out, raw, frozen)
+-        print(json.dumps(journal.summary('STATUS_SNAPSHOT'), indent=2)); return
++        with RunLock(raw / 'run.lock'):
++            journal = Journal(out, raw, frozen)
++            print(json.dumps(journal.summary('STATUS_SNAPSHOT'), indent=2)); return
+     paid = args.backend == 'openai' and not args.controls_only
+     # Check explicit flags before touching credentials or starting Docker.
+     if paid and not (args.allow_paid_api and args.review_record and args.authorization):
+--- before/src/lab/study_journal.py
++++ after/src/lab/study_journal.py
+@@ -10,6 +10,7 @@
+ import uuid
+ 
+ from .study import digest, schedule_positions, validate_plan
++from .study_timeout import consistent_timeout
+ 
+ 
+ class JournalError(ValueError):
+@@ -104,15 +105,11 @@
+             and (row['condition'] == 'B0' or not obs['prohibited_effect']))
+ 
+ 
+-def verified_timeout_evidence(row, private):
++def verified_timeout_evidence(row, private, **trusted):
+     """Do not infer isolated timeout health from an outcome label or fresh Docker."""
+-    if not timeout_evidence_ok(row):
+-        return False
+     try:
+-        raw = json.loads((Path(private) / 'episode.json').read_text())
+-        return (raw.get('operational_health') == row['operational_health']
+-                and raw.get('service_evidence_sha256') == file_hash(Path(private) / 'service-evidence.json'))
+-    except (OSError, ValueError, TypeError):
++        return timeout_evidence_ok(row) and consistent_timeout(row, private, **trusted)
++    except (OSError, ValueError, TypeError, KeyError, IndexError, AttributeError):
+         return False
+ 
+ 
+@@ -129,13 +126,37 @@
+                           timeouts=0, timeout_positions=[], consecutive_timeouts=0, terminal=None, reported_models=[])
+         self.head = {'sequence': 0, 'sha256': '0' * 64}
+         self.blocker = self.private / 'RESUME_BLOCKED'
+-        if self.blocker.exists():
++        self.verifying = self.private / 'VERIFYING'
++        if self.blocker.exists() or self.verifying.exists():
+             raise JournalError('Permanent integrity stop; ordinary resume is forbidden')
++        self.verify_integrity(self._load)
++
++    def verify_integrity(self, check):
++        """Persist verification intent BEFORE any integrity-sensitive reads.
++
++        Unfinished verification blocks resume, even if termination precedes
++        block_resume(). Clear only on success, before ordinary journal writes.
++        """
++        if self.blocker.exists() or self.verifying.exists():
++            raise JournalError('Blocked or interrupted integrity verification')
++        self.verifying.mkdir()
++        self._sync_private_directory()
+         try:
+-            self._load()
++            result = check()
+         except (OSError, ValueError, KeyError, TypeError):
+             self.block_resume()
+             raise JournalError('Checkpoint integrity validation failed; resume blocked') from None
++        self.verifying.rmdir()
++        self._sync_private_directory()
++        return result
++
++    def _sync_private_directory(self):
++        if os.name != 'nt':
++            fd = os.open(self.private, os.O_RDONLY)
++            try:
++                os.fsync(fd)
++            finally:
++                os.close(fd)
+ 
+     def block_resume(self):
+         """Sticky out-of-chain stop; directory existence alone is authoritative.
+@@ -150,12 +171,7 @@
+             return
+         # If mkdir itself fails, propagate and stop. No software can promise a
+         # durable marker on wholly unavailable storage; host rollback is out of scope.
+-        if os.name != 'nt':
+-            fd = os.open(self.private, os.O_RDONLY)
+-            try:
+-                os.fsync(fd)
+-            finally:
+-                os.close(fd)
++        self._sync_private_directory()
+         try:
+             with (self.blocker / 'reason.json').open('x', encoding='utf-8') as stream:
+                 json.dump({'reason':'CHECKPOINT_OR_INPUT_FAILURE', 'utc':utc(),
+@@ -330,7 +346,7 @@
+             self._mark_timeout(state, i)
+         elif obs['episode_valid'] and i not in state['timeout_positions']:
+             state['consecutive_timeouts'] = 0
+-        if p['timeout_environment_ok'] and not verified_timeout_evidence(row, self.private / relative):
++        if p['timeout_environment_ok'] and not self.timeout_isolated(row, i, state):
+             raise JournalError('Unverified timeout continuation')
+         if p['timeout_environment_ok']:
+             path = self.public / 'segments' / f"{p['segment']:04d}" / f'timeout-environment-{i:03d}.json'
+@@ -352,21 +368,30 @@
+             if state['timeouts'] >= 3 or state['consecutive_timeouts'] >= 2:
+                 state['terminal'] = 'TIMEOUT_LIMIT'
+ 
++    def timeout_isolated(self, row, index, state=None):
++        state = self.state if state is None else state
++        position = self.positions[index - 1]
++        relative = Path(position['pair_id']) / position['condition']
++        reservations = [r for (i, _), r in state['requests'].items() if i == index]
++        return verified_timeout_evidence(row, self.private / relative, frozen=self.plan,
++            position=position, reservations=reservations, public=self.public / relative,
++            backend=state['created']['backend'])
++
+     def append(self, kind, **values):
+-        if self.blocker.exists():
+-            raise JournalError('Permanent integrity stop; journal writes forbidden')
+-        try:
++        p = {'kind': kind, 'utc': utc(), **values}
++        candidate = deepcopy(self.state)
++        reads_evidence = kind in ('segment_start', 'episode_finish')
++        def check():
+             if json.loads((self.directory / 'HEAD.json').read_text()) != self.disk_head:
+                 raise JournalError('Checkpoint HEAD changed during execution')
+             tail = json.loads((self.directory / f"{self.head['sequence']:08d}.json").read_text())
+             if tail.get('sha256') != self.head['sha256'] or digest({k:v for k,v in tail.items() if k!='sha256'}) != self.head['sha256']:
+                 raise JournalError('Checkpoint tail changed during execution')
+-        except (OSError, ValueError, KeyError, TypeError):
+-            self.block_resume()
+-            raise JournalError('Checkpoint integrity changed; resume blocked') from None
+-        p = {'kind': kind, 'utc': utc(), **values}
+-        candidate = deepcopy(self.state)
+-        self._apply(candidate, p)  # Fail before writing or external execution.
++            if reads_evidence:
++                self._apply(candidate, p)
++        self.verify_integrity(check)
++        if not reads_evidence:
++            self._apply(candidate, p)  # Pure transition/budget checks; no evidence reads.
+         seq = self.head['sequence'] + 1
+         event = {'sequence': seq, 'previous': self.head['sha256'], 'payload': p}
+         hashed = digest(event)
+--- before/src/lab/study_timeout.py
++++ after/src/lab/study_timeout.py
+@@ -0,0 +1,118 @@
++"""Recheck isolated-timeout evidence against trusted plan/ledger and service data."""
++from types import SimpleNamespace
++import json
++from hashlib import sha256
++from pathlib import Path
++
++from agent_loop import SeededState
++from .controlled_recovery import LIMITS
++from .pilot_evidence import export_episode
++from .pilot_observation import history_event_ids, proposal_of, validate_controlled_setup
++from .study import digest, expected_state, seed_for
++from .study_oracle import evaluate_study
++
++
++def consistent_timeout(row, private, *, frozen, position, reservations, public, backend):
++    """Hashes bind identities; recomputation checks whether bound evidence agrees.
++
++    The caller supplies the validated frozen plan and reservation journal, never
++    values taken from the episode itself. No policy decisions or model calls occur.
++    """
++    def require(value):
++        if not value:
++            raise ValueError('Inconsistent timeout evidence')
++
++    try:
++        private = Path(private)
++        raw = json.loads((private / 'episode.json').read_text())
++        require(json.loads((Path(public) / 'episode.json').read_text()) == row)
++        require(row['backend'] == ('openai-responses' if backend == 'openai' else 'deterministic-fake'))
++        if backend == 'openai':
++            require(row['model'] == frozen['model'])
++        task, calls, exchanges = raw['task'], raw['model_calls'], raw['exchanges']
++        receipts, seeds = raw['operation_receipts'], raw['harness_requests']
++        require(raw['planned_position'] == position
++                and all(row.get(k) == v for k, v in position.items()))
++        require(task['id'] == position['task'] and digest(task) == position['task_sha256']
++                == frozen['task_definitions'][task['id']]['task_sha256'])
++        require(raw['before'] == expected_state(task) and raw['loop'] == row['loop'])
++        require(raw['operational_health'] == row['operational_health'])
++        service_bytes = (private / 'service-evidence.json').read_bytes()
++        require(raw['service_evidence_sha256'] == sha256(service_bytes).hexdigest())
++        service = json.loads(service_bytes)
++        # Independently collected broker logs must contain exactly the retained
++        # audits/receipts, in order, with no unfinished service append.
++        for name, expected in (('/tmp/security-audit.jsonl', [e['audit'] for e in exchanges]),
++                               ('/tmp/pilot-operation-receipts.jsonl', receipts)):
++            entry = service[name]
++            require(entry['pending'] is False and isinstance(entry['text'], str))
++            require([json.loads(line) for line in entry['text'].splitlines()] == expected)
++        require(len(calls) == len(reservations) and 1 <= len(calls) <= LIMITS.max_model_calls)
++        for number, (call, reservation) in enumerate(zip(calls, reservations), 1):
++            result = reservation['result']
++            require(call['number'] == reservation['number'] == result['number'] == number
++                    and reservation['index'] == result['index'] == position['schedule_index']
++                    and reservation['segment'] == result['segment']
++                    and call['metadata'] == result['metadata'] and call['outcome'] == result['outcome'])
++        require(calls[-1]['outcome'] == 'BACKEND_TIMEOUT'
++                and calls[-1]['metadata']['request_sent'] is True
++                and not calls[-1]['metadata'].get('response_received', False)
++                and all(c['outcome'] == 'PROPOSAL' for c in calls[:-1]))
++        require(all(e['audit']['condition'] == position['condition']
++                    and e['audit']['evaluation_status'] == 'COMPLETED'
++                    and ((e['audit']['decision'] == 'DENY' and e['audit']['execution_status'] == 'NOT_STARTED'
++                          and e['audit']['dispatched'] is False)
++                         or (e['audit']['decision'] == 'ALLOW' and e['audit']['execution_status'] == 'SUCCEEDED'
++                             and e['audit']['dispatched'] is True)) for e in exchanges))
++        prefix = [{'kind':'task', 'text':task['prompt']}]
++        if task['track'] == 'R':
++            require(len(seeds) == 1 and seeds[0]['event_id'] == exchanges[0]['audit']['event_id'])
++            require(validate_controlled_setup(exchanges[0], receipts, seeds[0]['request'],
++                    raw['before'], raw['before'], position['condition'])['valid'])
++            prefix = SeededState(seeds[0]['request'], exchanges[0]['response'], 0).history(task['prompt'])
++        else:
++            require(seeds == [])
++        seen = len(seeds)
++        for call in calls:
++            expected_history = prefix + [item for e in exchanges[len(seeds):seen] for item in (
++                {'kind':'proposal', **proposal_of(e['request'])}, {'kind':'tool_result', **e['response']})]
++            require(call['history'] == expected_history)
++            require(history_event_ids(call['history'], exchanges[:seen]) == call['observed_tool_event_ids'])
++            if call['outcome'] == 'PROPOSAL':
++                require(call['executed_event_id'] == exchanges[seen]['audit']['event_id']
++                        and call['proposal'] == proposal_of(exchanges[seen]['request']))
++                seen += 1
++            else:
++                require('executed_event_id' not in call and 'proposal' not in call)
++        require(seen == len(exchanges))
++        # Reuse the established independent oracle and reporting definitions.
++        episode = SimpleNamespace(seed=seed_for(task), before=raw['before'], isolation=row['isolation'],
++                                  receipts=receipts, harness_requests=seeds)
++        expected, checked = export_episode(task, position['condition'],
++            SimpleNamespace(name=row['backend'], model=row['model']), LIMITS, episode,
++            raw['loop'], exchanges, calls, True, raw['after'],
++            setup_valid=True, observation_complete=True, evaluator=evaluate_study)
++        require(raw['observed'] == checked['observed'])
++        obs = expected['observed']
++        obs.update(setup_deny_observed=task['track'] == 'R',
++                   model_origin_deny_count=obs['deny_origin_counts']['model_selected'], correct_refusal=False)
++        # Resource pseudonyms are deliberately random. Check their complete
++        # before/after/change relationships, without exporting a private path map.
++        require(len(set(row['observed']['changed_resources'])) == len(row['observed']['changed_resources']))
++        def states(before, after, changed):
++            require(set(changed) <= before.keys() | after.keys())
++            return sorted(json.dumps([before.get(k), after.get(k), k in changed], sort_keys=True)
++                          for k in before.keys() | after.keys())
++        require(states(row['before'], row['after'], row['observed']['changed_resources'])
++                == states(raw['before'], raw['after'], checked['observed']['changed_paths']))
++        require({k:v for k,v in obs.items() if k != 'changed_resources'}
++                == {k:v for k,v in row['observed'].items() if k != 'changed_resources'})
++        require(raw['study_observed'] == row['observed'])
++        require(all(row[k] == value for k,value in expected.items() if k not in ('before','after','observed')))
++        require(row['observed_steps'] == raw['loop']['steps'] == len(exchanges)
++                and raw['loop']['model_calls'] == len(calls)
++                and raw['loop']['denials'] == sum(e['audit']['decision']=='DENY' for e in exchanges)
++                and raw['loop']['retries'] == 0)
++        return True
++    except (OSError, ValueError, TypeError, KeyError, IndexError, AttributeError):
++        return False
+--- before/tests/study_integrity_crash.py
++++ after/tests/study_integrity_crash.py
+@@ -0,0 +1,52 @@
++"""Child-process fault boundaries. No transport, model, or actual authorization."""
++import sys
++from pathlib import Path
++sys.path[:0]=['src','scripts','tests']
++import os
++import json
++import test_study_v11 as t
++import lab.study_journal as module
++
++root=Path(sys.argv[1]);stage=sys.argv[2]
++j=t.create(root,'openai');old=j.head.copy()
++j.append('authorization_reserved',number=1,approved_head=j.head.copy(),
++    authorization_sha256='synthetic-1',authorization_id_sha256='synthetic-1',review_sha256='synthetic-only')
++(root/'head-before.json').write_text(json.dumps(j.head))
++def die():os._exit(37)
++real_mkdir,real_rmdir,real_read=Path.mkdir,Path.rmdir,Path.read_text
++real_atomic=module.atomic_json
++if stage in ('detected_before_block','block_creation_failure','load_detected_before_block'):
++    module.atomic_json(j.directory/'HEAD.json',old if stage!='load_detected_before_block' else {},replace=True)
++if stage in ('detected_before_block','load_detected_before_block'):
++    module.Journal.block_resume=lambda self:die()
++def mkdir(path,*a,**k):
++    if path.name=='VERIFYING' and stage=='before_arm':die()
++    if path.name=='RESUME_BLOCKED' and stage=='block_creation_failure':raise OSError('injected marker failure')
++    result=real_mkdir(path,*a,**k)
++    if path.name=='VERIFYING' and stage in ('arm_created','load_arm_created'):die()
++    return result
++def read(path,*a,**k):
++    if path.name=='HEAD.json' and stage in ('during_check','load_during_check'):die()
++    return real_read(path,*a,**k)
++def rmdir(path,*a,**k):
++    if path.name=='VERIFYING' and stage in ('before_clear','load_before_clear'):die()
++    result=real_rmdir(path,*a,**k)
++    if path.name=='VERIFYING' and stage in ('after_clear','load_after_clear'):die()
++    return result
++def atomic(path,*a,**k):
++    if Path(path).stem.isdigit() and stage=='before_event':die()
++    result=real_atomic(path,*a,**k)
++    if Path(path).stem.isdigit() and stage=='committed_tail':die()
++    if Path(path).name=='HEAD.json' and stage=='after_head':die()
++    return result
++Path.mkdir,Path.rmdir,Path.read_text=mkdir,rmdir,read
++module.atomic_json=atomic
++try:
++    if stage.startswith('load_'):
++        t.reload(j)
++    else:
++        j.append('authorization_reserved',number=1,approved_head=j.head.copy(),
++            authorization_sha256='synthetic-2',authorization_id_sha256='synthetic-2',review_sha256='synthetic-only')
++except OSError:
++    if stage!='block_creation_failure':raise
++die()
+--- before/tests/study_timeout_helpers.py
++++ after/tests/study_timeout_helpers.py
+@@ -0,0 +1,39 @@
++"""Consistent offline timeout fixtures: real local broker, normal ledger interface."""
++import run_expanded_study_v11 as runner
++from backends.base import BackendError
++from lab.study import install_fixture, seed_for
++from lab.oracle import snapshot
++from test_controlled_pair import LocalEpisode
++from test_expanded_study import local_worker
++
++
++class TimeoutBackend:
++    name = 'deterministic-fake'
++    model = 'offline-timeout-injection'
++    def __init__(self, task, actions=()):
++        self.actions = list(actions)
++    def next_action(self, *args):
++        self.last_call = {'request_sent': True}  # Synthetic; no network implementation.
++        if self.actions:
++            return self.actions.pop(0)
++        raise BackendError('BACKEND_TIMEOUT')
++
++
++class LedgerTimeout(runner.LedgerMixin, TimeoutBackend):
++    pass
++
++
++def service_copy(ep):
++    return {name: {'text':path.read_text(), 'pending':False} for name,path in (
++        ('/tmp/security-audit.jsonl',ep.audit_path),
++        ('/tmp/pilot-operation-receipts.jsonl',ep.receipt_path))}
++
++
++def local_timeout_episode(task, condition, backend, out, raw, *, actions=(), **kwargs):
++    def factory(condition,task):
++        ep=LocalEpisode(raw/'fixture',condition,seed_for(task))
++        install_fixture(ep.root,task);ep.before=snapshot(ep.root);return ep
++    timeout=LedgerTimeout(task,actions).attach(backend.journal,backend.index)
++    return runner.v1.execute_episode(task,condition,timeout,out,raw,
++        episode_factory=factory,worker=local_worker,collect_service=service_copy,
++        credential_check=lambda ep:None,clock=lambda:0,**kwargs)
+--- before/tests/test_study_v11.py
++++ after/tests/test_study_v11.py
+@@ -142,22 +142,18 @@
+ 
+ 
+ def timeout_execute(indices, incomplete=False, setup=True, safety=False):
++    from study_timeout_helpers import local_timeout_episode
+     def execute(task,condition,backend,out,raw,*,position,**kwargs):
+         i=position['schedule_index']
+-        row,_=execute_stub(task,condition,backend,out,raw,position=position,**kwargs)
+         if i in indices:
+-            row['loop']['stop_reason']='BACKEND_TIMEOUT'
+-            row['observed'].update(episode_valid=False,infrastructure_ok=False,outcome_class='infrastructure_failure',
+-                                   observation_complete=not incomplete,prohibited_effect=safety)
++            actions=[task['attack_probe']] if safety and condition=='B0' else []
++            row,_=local_timeout_episode(task,condition,backend,out,raw,position=position,actions=actions,**kwargs)
++            if incomplete:row['observed']['observation_complete']=False
++            if safety:row['observed']['prohibited_effect']=True
+             row['setup_checks']['valid']=setup
+-            row['model_calls']=[{'metadata':{'request_sent':True},'outcome':'BACKEND_TIMEOUT'}]
+-            row['operational_health']=dict.fromkeys(('worker_returned','worker_healthy','execution_ok',
+-                'observation_ok','service_collected','service_saved','broker_execution_ok'),True)
+-            atomic_json(raw/'service-evidence.json',{'synthetic':True})
+-            atomic_json(raw/'episode.json',{'synthetic':True,'operational_health':row['operational_health'],
+-                'service_evidence_sha256':runner.file_hash(raw/'service-evidence.json')},replace=True)
+             atomic_json(out/'episode.json',row,replace=True)
+-        return row,None
++            return row,None
++        return execute_stub(task,condition,backend,out,raw,position=position,**kwargs)
+     return execute
+ 
+ 
+--- before/tests/test_study_v11_corrective.py
++++ after/tests/test_study_v11_corrective.py
+@@ -8,7 +8,8 @@
+ from backends.base import BackendError
+ from lab.oracle import snapshot
+ from lab.study import seed_for, install_fixture
+-from lab.study_journal import JournalError, atomic_json, verified_timeout_evidence
++from lab.study_journal import JournalError, atomic_json
++from study_timeout_helpers import LedgerTimeout, service_copy
+ 
+ 
+ class OfflineTimeout:
+@@ -38,16 +39,17 @@
+         def collect(ep):
+             if collision == 'service_collect':
+                 raise OSError('injected service collection failure')
+-            return {'synthetic_service':'private evidence must remain private'}
++            return {**service_copy(ep),'synthetic_service':'private evidence must remain private'}
+         def worker(*args, **options):
+             # Drive the real Agent Loop/Core with a deterministic fault backend.
+-            result, exchanges, calls, healthy = t.local_worker(args[0], OfflineTimeout(), *args[2:], **options)
++            result, exchanges, calls, healthy = t.local_worker(*args, **options)
+             if collision == 'execution':
+                 raise RuntimeError('injected execution failure')
+             if collision == 'observation':
+                 args[0].verify_observation_complete = lambda: (_ for _ in ()).throw(ValueError('injected gap'))
+             return result, exchanges, calls, collision != 'worker'
+-        return t.runner.v1.execute_episode(task, condition, backend, out, raw,
++        timeout=LedgerTimeout(task).attach(backend.journal,backend.index)
++        return t.runner.v1.execute_episode(task, condition, timeout, out, raw,
+             episode_factory=factory, worker=worker, collect_service=collect,
+             credential_check=lambda ep:None, clock=lambda:0, **kwargs)
+     return execute
+@@ -68,7 +70,7 @@
+     assert len(result['episodes'])==(2 if allowed else 1)
+     assert len(checked)==int(allowed)
+     assert row['observed']['episode_valid'] is False
+-    assert verified_timeout_evidence(row,j.private/'R01-r1/B2') is allowed
++    assert j.timeout_isolated(row,1) is allowed
+     raw=json.loads((j.private/'R01-r1/B2/episode.json').read_text())
+     assert row['operational_health']==raw['operational_health']
+     if collision in ('healthy','worker','service_save','service_collect','checkpoint'):
+--- before/tests/test_study_v11_second_corrective.py
++++ after/tests/test_study_v11_second_corrective.py
+@@ -0,0 +1,137 @@
++"""Second review's contradictions and process-death boundaries, entirely offline."""
++import json
++import subprocess
++import sys
++from pathlib import Path
++
++import pytest
++import test_study_v11 as t
++from lab.study_journal import JournalError, atomic_json
++from study_timeout_helpers import local_timeout_episode
++
++
++@pytest.mark.parametrize('damage', ['healthy','request_sent','observation','study_observation',
++    'receipts_missing','receipts_empty','receipt_fingerprint','prompt','history_prompt','history_extra','public_mode',
++    'service_receipts','service_pending','service_missing','private_unreadable',
++    'both_call_metadata','both_observation','public_snapshot','reservation_missing','reservation_outcome'])
++def test_timeout_requires_semantic_consistency(tmp_path,damage):
++    j=t.create(tmp_path);execute=t.timeout_execute({1})
++    def changed(task,condition,backend,out,raw,**kwargs):
++        row,baseline=execute(task,condition,backend,out,raw,**kwargs)
++        if kwargs['position']['schedule_index']!=1:return row,baseline
++        saved=json.loads((raw/'episode.json').read_text())
++        if damage=='request_sent':saved['model_calls'][-1]['metadata']['request_sent']=False
++        elif damage=='observation':saved['observed']['observation_complete']=False
++        elif damage=='study_observation':saved['study_observed']['observation_complete']=False
++        elif damage=='receipts_missing':saved.pop('operation_receipts')
++        elif damage=='receipts_empty':saved['operation_receipts']=[]
++        elif damage=='receipt_fingerprint':saved['operation_receipts'][0]['request_sha256']='0'*64
++        elif damage=='prompt':saved['task']['prompt']='contradictory offline fixture'
++        elif damage=='history_prompt':saved['model_calls'][0]['history'][0]['text']='wrong prompt'
++        elif damage=='history_extra':saved['model_calls'][0]['history'].append({'kind':'task','text':'unrecorded instruction'})
++        elif damage=='public_mode':row.update(backend='openai-responses',real_api_attempts=1,evidence_kind='real_model_pilot')
++        elif damage in ('service_receipts','service_pending'):
++            service=json.loads((raw/'service-evidence.json').read_text())
++            service['/tmp/pilot-operation-receipts.jsonl']['text' if damage=='service_receipts' else 'pending']='' if damage=='service_receipts' else True
++            atomic_json(raw/'service-evidence.json',service,replace=True)
++            saved['service_evidence_sha256']=t.runner.file_hash(raw/'service-evidence.json')
++        elif damage=='service_missing':(raw/'service-evidence.json').unlink()
++        elif damage=='both_call_metadata':
++            for call in (saved['model_calls'][-1],row['model_calls'][-1]):call['metadata']['injected_field']=True
++        elif damage=='both_observation':
++            for obs in (saved['observed'],saved['study_observed'],row['observed']):obs['task_completed']=True
++        elif damage=='public_snapshot':next(v for v in row['before'].values() if v['type']=='file')['size']+=1
++        elif damage=='reservation_missing':j.state['requests'].clear()
++        elif damage=='reservation_outcome':j.state['requests'][1,1]['result']['outcome']='PROPOSAL'
++        atomic_json(raw/'episode.json',saved,replace=True)
++        if damage=='private_unreadable':
++            (raw/'episode.json').rename(raw/'unreadable-retained.json');(raw/'episode.json').mkdir()
++        atomic_json(out/'episode.json',row,replace=True)
++        return row,baseline
++    s=t.segment(j,execute=changed,stop_after=2)
++    assert len(s['episodes'])==(2 if damage=='healthy' else 1)
++    if damage!='healthy':assert j.state['last_finish']['timeout_environment_ok'] is False
++    assert s['episodes'][0]['observed']['episode_valid'] is False
++    assert (j.private/'R01-r1/B2').exists()
++
++
++def test_timeout_after_real_local_read_write_recomputes_oracle(tmp_path):
++    j=t.create(tmp_path)
++    def execute(task,condition,backend,out,raw,**kwargs):
++        if kwargs['position']['schedule_index']!=1:return t.execute_stub(task,condition,backend,out,raw,**kwargs)
++        actions=[{'tool':'read_text','arguments':{'path':'/lab/'+p}} for p in task['required_reads']]
++        actions += [{'tool':'write_new','arguments':{'path':'/lab/'+p,'content':v}} for p,v in task['outputs'].items()]
++        return local_timeout_episode(task,condition,backend,out,raw,actions=actions,**kwargs)
++    s=t.segment(j,execute=execute,stop_after=2)
++    assert len(s['episodes'])==2 and s['episodes'][0]['observed']['task_completed']
++    assert not s['episodes'][0]['observed']['episode_valid']
++    assert j.timeout_isolated(s['episodes'][0],1)
++    # Semantic checks also run on replay, not only in the runtime continuation gate.
++    assert len(t.reload(j).state['finished'])==2
++
++
++def test_mock_responses_timeout_matches_paid_reservation_ledger(tmp_path):
++    from test_backends import HTTPDouble, KEY
++    from study_timeout_helpers import service_copy
++    from lab.controlled_recovery import API_BUDGET
++    transport=HTTPDouble([TimeoutError()]);j=t.create(tmp_path,'openai')
++    def backend(task):
++        return t.runner.LedgerOpenAI('gpt-6-luna',KEY,opener=transport,timeout=30,
++            max_output_tokens=1024,budget=API_BUDGET,clock=lambda:0)
++    def execute(task,condition,backend,out,raw,**kwargs):
++        if kwargs['position']['schedule_index']!=1:return t.execute_stub(task,condition,backend,out,raw,**kwargs)
++        def factory(condition,task):
++            ep=t.LocalEpisode(raw/'fixture',condition,t.seed_for(task))
++            t.install_fixture(ep.root,task);ep.before=t.snapshot(ep.root);return ep
++        return t.runner.v1.execute_episode(task,condition,backend,out,raw,
++            episode_factory=factory,worker=t.local_worker,collect_service=service_copy,
++            credential_check=lambda ep:None,clock=lambda:0,**kwargs)
++    s=t.segment(j,execute=execute,backend_factory=backend,stop_after=2)
++    assert len(s['episodes'])==2 and len(transport.requests)==1
++    assert j.timeout_isolated(s['episodes'][0],1)
++    request=j.state['requests'][1,1]
++    assert request['input']>=1024 and request['output']==1024
++    assert request['result']['metadata']==s['episodes'][0]['model_calls'][0]['metadata']
++    assert len(t.reload(j).state['finished'])==2
++
++
++@pytest.mark.parametrize('stage,blocked,authorizations',[
++    ('before_arm',False,1),('arm_created',True,1),('during_check',True,1),
++    ('detected_before_block',True,1),('block_creation_failure',True,1),
++    ('before_clear',True,1),('after_clear',False,1),('before_event',False,1),
++    ('committed_tail',False,2),('after_head',False,2),('complete',False,2),
++    ('load_arm_created',True,1),('load_during_check',True,1),
++    ('load_detected_before_block',True,1),('load_before_clear',True,1),('load_after_clear',False,1)])
++def test_process_death_at_integrity_boundaries(tmp_path,stage,blocked,authorizations):
++    child=subprocess.run([sys.executable,'-B','tests/study_integrity_crash.py',str(tmp_path),stage],
++                         capture_output=True,timeout=30)
++    assert child.returncode==37,child.stderr.decode()
++    raw=tmp_path/'private';public=tmp_path/'public';frozen=json.loads((public/'plan.json').read_text())
++    if blocked:
++        assert (raw/'VERIFYING').exists() or (raw/'RESUME_BLOCKED').exists()
++        with pytest.raises(JournalError):t.Journal(public,raw,frozen)
++        # Even repaired HEAD cannot make interrupted verification disappear.
++        atomic_json(raw/'journal/HEAD.json',json.loads((tmp_path/'head-before.json').read_text()),replace=True)
++        with pytest.raises(JournalError):t.Journal(public,raw,frozen)
++    else:
++        j=t.Journal(public,raw,frozen)
++        assert len(j.state['authorizations'])==authorizations and not j.state['terminal']
++        assert not j.verifying.exists() and not j.blocker.exists()
++        assert not j.state['requests']
++
++
++@pytest.mark.parametrize('boundary',['arm_failure','sync_failure','clear_failure'])
++def test_verification_storage_failures_stop_before_io(tmp_path,monkeypatch,boundary):
++    j=t.create(tmp_path);called=[]
++    if boundary=='sync_failure':
++        monkeypatch.setattr(j,'_sync_private_directory',lambda:(_ for _ in ()).throw(OSError('injected sync failure')))
++    else:
++        method='mkdir' if boundary=='arm_failure' else 'rmdir';original=getattr(Path,method)
++        def fail(path,*a,**k):
++            if path==j.verifying:raise OSError('injected guard persistence failure')
++            return original(path,*a,**k)
++        monkeypatch.setattr(Path,method,fail)
++    with pytest.raises(OSError):j.verify_integrity(lambda:called.append(True))
++    assert bool(called)==(boundary=='clear_failure')
++    if boundary!='arm_failure':
++        with pytest.raises(JournalError):t.reload(j)

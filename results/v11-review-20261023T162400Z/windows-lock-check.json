@@ -1,0 +1,7 @@
+{
+  "kind": "offline_engineering_not_llm",
+  "platform": "win32",
+  "concurrent_process_excluded": true,
+  "lock_released_after_process_kill": true,
+  "real_api_attempts": 0
+}

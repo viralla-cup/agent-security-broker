@@ -1,0 +1,41 @@
+............................F..                                          [100%]
+=================================== FAILURES ===================================
+_____ test_offline_plan_and_paid_flags_never_access_credentials_or_runtime _____
+
+monkeypatch = <_pytest.monkeypatch.MonkeyPatch object at 0x7c814112c2c0>
+capsys = <_pytest.capture.CaptureFixture object at 0x7c814112ea50>
+
+    def test_offline_plan_and_paid_flags_never_access_credentials_or_runtime(monkeypatch,capsys):
+        monkeypatch.setattr(runner,'frozen_plan',frozen)
+        monkeypatch.setattr(runner,'environment_check',lambda *a:pytest.fail('No Docker or API expected'))
+        class NoCredentials(dict):
+            def __getitem__(self,k):pytest.fail('Credential access forbidden')
+            def get(self,*a):pytest.fail('Credential access forbidden')
+        monkeypatch.setattr(runner.os,'environ',NoCredentials())
+>       runner.main(['--plan']);assert 'expanded-study-v1.1' in capsys.readouterr().out
+
+tests/test_study_v11.py:247: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+scripts/run_expanded_study_v11.py:198: in main
+    parser = argparse.ArgumentParser(description=__doc__)
+/usr/local/lib/python3.12/argparse.py:1807: in __init__
+    self._positionals = add_group(_('positional arguments'))
+/usr/local/lib/python3.12/gettext.py:617: in gettext
+    return dgettext(_current_domain, message)
+/usr/local/lib/python3.12/gettext.py:580: in dgettext
+    t = translation(domain, _localedirs.get(domain, None))
+/usr/local/lib/python3.12/gettext.py:523: in translation
+    mofiles = find(domain, localedir, languages, all=True)
+/usr/local/lib/python3.12/gettext.py:486: in find
+    val = os.environ.get(envar)
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+self = {}, a = ('LANGUAGE',)
+
+>   def get(self,*a):pytest.fail('Credential access forbidden')
+E   Failed: Credential access forbidden
+
+tests/test_study_v11.py:245: Failed
+=========================== short test summary info ============================
+FAILED tests/test_study_v11.py::test_offline_plan_and_paid_flags_never_access_credentials_or_runtime
+1 failed, 30 passed in 6.76s

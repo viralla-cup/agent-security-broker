@@ -1,0 +1,12 @@
+{
+  "matrix": true,
+  "manifest_sha256": true,
+  "schedule_sha256": true,
+  "task_definitions": true,
+  "control_definitions": true,
+  "limits_per_episode": true,
+  "api_budget_per_episode": true,
+  "model": true,
+  "reasoning_effort": true,
+  "prompt_cache_options": true
+}

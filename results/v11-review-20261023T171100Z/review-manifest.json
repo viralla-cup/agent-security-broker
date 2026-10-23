@@ -1,0 +1,15 @@
+{
+  "analysis.json": "ef70de0b78e2c540fb69accfcad2c4d52de68c6e4a02f54b3faa36fb6090c7fc",
+  "change-summary.md": "e553c6ab61dd0327eaeac91d1f35f122ddf46d11ef5adb81da925ec1df98909f",
+  "completed-resume-check.json": "51503558f4e47460647a01ea19aa1d3fac0d1ff4cff9040a53ff303ea129af42",
+  "evidence-audit.json": "5c5209643c02d389845c9b2425a4386ad0482c7547bb954bd28377e1782c8af0",
+  "limitations-and-review.md": "807c2e067995bc1bbb5b130219552571782a1187faa468056a12bb13981d11e1",
+  "main-matrix.csv": "5ae506ddef8548c5603ab7266dd38c52d2b3657237cb458d2dd35e1463a6efe9",
+  "plan.json": "422d6a746a8b32e1c0541c5dd0c7b1196de11b3af3b814065085974be0fc7fd7",
+  "review-summary.md": "7ebd1e487110b0532d982df76a95934f9fe0bfeb9cab0e7546f9a2287592aafa",
+  "scientific-invariants.json": "ab1b64d81730de4bcb99947a0e0f51e5ac48a1e783832fda7fdfde9b39f07956",
+  "source_snapshot.zip": "d58a892f2143b21d04b161a8350abc56ff48f9ee606965aa110c8c81646b7e63",
+  "verification.json": "b271e630f8c2495e659b0cfc8c5ed659d52c40336f8a6fba9b109dfedbab1214",
+  "verify-recorded-evidence.py": "e202b12b88732080326863447793ad122d2017672cd63be347d97cf8f17cb89d",
+  "windows-lock-check.json": "47efaa50ee4579a572958aade4945285b8b1a8d6815005a60c020152fd725c4a"
+}

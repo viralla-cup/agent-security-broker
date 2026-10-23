@@ -1,0 +1,40 @@
+# Preserve raw bytes of hash-bound inputs and immutable public evidence.
+# -text disables both clean and checkout EOL conversion, regardless of autocrlf.
+# Explicit evidence scope avoids restaging older, already committed artifacts.
+/results/checks-20261023T161356Z-944bcb/** -text
+/results/checks-20261023T161551Z-441506/** -text
+/results/checks-20261023T161934Z-b5618f/** -text
+/results/checks-20261023T162301Z-02ecf8/** -text
+/results/checks-20261023T171009Z-4dae92/** -text
+/results/checks-20261023T183528Z-2e2990/** -text
+/results/checks-20261023T191209Z-622dcd/** -text
+/results/checks-20261023T191457Z-b76140/** -text
+/results/dev-20261023T162036Z-6814af/** -text
+/results/pilot-20261023T162036Z-a55c08/** -text
+/results/study-20261023T094101Z-039029/** -text
+/results/study-20261023T101314Z-5e275d/** -text
+/results/study-20261023T153106Z-cf4bbf/** -text
+/results/study-v1.1-offline-main-final-20261023/** -text
+/results/study-v1.1-offline-main-reviewed-20261023/** -text
+/results/v11-corrective-review-20261023T182927Z/** -text
+/results/v11-corrective2-review-20261024/** -text
+/results/v11-focused-20261023T161006Z-484fa0/** -text
+/results/v11-focused-20261023T161211Z-a60e09/** -text
+/results/v11-review-20261023T162400Z/** -text
+/results/v11-review-20261023T171100Z/** -text
+/results/git-packaging-20261024/** -text
+/src/** -text
+/scripts/** -text
+/tests/** -text
+/policies/** -text
+/experiments/** -text
+/Dockerfile -text
+/requirements.lock -text
+/pytest.ini -text
+/.dockerignore -text
+/docs/controlled-recovery-proposal.md -text
+/docs/expanded-study-v1.1-runbook.md -text
+
+# Packaging documentation is new, unbound text with an explicit LF convention.
+/.gitattributes text eol=lf
+/docs/git-byte-preservation.md text eol=lf

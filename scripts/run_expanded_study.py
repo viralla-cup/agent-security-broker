@@ -140,6 +140,11 @@ def execute_episode(task, condition, backend, public_dir, private_dir, *, baseli
     episode = SimpleNamespace(seed=seed_for(task), before={}, isolation={}, receipts=[], harness_requests=[])
     loop = {'stop_reason': 'INFRASTRUCTURE_ERROR', 'steps': 0, 'denials': 0, 'model_calls': 0, 'retries': 0}
     gate, after, complete, healthy, setup_valid = {}, {}, False, False, None
+    # Independent operational signals must survive a BACKEND_TIMEOUT outcome.
+    # They describe trusted harness health, not scientific task success.
+    health = dict(worker_returned=False, worker_healthy=False, execution_ok=True,
+                  observation_ok=False, service_collected=False, service_saved=False)
+    service_sha256 = None
     observed_baseline = None
     checkpoint_number = 0
     started_wall = clock()
@@ -205,11 +210,13 @@ def execute_episode(task, condition, backend, public_dir, private_dir, *, baseli
                     loop, _, _, healthy = worker(episode, GuardedBackend(), task, LIMITS, seeded_exchange=seeded,
                                                  episode_deadline=deadline, exchanges=exchanges, calls=calls,
                                                  checkpoint=checkpoint, record_history=True)
+                    health.update(worker_returned=True, worker_healthy=healthy is True)
                     if not calls and loop['stop_reason'] == 'TIME_LIMIT':
                         setup_valid = False
                 else:
                     loop['stop_reason'] = 'INVALID_SETUP'
             except Exception:
+                health['execution_ok'] = False
                 healthy = False
             finally:
                 try:
@@ -219,15 +226,25 @@ def execute_episode(task, condition, backend, public_dir, private_dir, *, baseli
                 except Exception:
                     healthy = False
                 try:
-                    write_json(private_dir / 'service-evidence.json', collect_service(episode))
+                    service = collect_service(episode)
+                    health['service_collected'] = True
+                    service_path = private_dir / 'service-evidence.json'
+                    write_json(service_path, service)
+                    persisted = service_path.read_bytes()
+                    if json.loads(persisted) != service:
+                        raise ValueError('Service evidence persistence mismatch')
+                    service_sha256 = hashlib.sha256(persisted).hexdigest()
+                    health['service_saved'] = True
                 except Exception:
                     healthy = False
                 checkpoint()
     except Exception:
+        health['execution_ok'] = False
         healthy = False
     try:
         integrity_check()
     except Exception:
+        health['execution_ok'] = False
         healthy = False
     # Evaluate with the original definition even if a faulty dependency mutated
     # its detached working copy. Such an episode remains infrastructure-invalid.
@@ -236,6 +253,15 @@ def execute_episode(task, condition, backend, public_dir, private_dir, *, baseli
                                  healthy and complete, after, setup_valid=setup_valid,
                                  observation_complete=complete, evaluator=evaluate_study)
     obs = public['observed']
+    health['observation_ok'] = complete and obs['observation_complete'] is True
+    health['broker_execution_ok'] = all(
+        e['audit'].get('evaluation_status') == 'COMPLETED'
+        and ((e['audit'].get('decision') == 'DENY'
+              and e['audit'].get('execution_status') == 'NOT_STARTED'
+              and e['audit'].get('dispatched') is False)
+             or (e['audit'].get('decision') == 'ALLOW'
+                 and e['audit'].get('execution_status') == 'SUCCEEDED'
+                 and e['audit'].get('dispatched') is True)) for e in exchanges)
     obs.update(setup_deny_observed=task['track'] == 'R' and setup_valid is True,
                model_origin_deny_count=obs['deny_origin_counts']['model_selected'],
                correct_refusal=(not task['feasible'] and obs['episode_valid'] and not obs['prohibited_effect']
@@ -243,8 +269,11 @@ def execute_episode(task, condition, backend, public_dir, private_dir, *, baseli
     public.update(track=task['track'], family=task['family'], stratum=task['stratum'],
                   pilot_kind='controlled_denial_seeded_recovery' if task['track'] == 'R' else 'prospective_security_utility',
                   elapsed_seconds=clock() - started_wall, setup_checks=gate,
+                  operational_health=health,
                   broker_elapsed_ns=[e['audit']['elapsed_ns'] for e in exchanges])
     raw['study_observed'] = obs
+    raw['operational_health'] = health
+    raw['service_evidence_sha256'] = service_sha256
     if position is not None:
         public.update(position)
         raw['planned_position'] = position
@@ -253,8 +282,9 @@ def execute_episode(task, condition, backend, public_dir, private_dir, *, baseli
     return public, observed_baseline
 
 
-def run_controls(out, raw, frozen, *, episode_factory=StudyEpisode, input_check=verify_inputs):
-    snapshot = FrozenStudy.capture(frozen)
+def run_controls(out, raw, frozen, *, episode_factory=StudyEpisode, input_check=verify_inputs,
+                 snapshot_factory=FrozenStudy.capture):
+    snapshot = snapshot_factory(frozen)
     rows = []
     for control in json.loads(snapshot.catalog_json)['controls']:
         task = snapshot.task(control['task_id'])

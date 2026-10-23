@@ -1,0 +1,10 @@
+{
+  "kind": "offline_engineering_not_llm",
+  "result": {
+    "run_id": "offline-main-reviewed-20261023",
+    "stop_reason": "SCHEDULE_EXHAUSTED",
+    "additional_api_attempts": 0
+  },
+  "all_run_files_unchanged": true,
+  "files_checked": 1693
+}

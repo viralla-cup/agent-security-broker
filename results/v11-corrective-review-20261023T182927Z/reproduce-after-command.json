@@ -1,0 +1,31 @@
+{
+  "command": [
+    "docker",
+    "run",
+    "--rm",
+    "--network",
+    "none",
+    "--read-only",
+    "--cap-drop",
+    "ALL",
+    "--security-opt",
+    "no-new-privileges=true",
+    "--memory",
+    "256m",
+    "--cpus",
+    "1",
+    "--pids-limit",
+    "64",
+    "--tmpfs",
+    "/tmp:rw,noexec,nosuid,nodev,size=8m",
+    "--log-driver",
+    "none",
+    "--mount",
+    "type=bind,src=C:\\Users\\Alibi\\Documents\\GitHub\\agent-security-broker\\results\\v11-corrective-review-20261023T182927Z,dst=/review,readonly",
+    "agent-security-broker:mvp",
+    "python",
+    "-B",
+    "/review/reproduce-after.py"
+  ],
+  "exit_code": 0
+}

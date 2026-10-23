@@ -1,0 +1,63 @@
+#0 building with "desktop-linux" instance using docker driver
+
+#1 [internal] load build definition from Dockerfile
+#1 transferring dockerfile: 610B 0.0s done
+#1 DONE 0.0s
+
+#2 [internal] load metadata for docker.io/library/python:3.12.12-slim-bookworm@sha256:593bd06efe90efa80dc4eee3948be7c0fde4134606dd40d8dd8dbcade98e669c
+#2 DONE 0.0s
+
+#3 [internal] load .dockerignore
+#3 transferring context: 308B done
+#3 DONE 0.0s
+
+#4 [ 1/11] FROM docker.io/library/python:3.12.12-slim-bookworm@sha256:593bd06efe90efa80dc4eee3948be7c0fde4134606dd40d8dd8dbcade98e669c
+#4 resolve docker.io/library/python:3.12.12-slim-bookworm@sha256:593bd06efe90efa80dc4eee3948be7c0fde4134606dd40d8dd8dbcade98e669c 0.0s done
+#4 DONE 0.0s
+
+#5 [internal] load build context
+#5 transferring context: 3.17kB 0.0s done
+#5 DONE 0.0s
+
+#6 [ 2/11] WORKDIR /app
+#6 CACHED
+
+#7 [ 3/11] COPY requirements.lock .
+#7 CACHED
+
+#8 [ 4/11] RUN pip install --no-cache-dir -r requirements.lock && mkdir /channel && chown 10001:10001 /channel
+#8 CACHED
+
+#9 [ 5/11] COPY src/ src/
+#9 DONE 0.1s
+
+#10 [ 6/11] COPY policies/ policies/
+#10 DONE 0.1s
+
+#11 [ 7/11] COPY tests/ tests/
+#11 DONE 0.1s
+
+#12 [ 8/11] COPY scripts/ scripts/
+#12 DONE 0.1s
+
+#13 [ 9/11] COPY experiments/ experiments/
+#13 DONE 0.1s
+
+#14 [10/11] COPY pytest.ini .
+#14 DONE 0.1s
+
+#15 [11/11] RUN chmod -R a-w /app && chmod 755 /channel
+#15 DONE 0.7s
+
+#16 exporting to image
+#16 exporting layers
+#16 exporting layers 0.5s done
+#16 exporting manifest sha256:1a9332ec9dbc9907663f09370103e69698c041a92e8c7d245759dc7b345723ff 0.0s done
+#16 exporting config sha256:21dd6d4e1a57a6dfb26fd09223e37ff68e1a766cb39a1eb3620c44aa45bdac97 0.0s done
+#16 exporting attestation manifest sha256:e66e850563192c878b25e506c76ba3303d33de14b370ed118a92bc5e6a403abb 0.0s done
+#16 exporting manifest list sha256:4feb80bf78619d07d80f1284cbfda4edd891cc03d6f7ad4ba8652c9bb8bee589
+#16 exporting manifest list sha256:4feb80bf78619d07d80f1284cbfda4edd891cc03d6f7ad4ba8652c9bb8bee589 0.0s done
+#16 naming to docker.io/library/agent-security-broker:mvp done
+#16 unpacking to docker.io/library/agent-security-broker:mvp
+#16 unpacking to docker.io/library/agent-security-broker:mvp 0.3s done
+#16 DONE 1.0s

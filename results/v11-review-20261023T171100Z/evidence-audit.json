@@ -1,0 +1,245 @@
+{
+  "kind": "offline_engineering_not_llm",
+  "episodes": 56,
+  "valid": 56,
+  "complete_valid_pairs": 28,
+  "segments": 2,
+  "unique_broker_sessions": 56,
+  "real_api_attempts": 0,
+  "actual_llm_episodes": 0,
+  "historical_evidence_files_preserved": 4264,
+  "previous_docker_main_files_preserved": 1693,
+  "only_modified_preexisting_file": [
+    "scripts/run_expanded_study.py"
+  ],
+  "first_segment_artifacts_unchanged": true,
+  "clean_docker_teardown": true,
+  "checks": [
+    {
+      "schedule_index": 1,
+      "receipt_oracle_history_budget_checks": true
+    },
+    {
+      "schedule_index": 2,
+      "receipt_oracle_history_budget_checks": true
+    },
+    {
+      "schedule_index": 3,
+      "receipt_oracle_history_budget_checks": true
+    },
+    {
+      "schedule_index": 4,
+      "receipt_oracle_history_budget_checks": true
+    },
+    {
+      "schedule_index": 5,
+      "receipt_oracle_history_budget_checks": true
+    },
+    {
+      "schedule_index": 6,
+      "receipt_oracle_history_budget_checks": true
+    },
+    {
+      "schedule_index": 7,
+      "receipt_oracle_history_budget_checks": true
+    },
+    {
+      "schedule_index": 8,
+      "receipt_oracle_history_budget_checks": true
+    },
+    {
+      "schedule_index": 9,
+      "receipt_oracle_history_budget_checks": true
+    },
+    {
+      "schedule_index": 10,
+      "receipt_oracle_history_budget_checks": true
+    },
+    {
+      "schedule_index": 11,
+      "receipt_oracle_history_budget_checks": true
+    },
+    {
+      "schedule_index": 12,
+      "receipt_oracle_history_budget_checks": true
+    },
+    {
+      "schedule_index": 13,
+      "receipt_oracle_history_budget_checks": true
+    },
+    {
+      "schedule_index": 14,
+      "receipt_oracle_history_budget_checks": true
+    },
+    {
+      "schedule_index": 15,
+      "receipt_oracle_history_budget_checks": true
+    },
+    {
+      "schedule_index": 16,
+      "receipt_oracle_history_budget_checks": true
+    },
+    {
+      "schedule_index": 17,
+      "receipt_oracle_history_budget_checks": true
+    },
+    {
+      "schedule_index": 18,
+      "receipt_oracle_history_budget_checks": true
+    },
+    {
+      "schedule_index": 19,
+      "receipt_oracle_history_budget_checks": true
+    },
+    {
+      "schedule_index": 20,
+      "receipt_oracle_history_budget_checks": true
+    },
+    {
+      "schedule_index": 21,
+      "receipt_oracle_history_budget_checks": true
+    },
+    {
+      "schedule_index": 22,
+      "receipt_oracle_history_budget_checks": true
+    },
+    {
+      "schedule_index": 23,
+      "receipt_oracle_history_budget_checks": true
+    },
+    {
+      "schedule_index": 24,
+      "receipt_oracle_history_budget_checks": true
+    },
+    {
+      "schedule_index": 25,
+      "receipt_oracle_history_budget_checks": true
+    },
+    {
+      "schedule_index": 26,
+      "receipt_oracle_history_budget_checks": true
+    },
+    {
+      "schedule_index": 27,
+      "receipt_oracle_history_budget_checks": true
+    },
+    {
+      "schedule_index": 28,
+      "receipt_oracle_history_budget_checks": true
+    },
+    {
+      "schedule_index": 29,
+      "receipt_oracle_history_budget_checks": true
+    },
+    {
+      "schedule_index": 30,
+      "receipt_oracle_history_budget_checks": true
+    },
+    {
+      "schedule_index": 31,
+      "receipt_oracle_history_budget_checks": true
+    },
+    {
+      "schedule_index": 32,
+      "receipt_oracle_history_budget_checks": true
+    },
+    {
+      "schedule_index": 33,
+      "receipt_oracle_history_budget_checks": true
+    },
+    {
+      "schedule_index": 34,
+      "receipt_oracle_history_budget_checks": true
+    },
+    {
+      "schedule_index": 35,
+      "receipt_oracle_history_budget_checks": true
+    },
+    {
+      "schedule_index": 36,
+      "receipt_oracle_history_budget_checks": true
+    },
+    {
+      "schedule_index": 37,
+      "receipt_oracle_history_budget_checks": true
+    },
+    {
+      "schedule_index": 38,
+      "receipt_oracle_history_budget_checks": true
+    },
+    {
+      "schedule_index": 39,
+      "receipt_oracle_history_budget_checks": true
+    },
+    {
+      "schedule_index": 40,
+      "receipt_oracle_history_budget_checks": true
+    },
+    {
+      "schedule_index": 41,
+      "receipt_oracle_history_budget_checks": true
+    },
+    {
+      "schedule_index": 42,
+      "receipt_oracle_history_budget_checks": true
+    },
+    {
+      "schedule_index": 43,
+      "receipt_oracle_history_budget_checks": true
+    },
+    {
+      "schedule_index": 44,
+      "receipt_oracle_history_budget_checks": true
+    },
+    {
+      "schedule_index": 45,
+      "receipt_oracle_history_budget_checks": true
+    },
+    {
+      "schedule_index": 46,
+      "receipt_oracle_history_budget_checks": true
+    },
+    {
+      "schedule_index": 47,
+      "receipt_oracle_history_budget_checks": true
+    },
+    {
+      "schedule_index": 48,
+      "receipt_oracle_history_budget_checks": true
+    },
+    {
+      "schedule_index": 49,
+      "receipt_oracle_history_budget_checks": true
+    },
+    {
+      "schedule_index": 50,
+      "receipt_oracle_history_budget_checks": true
+    },
+    {
+      "schedule_index": 51,
+      "receipt_oracle_history_budget_checks": true
+    },
+    {
+      "schedule_index": 52,
+      "receipt_oracle_history_budget_checks": true
+    },
+    {
+      "schedule_index": 53,
+      "receipt_oracle_history_budget_checks": true
+    },
+    {
+      "schedule_index": 54,
+      "receipt_oracle_history_budget_checks": true
+    },
+    {
+      "schedule_index": 55,
+      "receipt_oracle_history_budget_checks": true
+    },
+    {
+      "schedule_index": 56,
+      "receipt_oracle_history_budget_checks": true
+    }
+  ],
+  "plan_sha256": "0dd712482d29c323306d0430675ab3659f609c191cdaf60b4fbea69c6d777a6b",
+  "source_manifest_digest": "7f9765068dd6b99299d9fd48484686eaaef2e739927aaf830e815ff8fbc05c58"
+}

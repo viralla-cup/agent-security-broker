@@ -1,0 +1,48 @@
+....................................................................F.   [100%]
+=================================== FAILURES ===================================
+___ test_quarantine_blocks_paid_entry_before_review_preflight_or_credentials ___
+
+tmp_path = PosixPath('/tmp/pytest-of-unknown/pytest-0/test_quarantine_blocks_paid_entry_before0')
+monkeypatch = <_pytest.monkeypatch.MonkeyPatch object at 0x7ae83067b590>
+
+    def test_quarantine_blocks_paid_entry_before_review_preflight_or_credentials(tmp_path,monkeypatch):
+        j=t.create(tmp_path,'openai');j.block_resume()
+        # main's filesystem layout, without changing the journal or synthetic plan.
+        root=tmp_path/'cli';public=root/'results/study-v1.1-offline-test';private=root/'.local/study-v1.1/offline-test'
+        public.parent.mkdir(parents=True);private.parent.mkdir(parents=True)
+        j.public.rename(public);j.private.rename(private)
+        monkeypatch.setattr(t.runner,'ROOT',root)
+        monkeypatch.setattr(t.runner,'frozen_plan',lambda:j.plan)
+        monkeypatch.setattr(t.runner.v1,'require_review',lambda *a:pytest.fail('No review/paid path allowed'))
+        monkeypatch.setattr(t.runner,'environment_check',lambda *a:pytest.fail('No Docker/experiment allowed'))
+        class NoCredentials(dict):
+            def __getitem__(self,key):pytest.fail('No credential access allowed')
+        monkeypatch.setattr(t.runner.os,'environ',NoCredentials())
+>       with pytest.raises(JournalError):t.runner.main(['--run-id','offline-test','--backend','openai','--resume',
+            '--allow-paid-api','--review-record','unused','--authorization','unused'])
+
+tests/test_study_v11_corrective.py:169: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+scripts/run_expanded_study_v11.py:222: in main
+    parser = argparse.ArgumentParser(description=__doc__)
+/usr/local/lib/python3.12/argparse.py:1820: in __init__
+    self.add_argument(
+/usr/local/lib/python3.12/argparse.py:1496: in add_argument
+    self._get_formatter()._format_args(action, None)
+/usr/local/lib/python3.12/argparse.py:2608: in _get_formatter
+    return self.formatter_class(prog=self.prog)
+/usr/local/lib/python3.12/argparse.py:173: in __init__
+    width = shutil.get_terminal_size().columns
+/usr/local/lib/python3.12/shutil.py:1443: in get_terminal_size
+    columns = int(os.environ['COLUMNS'])
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+self = {}, key = 'COLUMNS'
+
+>   def __getitem__(self,key):pytest.fail('No credential access allowed')
+E   Failed: No credential access allowed
+
+tests/test_study_v11_corrective.py:167: Failed
+=========================== short test summary info ============================
+FAILED tests/test_study_v11_corrective.py::test_quarantine_blocks_paid_entry_before_review_preflight_or_credentials
+1 failed, 69 passed in 8.19s

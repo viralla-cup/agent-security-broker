@@ -1,0 +1,40 @@
+{
+  "kind": "offline_engineering",
+  "actual_provider_calls": 0,
+  "P1": [
+    {
+      "case": "healthy",
+      "continued": true,
+      "position_1_retained": true
+    },
+    {
+      "case": "private_request_sent_false",
+      "continued": false,
+      "position_1_retained": true
+    },
+    {
+      "case": "private_observation_false",
+      "continued": false,
+      "position_1_retained": true
+    },
+    {
+      "case": "missing_receipts",
+      "continued": false,
+      "position_1_retained": true
+    },
+    {
+      "case": "modified_task_prompt",
+      "continued": false,
+      "position_1_retained": true
+    }
+  ],
+  "P2": {
+    "child_exit_code": 29,
+    "resume_blocked": true,
+    "next_position": null
+  },
+  "source_sha256": {
+    "src/lab/study_journal.py": "b949f1a23729daf37b94d99652be39138a6841c0a915d605c8c8a23b7aef8fff",
+    "scripts/run_expanded_study_v11.py": "221b8174f0652c382ee586566b6fca0caeeacf54766f02a798eeffb79fa0b6f3"
+  }
+}

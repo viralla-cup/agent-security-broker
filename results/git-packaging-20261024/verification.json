@@ -1,0 +1,76 @@
+{
+  "already_committed_result_blobs_changed": 0,
+  "archives_scanned": 27,
+  "baseline_commit": "3be02741ad3a8f0edf298e5b0cf80266fd07f0d8",
+  "commit_created": false,
+  "credential_pattern_or_private_JSON_hits": 0,
+  "date_local": "2026-10-24",
+  "experiments_launched": 0,
+  "fresh_checkouts": [
+    {
+      "all_review_manifest_entries": 82,
+      "bound_files_byte_equal": 523,
+      "core_autocrlf": "true",
+      "final_review_manifest_entries": 34,
+      "plan_digest": "6d7a4153a1df255abf3f8b9076fd0576eeb46ed3a25e1814341d86232cc5646d",
+      "snapshot_files": 70,
+      "source_digest": "ea7f7dab488d20750098ee21606d426e0e435e0df80f8214321b05e73cb22801",
+      "source_files": 66
+    },
+    {
+      "all_review_manifest_entries": 82,
+      "bound_files_byte_equal": 523,
+      "core_autocrlf": "input",
+      "final_review_manifest_entries": 34,
+      "plan_digest": "6d7a4153a1df255abf3f8b9076fd0576eeb46ed3a25e1814341d86232cc5646d",
+      "snapshot_files": 70,
+      "source_digest": "ea7f7dab488d20750098ee21606d426e0e435e0df80f8214321b05e73cb22801",
+      "source_files": 66
+    },
+    {
+      "all_review_manifest_entries": 82,
+      "bound_files_byte_equal": 523,
+      "core_autocrlf": "false",
+      "final_review_manifest_entries": 34,
+      "plan_digest": "6d7a4153a1df255abf3f8b9076fd0576eeb46ed3a25e1814341d86232cc5646d",
+      "snapshot_files": 70,
+      "source_digest": "ea7f7dab488d20750098ee21606d426e0e435e0df80f8214321b05e73cb22801",
+      "source_files": 66
+    }
+  ],
+  "git_version": "git version 2.55.0.windows.5",
+  "index_files_scanned": 1531,
+  "kind": "implementer_offline_git_packaging_verification_not_independent_attestation",
+  "legacy_result_EOL_differences_not_restaged": 937,
+  "legacy_result_paths_outside_new_byte_policy": 988,
+  "limitations": [
+    "All checkout modes were exercised with Git for Windows, not a separate Linux Git installation.",
+    "Older committed evidence retains its legacy conversion behavior and was not repackaged.",
+    "New evidence directories need explicit byte-preserving attributes and verification.",
+    "No independent attestation or paid authorization is created by this report.",
+    "Secret-pattern scanning does not prove absence of every possible secret encoding.",
+    "This report is created after the recorded checks; final index/readback is checked separately."
+  ],
+  "packaging_files_covered_by_prior_independent_pass": false,
+  "paid_api_requests": 0,
+  "plan_digest": "6d7a4153a1df255abf3f8b9076fd0576eeb46ed3a25e1814341d86232cc5646d",
+  "preexisting_working_files_unchanged": 1529,
+  "repeat_source_review_required_by_source_changes": false,
+  "review_manifest_entries_verified": {
+    "results/v11-corrective-review-20261023T182927Z/review-manifest.json": 35,
+    "results/v11-corrective2-review-20261024/review-manifest.json": 34,
+    "results/v11-review-20261023T171100Z/review-manifest.json": 13
+  },
+  "source_boundary_changed": false,
+  "source_digest": "ea7f7dab488d20750098ee21606d426e0e435e0df80f8214321b05e73cb22801",
+  "staged_existing_source_EOL_only_corrections": [
+    "experiments/study-review-template.json",
+    "scripts/run_agent_pilot.py",
+    "src/lab/pilot_evidence.py",
+    "tests/test_expanded_study.py"
+  ],
+  "timezone": "Asia/Qyzylorda",
+  "tracked_ignored_files": 0,
+  "verification_method": "staged tree; independent bare Git metadata and empty checkout; no commit; no copied worktree files",
+  "verified_index_changed_blobs_before_this_report": 470
+}

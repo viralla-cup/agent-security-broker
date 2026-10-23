@@ -1,0 +1,10 @@
+{
+  "kind": "offline_engineering",
+  "platform": "win32",
+  "actual_provider_calls": 0,
+  "detected_rollback_blocks_reload": true,
+  "restored_head_still_blocked": true,
+  "marker_persisted": true,
+  "ordinary_tail_recovers": true,
+  "ordinary_tail_not_quarantined": true
+}

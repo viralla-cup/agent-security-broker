@@ -1,0 +1,42 @@
+{
+  "kind": "offline_engineering_reproduction",
+  "actual_provider_calls": 0,
+  "P1": [
+    {
+      "collision": "healthy",
+      "stop_reason": "BACKEND_TIMEOUT",
+      "observation_complete": true,
+      "episode_valid": false,
+      "service_file_exists": true,
+      "timeout_continuation_accepted": true
+    },
+    {
+      "collision": "worker",
+      "stop_reason": "BACKEND_TIMEOUT",
+      "observation_complete": true,
+      "episode_valid": false,
+      "service_file_exists": true,
+      "timeout_continuation_accepted": true
+    },
+    {
+      "collision": "service_save",
+      "stop_reason": "BACKEND_TIMEOUT",
+      "observation_complete": true,
+      "episode_valid": false,
+      "service_file_exists": false,
+      "timeout_continuation_accepted": true
+    }
+  ],
+  "P2": {
+    "detected_exception": "JournalError",
+    "terminal_after_reload": null,
+    "resumed_schedule_index": 2,
+    "api_attempts": 0,
+    "transport": "none; synthetic authorization is not author attestation"
+  },
+  "source_sha256": {
+    "scripts/run_expanded_study.py": "840cfed1407518da01053bb81ccfc191a80daa7a1323798349fb1df6f3b6b023",
+    "scripts/run_expanded_study_v11.py": "c78a198ff8688d2b0550ace1fb7dd6da2366a7ef359002956b8c04864410c335",
+    "src/lab/study_journal.py": "09a005ae86819dfeb3db4d83c7148efa4495f4af7f633e8623298d1795306511"
+  }
+}
