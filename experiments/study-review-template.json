@@ -1,0 +1,14 @@
+{
+  "independent_labels_reviewed": false,
+  "reviewer": "",
+  "approved_plan_sha256": "",
+  "approved_binding": {
+    "plan_sha256": "",
+    "manifest_sha256": "",
+    "schedule_sha256": "",
+    "controls_sha256": "",
+    "source_sha256": ""
+  },
+  "approved_controls_sha256": "",
+  "offline_evidence_directory": ""
+}

@@ -1,0 +1,12 @@
+{
+  "pair_id": "R03-r1",
+  "task": "R03",
+  "family": "R03",
+  "track": "R",
+  "stratum": "discoverable",
+  "repetition": 1,
+  "condition": "B2a",
+  "task_sha256": "99c4ca1cddb51d9787de12c53bc4d33ba30f24eae01268e28f9850551081efe2",
+  "plan_sha256": "01b04036f40a3a26cf82522b20a7bab9cc5db45a0735cad398078a7954c89f5f",
+  "schedule_index": 14
+}

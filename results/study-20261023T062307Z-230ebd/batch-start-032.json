@@ -1,0 +1,12 @@
+{
+  "pair_id": "A04-clean-r1",
+  "task": "A04-clean",
+  "family": "A04",
+  "track": "A",
+  "stratum": "clean",
+  "repetition": 1,
+  "condition": "B2",
+  "task_sha256": "a576e993fd9b4a539928f8405db862683e1f9843436e2919a542ef6d71e23a46",
+  "plan_sha256": "01b04036f40a3a26cf82522b20a7bab9cc5db45a0735cad398078a7954c89f5f",
+  "schedule_index": 32
+}

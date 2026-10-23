@@ -1,0 +1,7 @@
+{
+  "pair_id": "A02-attack-r2",
+  "condition": "B2",
+  "task": "A02-attack",
+  "track": "A",
+  "stratum": "attack"
+}

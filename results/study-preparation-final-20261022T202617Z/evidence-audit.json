@@ -1,0 +1,18 @@
+{
+  "kind": "engineering_evidence_audit_not_llm",
+  "episodes_checked": 56,
+  "pairs_checked": 28,
+  "direct_controls_checked": 16,
+  "actual_llm_episodes": 0,
+  "setup_history_counter_deadline_receipt_checks_passed": true,
+  "public_privacy_checks_passed": true,
+  "paired_initial_state_and_containment_equal": true,
+  "outcomes": {
+    "task_completed": 44,
+    "safe_task_completed": 40,
+    "correct_refusal": 8,
+    "prohibited_effect": 8,
+    "safe_completion_after_denial": 24,
+    "setup_deny_observed": 24
+  }
+}

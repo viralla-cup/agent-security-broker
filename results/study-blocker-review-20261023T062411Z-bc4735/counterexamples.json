@@ -1,0 +1,510 @@
+{
+  "kind": "synthetic_offline_counterexamples_not_llm",
+  "archived_source_zip": "results/study-review-20261022T204654Z/source_snapshot.zip",
+  "archived_source_sha256": "0a8908ab663878b4ecd3382b0e03d970b7bfd397e7609063b4c5cf0d8345833d",
+  "real_api_attempts": 0,
+  "approval_records_created": false,
+  "manifest_after_plan": {
+    "old_executed_changed_prompt_under_original_digest": true,
+    "new_stop": "BATCH_INPUT_INTEGRITY_FAILURE",
+    "new_started_positions": 0
+  },
+  "mixed_task_repetition": {
+    "old_paired_difference_pp": 100,
+    "new_paired_difference_pp": null,
+    "new_complete_pairs": 0,
+    "new_integrity": {
+      "records_valid": false,
+      "errors": [
+        {
+          "record_index": 0,
+          "reason": "POSITION_IDENTITY_MISMATCH"
+        }
+      ],
+      "rejected_record_count": 1,
+      "pairs": {
+        "R01-r1": {
+          "status": "invalid_records",
+          "expected_conditions": [
+            "B2",
+            "B2a"
+          ],
+          "recorded_conditions": [
+            "B2a"
+          ]
+        },
+        "A01-clean-r2": {
+          "status": "incomplete",
+          "expected_conditions": [
+            "B2",
+            "B0"
+          ],
+          "recorded_conditions": []
+        },
+        "R03-r2": {
+          "status": "incomplete",
+          "expected_conditions": [
+            "B2a",
+            "B2"
+          ],
+          "recorded_conditions": []
+        },
+        "R05-r2": {
+          "status": "incomplete",
+          "expected_conditions": [
+            "B2a",
+            "B2"
+          ],
+          "recorded_conditions": []
+        },
+        "R04-r2": {
+          "status": "incomplete",
+          "expected_conditions": [
+            "B2",
+            "B2a"
+          ],
+          "recorded_conditions": []
+        },
+        "R06-r1": {
+          "status": "incomplete",
+          "expected_conditions": [
+            "B2a",
+            "B2"
+          ],
+          "recorded_conditions": []
+        },
+        "R03-r1": {
+          "status": "incomplete",
+          "expected_conditions": [
+            "B2",
+            "B2a"
+          ],
+          "recorded_conditions": []
+        },
+        "R02-r2": {
+          "status": "invalid_records",
+          "expected_conditions": [
+            "B2",
+            "B2a"
+          ],
+          "recorded_conditions": []
+        },
+        "A03-attack-r1": {
+          "status": "incomplete",
+          "expected_conditions": [
+            "B2",
+            "B0"
+          ],
+          "recorded_conditions": []
+        },
+        "A03-clean-r2": {
+          "status": "incomplete",
+          "expected_conditions": [
+            "B2",
+            "B0"
+          ],
+          "recorded_conditions": []
+        },
+        "A04-attack-r1": {
+          "status": "incomplete",
+          "expected_conditions": [
+            "B2",
+            "B0"
+          ],
+          "recorded_conditions": []
+        },
+        "A02-clean-r2": {
+          "status": "incomplete",
+          "expected_conditions": [
+            "B2",
+            "B0"
+          ],
+          "recorded_conditions": []
+        },
+        "A02-clean-r1": {
+          "status": "incomplete",
+          "expected_conditions": [
+            "B0",
+            "B2"
+          ],
+          "recorded_conditions": []
+        },
+        "A01-attack-r2": {
+          "status": "incomplete",
+          "expected_conditions": [
+            "B0",
+            "B2"
+          ],
+          "recorded_conditions": []
+        },
+        "A04-attack-r2": {
+          "status": "incomplete",
+          "expected_conditions": [
+            "B0",
+            "B2"
+          ],
+          "recorded_conditions": []
+        },
+        "A04-clean-r1": {
+          "status": "incomplete",
+          "expected_conditions": [
+            "B0",
+            "B2"
+          ],
+          "recorded_conditions": []
+        },
+        "A01-attack-r1": {
+          "status": "incomplete",
+          "expected_conditions": [
+            "B2",
+            "B0"
+          ],
+          "recorded_conditions": []
+        },
+        "A04-clean-r2": {
+          "status": "incomplete",
+          "expected_conditions": [
+            "B2",
+            "B0"
+          ],
+          "recorded_conditions": []
+        },
+        "A01-clean-r1": {
+          "status": "incomplete",
+          "expected_conditions": [
+            "B0",
+            "B2"
+          ],
+          "recorded_conditions": []
+        },
+        "R04-r1": {
+          "status": "incomplete",
+          "expected_conditions": [
+            "B2a",
+            "B2"
+          ],
+          "recorded_conditions": []
+        },
+        "R02-r1": {
+          "status": "incomplete",
+          "expected_conditions": [
+            "B2a",
+            "B2"
+          ],
+          "recorded_conditions": []
+        },
+        "A02-attack-r2": {
+          "status": "incomplete",
+          "expected_conditions": [
+            "B0",
+            "B2"
+          ],
+          "recorded_conditions": []
+        },
+        "A03-attack-r2": {
+          "status": "incomplete",
+          "expected_conditions": [
+            "B0",
+            "B2"
+          ],
+          "recorded_conditions": []
+        },
+        "R01-r2": {
+          "status": "incomplete",
+          "expected_conditions": [
+            "B2a",
+            "B2"
+          ],
+          "recorded_conditions": []
+        },
+        "A02-attack-r1": {
+          "status": "incomplete",
+          "expected_conditions": [
+            "B2",
+            "B0"
+          ],
+          "recorded_conditions": []
+        },
+        "R05-r1": {
+          "status": "incomplete",
+          "expected_conditions": [
+            "B2",
+            "B2a"
+          ],
+          "recorded_conditions": []
+        },
+        "R06-r2": {
+          "status": "incomplete",
+          "expected_conditions": [
+            "B2",
+            "B2a"
+          ],
+          "recorded_conditions": []
+        },
+        "A03-clean-r1": {
+          "status": "incomplete",
+          "expected_conditions": [
+            "B0",
+            "B2"
+          ],
+          "recorded_conditions": []
+        }
+      }
+    }
+  },
+  "duplicate_condition": {
+    "old_paired_difference_pp": 100,
+    "new_paired_difference_pp": null,
+    "new_complete_pairs": 0,
+    "new_integrity": {
+      "records_valid": false,
+      "errors": [
+        {
+          "record_index": 1,
+          "reason": "MISPLACED_RECORD"
+        },
+        {
+          "record_indexes": [
+            0,
+            1
+          ],
+          "reason": "DUPLICATE_POSITION"
+        }
+      ],
+      "rejected_record_count": 2,
+      "pairs": {
+        "R01-r1": {
+          "status": "invalid_records",
+          "expected_conditions": [
+            "B2",
+            "B2a"
+          ],
+          "recorded_conditions": [
+            "B2a"
+          ]
+        },
+        "A01-clean-r2": {
+          "status": "incomplete",
+          "expected_conditions": [
+            "B2",
+            "B0"
+          ],
+          "recorded_conditions": []
+        },
+        "R03-r2": {
+          "status": "incomplete",
+          "expected_conditions": [
+            "B2a",
+            "B2"
+          ],
+          "recorded_conditions": []
+        },
+        "R05-r2": {
+          "status": "incomplete",
+          "expected_conditions": [
+            "B2a",
+            "B2"
+          ],
+          "recorded_conditions": []
+        },
+        "R04-r2": {
+          "status": "incomplete",
+          "expected_conditions": [
+            "B2",
+            "B2a"
+          ],
+          "recorded_conditions": []
+        },
+        "R06-r1": {
+          "status": "incomplete",
+          "expected_conditions": [
+            "B2a",
+            "B2"
+          ],
+          "recorded_conditions": []
+        },
+        "R03-r1": {
+          "status": "incomplete",
+          "expected_conditions": [
+            "B2",
+            "B2a"
+          ],
+          "recorded_conditions": []
+        },
+        "R02-r2": {
+          "status": "incomplete",
+          "expected_conditions": [
+            "B2",
+            "B2a"
+          ],
+          "recorded_conditions": []
+        },
+        "A03-attack-r1": {
+          "status": "incomplete",
+          "expected_conditions": [
+            "B2",
+            "B0"
+          ],
+          "recorded_conditions": []
+        },
+        "A03-clean-r2": {
+          "status": "incomplete",
+          "expected_conditions": [
+            "B2",
+            "B0"
+          ],
+          "recorded_conditions": []
+        },
+        "A04-attack-r1": {
+          "status": "incomplete",
+          "expected_conditions": [
+            "B2",
+            "B0"
+          ],
+          "recorded_conditions": []
+        },
+        "A02-clean-r2": {
+          "status": "incomplete",
+          "expected_conditions": [
+            "B2",
+            "B0"
+          ],
+          "recorded_conditions": []
+        },
+        "A02-clean-r1": {
+          "status": "incomplete",
+          "expected_conditions": [
+            "B0",
+            "B2"
+          ],
+          "recorded_conditions": []
+        },
+        "A01-attack-r2": {
+          "status": "incomplete",
+          "expected_conditions": [
+            "B0",
+            "B2"
+          ],
+          "recorded_conditions": []
+        },
+        "A04-attack-r2": {
+          "status": "incomplete",
+          "expected_conditions": [
+            "B0",
+            "B2"
+          ],
+          "recorded_conditions": []
+        },
+        "A04-clean-r1": {
+          "status": "incomplete",
+          "expected_conditions": [
+            "B0",
+            "B2"
+          ],
+          "recorded_conditions": []
+        },
+        "A01-attack-r1": {
+          "status": "incomplete",
+          "expected_conditions": [
+            "B2",
+            "B0"
+          ],
+          "recorded_conditions": []
+        },
+        "A04-clean-r2": {
+          "status": "incomplete",
+          "expected_conditions": [
+            "B2",
+            "B0"
+          ],
+          "recorded_conditions": []
+        },
+        "A01-clean-r1": {
+          "status": "incomplete",
+          "expected_conditions": [
+            "B0",
+            "B2"
+          ],
+          "recorded_conditions": []
+        },
+        "R04-r1": {
+          "status": "incomplete",
+          "expected_conditions": [
+            "B2a",
+            "B2"
+          ],
+          "recorded_conditions": []
+        },
+        "R02-r1": {
+          "status": "incomplete",
+          "expected_conditions": [
+            "B2a",
+            "B2"
+          ],
+          "recorded_conditions": []
+        },
+        "A02-attack-r2": {
+          "status": "incomplete",
+          "expected_conditions": [
+            "B0",
+            "B2"
+          ],
+          "recorded_conditions": []
+        },
+        "A03-attack-r2": {
+          "status": "incomplete",
+          "expected_conditions": [
+            "B0",
+            "B2"
+          ],
+          "recorded_conditions": []
+        },
+        "R01-r2": {
+          "status": "incomplete",
+          "expected_conditions": [
+            "B2a",
+            "B2"
+          ],
+          "recorded_conditions": []
+        },
+        "A02-attack-r1": {
+          "status": "incomplete",
+          "expected_conditions": [
+            "B2",
+            "B0"
+          ],
+          "recorded_conditions": []
+        },
+        "R05-r1": {
+          "status": "incomplete",
+          "expected_conditions": [
+            "B2",
+            "B2a"
+          ],
+          "recorded_conditions": []
+        },
+        "R06-r2": {
+          "status": "incomplete",
+          "expected_conditions": [
+            "B2",
+            "B2a"
+          ],
+          "recorded_conditions": []
+        },
+        "A03-clean-r1": {
+          "status": "incomplete",
+          "expected_conditions": [
+            "B0",
+            "B2"
+          ],
+          "recorded_conditions": []
+        }
+      }
+    }
+  },
+  "empty_controls": {
+    "old_accepted": true,
+    "new_accepted": false,
+    "filesystem_review_record_created": false
+  }
+}

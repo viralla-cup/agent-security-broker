@@ -1,0 +1,30 @@
+{
+  "note": "Review inventory only; no commit or staging performed",
+  "source_and_documentation_files": {
+    "scripts/run_agent_pilot.py": "50e7fb1c2223265f46d1559353b903c6ac7f397d3bba5c94f6ba366d8107c8d4",
+    "src/lab/pilot_evidence.py": "066f54e8ab4e209f5ff6dfd86913e22d9e3af602d65ff4e914be5591edda369f",
+    "docs/expanded-study-runbook.md": "57ba60cf299a4fffb57dae6bd1576623986bdde8a2f04087077c1ad80e66babf",
+    "docs/expanded-study-blocker-corrections.md": "0ebdbe86a94e1403590a2f10fc1893aa2863d86481bba7294c7c33fa4e86bf52",
+    "experiments/expanded-study-v1.md": "aba4eba4ff8097cb9f994eaae8f0245b62df2f13174136bd540c69e8af47d7c2",
+    "experiments/manifests/expanded-study-v1.json": "e0f981ddfc6ae764a6f37bd3d0284003d39388ec75852c42220ecdea63f0746b",
+    "experiments/study-review-template.json": "c5fc6c939353f955aaa6829dc5e5d14193d1ed3d40b45159e384826d937fbb33",
+    "scripts/run_expanded_study.py": "90104f4c4b5e1acb1e1f8ff824fe9f2fa95f5c6b485924adb9fb4d9902ad1af8",
+    "scripts/analyze_expanded_study.py": "42c037f96d0bc13f7b961f76fcf8580d379520e398da6e92b7a374d59be52dc3",
+    "src/lab/study.py": "3aad8a797671d5b3c755ec7bcc52f7fb0429f65b42abe8d81d06d15c9634fe51",
+    "src/lab/study_fake.py": "5648d9749d06337b61aa69610110f4879ee5f3998e7ba660a41a2af5797be017",
+    "src/lab/study_oracle.py": "55c2a7819028ee7375d74e025bc5ea13b7161b30ea61d2063b40c442a2ea8002",
+    "tests/test_expanded_study.py": "bfe870550ecb8ecf094d097e98eaa4cf1874b477b732d26d14ff6428a4d6206e"
+  },
+  "new_result_directories": [
+    "checks-20261023T062231Z-501564",
+    "dev-20261023T062322Z-7fe331",
+    "pilot-20261023T062322Z-9c9b8a",
+    "pilot-20261023T062438Z-0daf1c",
+    "study-20261023T062307Z-230ebd",
+    "study-20261023T062324Z-686ffa",
+    "study-blocker-focused-20261023T062014Z-0eb3ea",
+    "study-blocker-focused-20261023T062204Z-d691aa",
+    "study-blocker-review-20261023T062411Z-bc4735"
+  ],
+  "historical_results_preserved_not_rewritten": 752
+}

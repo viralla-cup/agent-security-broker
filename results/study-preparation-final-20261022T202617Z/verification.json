@@ -1,0 +1,33 @@
+{
+  "kind": "offline_preparation_not_new_llm_evidence",
+  "baseline_head": "da4c079ba2127492768539b3cece110ec2d28568",
+  "head_unchanged": true,
+  "existing_modified_files": [
+    "scripts/run_agent_pilot.py",
+    "src/lab/pilot_evidence.py"
+  ],
+  "historical_result_files_unchanged": 385,
+  "readme_sha256_unchanged": "715297df9e9f5223fb465e423321cb484ff7cdc56afad60fd63a85e2370d6d69",
+  "engineering_tests_passed": 385,
+  "final_checks_directory": "results/checks-20261022T202512Z-06f850",
+  "legacy_fake_episodes_passed": 6,
+  "legacy_replay_checks_passed": 15,
+  "legacy_checks_note": "Run before final study-only refinements; all existing implementation hashes still match.",
+  "final_fake_study_directory": "results/study-20261022T202535Z-c5b8f8",
+  "final_fake_episodes_valid": 56,
+  "final_direct_controls_passed": {
+    "main": 16,
+    "fallback": 16
+  },
+  "fallback_matrix_executed_as_separate_docker_batch": false,
+  "docker_server": "29.8.1",
+  "docker_image_id": "sha256:cca143814f39cdc44e3385f44e6a3626acf42d105dbf2a7a710a0dc81f5f6f20",
+  "remaining_asb_containers": 0,
+  "remaining_disposable_volumes": 0,
+  "actual_new_llm_episodes": 0,
+  "recorded_new_api_attempts": 0,
+  "independent_human_label_review": "pending",
+  "author_paid_approval": "pending",
+  "git_commit_or_push_performed": false,
+  "earlier_candidate_successes_and_failures_retained": true
+}

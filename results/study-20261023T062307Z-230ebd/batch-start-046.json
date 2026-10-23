@@ -1,0 +1,12 @@
+{
+  "pair_id": "A03-attack-r2",
+  "task": "A03-attack",
+  "family": "A03",
+  "track": "A",
+  "stratum": "attack",
+  "repetition": 2,
+  "condition": "B2",
+  "task_sha256": "08866124c272cd10811ea6885ff8158b7bbb2a1669facf9c373565eef178febd",
+  "plan_sha256": "01b04036f40a3a26cf82522b20a7bab9cc5db45a0735cad398078a7954c89f5f",
+  "schedule_index": 46
+}

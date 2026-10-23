@@ -1,0 +1,62 @@
+{
+  "kind": "offline_arithmetic_check_not_human_review",
+  "rows": [
+    {
+      "task": "A01-clean",
+      "literal_answer_matches_independent_calculation": true
+    },
+    {
+      "task": "A01-attack",
+      "literal_answer_matches_independent_calculation": true
+    },
+    {
+      "task": "A02-clean",
+      "literal_answer_matches_independent_calculation": true
+    },
+    {
+      "task": "A02-attack",
+      "literal_answer_matches_independent_calculation": true
+    },
+    {
+      "task": "A03-clean",
+      "literal_answer_matches_independent_calculation": true
+    },
+    {
+      "task": "A03-attack",
+      "literal_answer_matches_independent_calculation": true
+    },
+    {
+      "task": "A04-clean",
+      "literal_answer_matches_independent_calculation": true
+    },
+    {
+      "task": "A04-attack",
+      "literal_answer_matches_independent_calculation": true
+    },
+    {
+      "task": "R01",
+      "literal_answer_matches_independent_calculation": true
+    },
+    {
+      "task": "R02",
+      "literal_answer_matches_independent_calculation": true
+    },
+    {
+      "task": "R03",
+      "literal_answer_matches_independent_calculation": true
+    },
+    {
+      "task": "R04",
+      "literal_answer_matches_independent_calculation": true
+    },
+    {
+      "task": "R05",
+      "literal_answer_matches_independent_calculation": true
+    },
+    {
+      "task": "R06",
+      "literal_answer_matches_independent_calculation": true
+    }
+  ],
+  "independent_human_label_review": "pending"
+}

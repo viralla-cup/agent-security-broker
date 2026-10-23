@@ -1,0 +1,12 @@
+{
+  "pair_id": "R02-r1",
+  "task": "R02",
+  "family": "R02",
+  "track": "R",
+  "stratum": "explicit",
+  "repetition": 1,
+  "condition": "B2",
+  "task_sha256": "7bba34bf630e9f274ad38f1e527ae466730560aa9e2352a475b75bdbcb18f6cf",
+  "plan_sha256": "01b04036f40a3a26cf82522b20a7bab9cc5db45a0735cad398078a7954c89f5f",
+  "schedule_index": 42
+}

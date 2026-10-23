@@ -1,0 +1,84 @@
+........................................................................ [ 19%]
+........................................................................ [ 38%]
+......................................FF................................ [ 57%]
+........................................................................ [ 77%]
+........................................................................ [ 96%]
+.............                                                            [100%]
+=================================== FAILURES ===================================
+________________ test_controls_all_effects_possible_only_in_B0 _________________
+
+tmp_path = PosixPath('/tmp/pytest-of-unknown/pytest-0/test_controls_all_effects_poss0')
+
+    def test_controls_all_effects_possible_only_in_B0(tmp_path):
+        count = 0
+        def factory(condition, task):
+            nonlocal count
+            count += 1
+            ep = LocalEpisode(tmp_path / f'lab-{count}',condition,seed_for(task))
+            install_fixture(ep.root,task)
+            ep.before = snapshot(ep.root)
+            return ep
+        out,raw=tmp_path/'public',tmp_path/'private'
+        out.mkdir(); raw.mkdir()
+>       result=runner.run_controls(out,raw,episode_factory=factory)
+
+tests/test_expanded_study.py:191: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+scripts/run_expanded_study.py:174: in run_controls
+    with episode_factory(condition, task) as episode:
+tests/test_expanded_study.py:185: in factory
+    ep = LocalEpisode(tmp_path / f'lab-{count}',condition,seed_for(task))
+tests/test_controlled_pair.py:45: in __init__
+    self.audit_writer, self.receipt_writer = AuditWriter(self.audit_path), AuditWriter(self.receipt_path)
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+self = <security_audit.storage.AuditWriter object at 0x7d02bd53d100>
+path = PosixPath('/tmp/pytest-of-unknown/pytest-0/test_controls_all_effects_poss0/B0-audit')
+
+    def __init__(self, path=DEFAULT_LOG):
+        self.pending = Path(str(path) + '.pending')
+>       self.fd = os.open(path, os.O_WRONLY | os.O_CREAT | os.O_EXCL | os.O_NOFOLLOW, 0o600)
+E       FileExistsError: [Errno 17] File exists: '/tmp/pytest-of-unknown/pytest-0/test_controls_all_effects_poss0/B0-audit'
+
+src/security_audit/storage.py:13: FileExistsError
+_________________ test_live_guard_and_plan_need_no_credentials _________________
+
+monkeypatch = <_pytest.monkeypatch.MonkeyPatch object at 0x7d02bd5edcd0>
+capsys = <_pytest.capture.CaptureFixture object at 0x7d02bd5ed820>
+
+    def test_live_guard_and_plan_need_no_credentials(monkeypatch,capsys):
+        monkeypatch.delenv('OPENAI_API_KEY',raising=False)
+        monkeypatch.setattr(runner,'verified_runtime',lambda: pytest.fail('Docker should not start'))
+>       runner.main(['--design','main','--backend','openai','--plan'])
+
+tests/test_expanded_study.py:198: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+scripts/run_expanded_study.py:267: in main
+    frozen = frozen_plan(args.design)
+scripts/run_expanded_study.py:51: in frozen_plan
+    result['source_sha256'] = source_manifest()
+scripts/run_replay.py:161: in source_manifest
+    return {p.relative_to(ROOT).as_posix(): hashlib.sha256(p.read_bytes()).hexdigest() for p in sorted(paths)}
+/usr/local/lib/python3.12/pathlib.py:1019: in read_bytes
+    with self.open(mode='rb') as f:
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+self = PosixPath('/app/.dockerignore'), mode = 'rb', buffering = -1
+encoding = None, errors = None, newline = None
+
+    def open(self, mode='r', buffering=-1, encoding=None,
+             errors=None, newline=None):
+        """
+        Open the file pointed to by this path and return a file object, as
+        the built-in open() function does.
+        """
+        if "b" not in mode:
+            encoding = io.text_encoding(encoding)
+>       return io.open(self, mode, buffering, encoding, errors, newline)
+E       FileNotFoundError: [Errno 2] No such file or directory: '/app/.dockerignore'
+
+/usr/local/lib/python3.12/pathlib.py:1013: FileNotFoundError
+=========================== short test summary info ============================
+FAILED tests/test_expanded_study.py::test_controls_all_effects_possible_only_in_B0
+FAILED tests/test_expanded_study.py::test_live_guard_and_plan_need_no_credentials
+2 failed, 371 passed in 7.31s

@@ -1,0 +1,57 @@
+{
+  "kind": "review_readiness_offline_only",
+  "baseline_head": "da4c079ba2127492768539b3cece110ec2d28568",
+  "readme_preserved": true,
+  "historical_files_unchanged": 385,
+  "existing_files_changed": [
+    "scripts/run_agent_pilot.py",
+    "src/lab/pilot_evidence.py"
+  ],
+  "engineering_tests_passed": 387,
+  "existing_tests": 329,
+  "new_tests": 58,
+  "checks_directory": "results/checks-20261022T204532Z-a8b58a",
+  "full_docker_fake_matrix": "results/study-20261022T202535Z-c5b8f8",
+  "fake_episodes_valid": 56,
+  "fake_pairs_valid": 28,
+  "fake_plan_sha256": "64f71d79b8f78d603e30b9200a67b5ff0779cc827b9fd890627cfc11d876bfe2",
+  "review_plan_sha256": "1e00f5af637f0bcc2cef3ceace884591ffc2956cf5086a4ab5fa4da27a3ee3ad",
+  "post_matrix_changes": [
+    "scripts/analyze_expanded_study.py",
+    "tests/test_expanded_study.py",
+    "experiments/expanded-study-v1.md"
+  ],
+  "execution_oracle_fixtures_schedule_configuration_unchanged_since_matrix": true,
+  "current_controls": {
+    "main": {
+      "passed": 16,
+      "directory": "results/study-20261022T204553Z-34d5f2",
+      "plan_sha256": "1e00f5af637f0bcc2cef3ceace884591ffc2956cf5086a4ab5fa4da27a3ee3ad"
+    },
+    "fallback": {
+      "passed": 16,
+      "directory": "results/study-20261022T204553Z-fda20c",
+      "plan_sha256": "6ddfa3d228d70c75808b4e741f2eb07194685c4fa73bd235bb4913900f49f6f8"
+    }
+  },
+  "analysis_file": "results/study-20261022T202535Z-c5b8f8/analysis.json",
+  "analysis_source_sha256": "385854091590f7704d27b9bb9ce09c24ecb69c982e19dbc03558150c410e296e",
+  "legacy_fake": {
+    "passed": 6,
+    "directory": "results/pilot-20261022T200230Z-e9e5e4"
+  },
+  "legacy_replay": {
+    "passed": 15,
+    "directory": "results/dev-20261022T200229Z-3d9158"
+  },
+  "docker_server": "29.8.1",
+  "docker_image_id": "sha256:4ee4e581793d2b54e88cc3f54a0f00ff0334da6b1f14b7053ac0ca90d5cb2c84",
+  "remaining_asb_containers": 0,
+  "remaining_disposable_volumes": 0,
+  "new_real_llm_episodes": 0,
+  "new_paid_api_attempts": 0,
+  "independent_human_label_review": "pending",
+  "paid_author_approval": "pending",
+  "commit_or_push_performed": false,
+  "earlier_candidate_evidence_retained": true
+}

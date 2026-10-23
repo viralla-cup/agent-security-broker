@@ -34,7 +34,7 @@ def check_credential_isolation(episode):
 
 
 def run_worker(episode, backend, task, limits, *, seeded_exchange=None, episode_deadline=None,
-               exchanges=None, calls=None, checkpoint=lambda: None):
+               exchanges=None, calls=None, checkpoint=lambda: None, record_history=False):
     """Relay inference only; detailed audit and snapshots never enter model history."""
     frames = Queue(maxsize=1)
     process = subprocess.Popen(
@@ -107,7 +107,7 @@ def run_worker(episode, backend, task, limits, *, seeded_exchange=None, episode_
                 call = {"number": len(calls) + 1,
                         "metadata": {"request_sent": False},
                         "observed_tool_event_ids": history_event_ids(frame["history"], exchanges)}
-                if seeded_exchange is not None:
+                if seeded_exchange is not None or record_history:
                     call["history"] = frame["history"]  # Private checkpoint only.
                 pending_call = None
                 calls.append(call)

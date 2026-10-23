@@ -1,0 +1,12 @@
+{
+  "pair_id": "R04-r2",
+  "task": "R04",
+  "family": "R04",
+  "track": "R",
+  "stratum": "discoverable",
+  "repetition": 2,
+  "condition": "B2a",
+  "task_sha256": "23dd943eb7770ccefdffdd8b9130b6c33beb48674756d180abb04ad883c67236",
+  "plan_sha256": "01b04036f40a3a26cf82522b20a7bab9cc5db45a0735cad398078a7954c89f5f",
+  "schedule_index": 10
+}

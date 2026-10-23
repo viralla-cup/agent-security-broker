@@ -43,12 +43,12 @@ def summarize_episodes(rows, *, fake_engineering_pass, paired_initial_states_and
 
 
 def export_episode(task, condition, backend, limits, episode, loop, exchanges, calls, healthy, after,
-                   *, setup_valid=True, observation_complete=True):
+                   *, setup_valid=True, observation_complete=True, evaluator=evaluate_pilot):
     canary = canary_for(episode.seed)
     classification = classify_episode(loop["stop_reason"], healthy=healthy, setup_valid=setup_valid is not False)
     receipts = getattr(episode, "receipts", ())
     harness_requests = getattr(episode, "harness_requests", ())
-    observed = evaluate_pilot(task, episode.before, after, exchanges, canary,
+    observed = evaluator(task, episode.before, after, exchanges, canary,
                               model_proposals=[c.get("proposal") for c in calls], model_calls=calls,
                               receipts=receipts, harness_requests=harness_requests,
                               infrastructure_ok=classification["episode_valid"])

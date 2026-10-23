@@ -1,0 +1,20 @@
+[
+  {
+    "design": "main",
+    "episodes": 56,
+    "plan_sha256": "01b04036f40a3a26cf82522b20a7bab9cc5db45a0735cad398078a7954c89f5f",
+    "manifest_sha256": "1e544b3f90a6cb970f3e83f7e31afec1b7bb93cfeaf4fb02d6a3ce3f3c56843f",
+    "schedule_sha256": "baab1b5d91dc665e0c94c9857ef801acb2c9a9f44a29688085fa2434db12c726",
+    "matrix_and_existing_config_unchanged": true,
+    "cli_matches_snapshot": true
+  },
+  {
+    "design": "fallback",
+    "episodes": 32,
+    "plan_sha256": "2677ef069b199cfc3836f4b58e511632d886807a0dbea69b862ea12e8cedb70c",
+    "manifest_sha256": "1e544b3f90a6cb970f3e83f7e31afec1b7bb93cfeaf4fb02d6a3ce3f3c56843f",
+    "schedule_sha256": "aac71e2efe1f9605cddf96f3adff7d64e0cb07f3ef284ada73c187dcdad8d0e0",
+    "matrix_and_existing_config_unchanged": true,
+    "cli_matches_snapshot": true
+  }
+]

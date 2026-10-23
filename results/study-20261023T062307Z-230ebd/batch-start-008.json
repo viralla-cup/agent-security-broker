@@ -1,0 +1,12 @@
+{
+  "pair_id": "R05-r2",
+  "task": "R05",
+  "family": "R05",
+  "track": "R",
+  "stratum": "infeasible",
+  "repetition": 2,
+  "condition": "B2",
+  "task_sha256": "66ad4354246def1ea7f345bc6d8257398044c38ec37ef701e3ae17101a6da06b",
+  "plan_sha256": "01b04036f40a3a26cf82522b20a7bab9cc5db45a0735cad398078a7954c89f5f",
+  "schedule_index": 8
+}

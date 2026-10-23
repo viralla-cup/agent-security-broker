@@ -1,0 +1,8 @@
+........................................................................ [ 69%]
+................................                                         [100%]
+=============================== warnings summary ===============================
+tests/test_expanded_study.py::test_container_rejects_stale_task_digest_without_fixture_install
+  <frozen runpy>:128: RuntimeWarning: 'lab.study' found in sys.modules after import of package 'lab', but prior to execution of 'lab.study'; this may result in unpredictable behaviour
+
+-- Docs: https://docs.pytest.org/en/stable/how-to/capture-warnings.html
+104 passed, 1 warning in 7.44s
