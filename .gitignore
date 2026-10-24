@@ -6,3 +6,9 @@ __pycache__/
 results/local-*/
 .env
 .env.*
+
+# Preserve historical internal packages locally; publish selected copies separately.
+/manuscripts/main-v1.1-first-draft-20261024-v0.1/
+/manuscripts/main-v1.1-first-draft-20261024-v0.1.zip
+/results/derived-analysis-main-v11-01-20261024-4e7c91/
+/results/derived-analysis-main-v11-01-20261024-4e7c91.zip

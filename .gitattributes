@@ -39,3 +39,7 @@
 # Packaging documentation is new, unbound text with an explicit LF convention.
 /.gitattributes text eol=lf
 /docs/git-byte-preservation.md text eol=lf
+
+# Preserve the real Main evidence and the separately versioned English analysis.
+/results/study-v1.1-main-v11-01/** -text
+/publication/main-v1.1-en-v1.0/** -text
