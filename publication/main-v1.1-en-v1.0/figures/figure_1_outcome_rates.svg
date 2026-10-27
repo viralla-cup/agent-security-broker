@@ -1,0 +1,65 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!DOCTYPE svg
+  PUBLIC '-//W3C//DTD SVG 1.0//EN'
+  'http://www.w3.org/TR/2001/REC-SVG-20010904/DTD/svg10.dtd'>
+<svg width="720" height="424" preserveAspectRatio="xMinYMin meet" viewBox="0 0 720 424" xmlns="http://www.w3.org/2000/svg" version="1.0" fill-rule="evenodd" xmlns:xlink="http://www.w3.org/1999/xlink">
+	<title>...</title>
+	<desc>...</desc>
+	<clipPath id="clip">
+		<rect x="0" y="0" width="720" height="424"/>
+	</clipPath>
+	<g id="group" transform="scale(1,-1) translate(0,-424)" style="clip-path: url(#clip)">
+		<g transform="">
+			<text x="14" y="400" style="font-family: Bold; font-size: 17px;fill: rgb(9%,16%,22%); stroke:none;" transform="translate(0,800) scale(1,-1)">Observed outcomes across the frozen task strata</text>
+			<text x="14" y="380" style="font-family: Body; font-size: 11px;fill: rgb(45%,50%,55%); stroke:none;" transform="translate(0,760) scale(1,-1)">Rates use valid episodes; invalid observations remain explicit.</text>
+			<path d="M 255,78 L 255,350 Z" style="stroke: rgb(86%,89%,90%); stroke-linecap: butt; stroke-width: 0.6;"/>
+			<text x="251.941162109375" y="59" style="font-family: Body; font-size: 11px;fill: rgb(45%,50%,55%); stroke:none;" transform="translate(0,118) scale(1,-1)">0</text>
+			<path d="M 316.25,78 L 316.25,350 Z" style="stroke: rgb(86%,89%,90%); stroke-linecap: butt; stroke-width: 0.6;"/>
+			<text x="310.13232421875" y="59" style="font-family: Body; font-size: 11px;fill: rgb(45%,50%,55%); stroke:none;" transform="translate(0,118) scale(1,-1)">25</text>
+			<path d="M 377.5,78 L 377.5,350 Z" style="stroke: rgb(86%,89%,90%); stroke-linecap: butt; stroke-width: 0.6;"/>
+			<text x="371.38232421875" y="59" style="font-family: Body; font-size: 11px;fill: rgb(45%,50%,55%); stroke:none;" transform="translate(0,118) scale(1,-1)">50</text>
+			<path d="M 438.75,78 L 438.75,350 Z" style="stroke: rgb(86%,89%,90%); stroke-linecap: butt; stroke-width: 0.6;"/>
+			<text x="432.63232421875" y="59" style="font-family: Body; font-size: 11px;fill: rgb(45%,50%,55%); stroke:none;" transform="translate(0,118) scale(1,-1)">75</text>
+			<path d="M 500,78 L 500,350 Z" style="stroke: rgb(86%,89%,90%); stroke-linecap: butt; stroke-width: 0.6;"/>
+			<text x="490.823486328125" y="59" style="font-family: Body; font-size: 11px;fill: rgb(45%,50%,55%); stroke:none;" transform="translate(0,118) scale(1,-1)">100</text>
+			<text x="323.08544921875" y="42" style="font-family: Body; font-size: 11px;fill: rgb(45%,50%,55%); stroke:none;" transform="translate(0,84) scale(1,-1)">Valid-episode rate (%)</text>
+			<text x="14" y="340" style="font-family: Bold; font-size: 11px;fill: rgb(9%,16%,22%); stroke:none;" transform="translate(0,680) scale(1,-1)">A: attacked</text>
+			<text x="14" y="325" style="font-family: Body; font-size: 11px;fill: rgb(45%,50%,55%); stroke:none;" transform="translate(0,650) scale(1,-1)">Prohibited effect</text>
+			<circle cx="255.0" cy="340" r="4" style="stroke: rgb(100%,100%,100%); stroke-linecap: butt; stroke-width: 0.5; fill: rgb(9%,16%,22%); fill-rule: evenodd;"/>
+			<rect x="251.0" y="325" width="8.0" height="8" style="stroke: rgb(100%,100%,100%); stroke-linecap: butt; stroke-width: 0.5; fill: rgb(3%,49%,54%); fill-rule: evenodd;"/>
+			<text x="530" y="339" style="font-family: Body; font-size: 11px;fill: rgb(9%,16%,22%); stroke:none;" transform="translate(0,678) scale(1,-1)">B0: 0/8;  B2: 0/8</text>
+			<text x="530" y="324" style="font-family: Body; font-size: 11px;fill: rgb(45%,50%,55%); stroke:none;" transform="translate(0,648) scale(1,-1)">0 invalid</text>
+			<text x="14" y="293" style="font-family: Bold; font-size: 11px;fill: rgb(9%,16%,22%); stroke:none;" transform="translate(0,586) scale(1,-1)">A: clean</text>
+			<text x="14" y="278" style="font-family: Body; font-size: 11px;fill: rgb(45%,50%,55%); stroke:none;" transform="translate(0,556) scale(1,-1)">Safe task completion</text>
+			<circle cx="500.0" cy="293" r="4" style="stroke: rgb(100%,100%,100%); stroke-linecap: butt; stroke-width: 0.5; fill: rgb(9%,16%,22%); fill-rule: evenodd;"/>
+			<rect x="496.0" y="278" width="8.0" height="8" style="stroke: rgb(100%,100%,100%); stroke-linecap: butt; stroke-width: 0.5; fill: rgb(3%,49%,54%); fill-rule: evenodd;"/>
+			<text x="530" y="292" style="font-family: Body; font-size: 11px;fill: rgb(9%,16%,22%); stroke:none;" transform="translate(0,584) scale(1,-1)">B0: 8/8;  B2: 8/8</text>
+			<text x="530" y="277" style="font-family: Body; font-size: 11px;fill: rgb(45%,50%,55%); stroke:none;" transform="translate(0,554) scale(1,-1)">0 invalid</text>
+			<text x="14" y="246" style="font-family: Bold; font-size: 11px;fill: rgb(9%,16%,22%); stroke:none;" transform="translate(0,492) scale(1,-1)">A: attacked</text>
+			<text x="14" y="231" style="font-family: Body; font-size: 11px;fill: rgb(45%,50%,55%); stroke:none;" transform="translate(0,462) scale(1,-1)">Safe task completion</text>
+			<circle cx="500.0" cy="246" r="4" style="stroke: rgb(100%,100%,100%); stroke-linecap: butt; stroke-width: 0.5; fill: rgb(9%,16%,22%); fill-rule: evenodd;"/>
+			<rect x="496.0" y="231" width="8.0" height="8" style="stroke: rgb(100%,100%,100%); stroke-linecap: butt; stroke-width: 0.5; fill: rgb(3%,49%,54%); fill-rule: evenodd;"/>
+			<text x="530" y="245" style="font-family: Body; font-size: 11px;fill: rgb(9%,16%,22%); stroke:none;" transform="translate(0,490) scale(1,-1)">B0: 8/8;  B2: 8/8</text>
+			<text x="530" y="230" style="font-family: Body; font-size: 11px;fill: rgb(45%,50%,55%); stroke:none;" transform="translate(0,460) scale(1,-1)">0 invalid</text>
+			<text x="14" y="199" style="font-family: Bold; font-size: 11px;fill: rgb(9%,16%,22%); stroke:none;" transform="translate(0,398) scale(1,-1)">R: explicit destination</text>
+			<text x="14" y="184" style="font-family: Body; font-size: 11px;fill: rgb(45%,50%,55%); stroke:none;" transform="translate(0,368) scale(1,-1)">Safe completion after DENY</text>
+			<polygon points="500 204, 495 195, 505 195" style="stroke: rgb(100%,100%,100%); stroke-linecap: butt; stroke-width: 0.5; fill: rgb(72%,40%,7%); fill-rule: evenodd;"/>
+			<rect x="496.0" y="184" width="8.0" height="8" style="stroke: rgb(100%,100%,100%); stroke-linecap: butt; stroke-width: 0.5; fill: rgb(3%,49%,54%); fill-rule: evenodd;"/>
+			<text x="530" y="198" style="font-family: Body; font-size: 11px;fill: rgb(9%,16%,22%); stroke:none;" transform="translate(0,396) scale(1,-1)">B2a: 4/4;  B2: 4/4</text>
+			<text x="530" y="183" style="font-family: Body; font-size: 11px;fill: rgb(45%,50%,55%); stroke:none;" transform="translate(0,366) scale(1,-1)">0 invalid</text>
+			<text x="14" y="152" style="font-family: Bold; font-size: 11px;fill: rgb(9%,16%,22%); stroke:none;" transform="translate(0,304) scale(1,-1)">R: discoverable destination</text>
+			<text x="14" y="137" style="font-family: Body; font-size: 11px;fill: rgb(45%,50%,55%); stroke:none;" transform="translate(0,274) scale(1,-1)">Safe completion after DENY</text>
+			<polygon points="500 157, 495 148, 505 148" style="stroke: rgb(100%,100%,100%); stroke-linecap: butt; stroke-width: 0.5; fill: rgb(72%,40%,7%); fill-rule: evenodd;"/>
+			<rect x="496.0" y="137" width="8.0" height="8" style="stroke: rgb(100%,100%,100%); stroke-linecap: butt; stroke-width: 0.5; fill: rgb(3%,49%,54%); fill-rule: evenodd;"/>
+			<text x="530" y="151" style="font-family: Body; font-size: 11px;fill: rgb(9%,16%,22%); stroke:none;" transform="translate(0,302) scale(1,-1)">B2a: 4/4;  B2: 3/3</text>
+			<text x="530" y="136" style="font-family: Body; font-size: 11px;fill: rgb(45%,50%,55%); stroke:none;" transform="translate(0,272) scale(1,-1)">B2: 1 invalid / 4 planned</text>
+			<text x="14" y="105" style="font-family: Bold; font-size: 11px;fill: rgb(9%,16%,22%); stroke:none;" transform="translate(0,210) scale(1,-1)">R: infeasible</text>
+			<text x="14" y="90" style="font-family: Body; font-size: 11px;fill: rgb(45%,50%,55%); stroke:none;" transform="translate(0,180) scale(1,-1)">Correct refusal</text>
+			<polygon points="336.6667 110, 331.6667 101, 341.6667 101" style="stroke: rgb(100%,100%,100%); stroke-linecap: butt; stroke-width: 0.5; fill: rgb(72%,40%,7%); fill-rule: evenodd;"/>
+			<rect x="312.25" y="90" width="8.0" height="8" style="stroke: rgb(100%,100%,100%); stroke-linecap: butt; stroke-width: 0.5; fill: rgb(3%,49%,54%); fill-rule: evenodd;"/>
+			<text x="530" y="104" style="font-family: Body; font-size: 11px;fill: rgb(9%,16%,22%); stroke:none;" transform="translate(0,208) scale(1,-1)">B2a: 1/3;  B2: 1/4</text>
+			<text x="530" y="89" style="font-family: Body; font-size: 11px;fill: rgb(45%,50%,55%); stroke:none;" transform="translate(0,178) scale(1,-1)">B2a: 1 invalid / 4 planned</text>
+			<text x="14" y="16" style="font-family: Body; font-size: 11px;fill: rgb(45%,50%,55%); stroke:none;" transform="translate(0,32) scale(1,-1)">No inferential intervals are implied. The study is a small finite synthetic corpus.</text>
+		</g>
+	</g>
+</svg>

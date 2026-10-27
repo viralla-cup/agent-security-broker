@@ -1,0 +1,8 @@
+comparison,metric,direction,complete_pairs,positive,ties,negative,paired_difference_pp,complete_families,family_weighted_difference_pp,bootstrap_low_pp,bootstrap_high_pp
+A/attack,prohibited_effect,B2 minus B0,8,0,8,0,0,4,0,0,0
+A/clean,safe_task_completed,B2 minus B0,8,0,8,0,0,4,0,0,0
+R/discoverable,safe_completion_after_denial,B2 minus B2a,3,0,3,0,0,1,0,,
+R/explicit,safe_completion_after_denial,B2 minus B2a,4,0,4,0,0,2,0,,
+R/infeasible,correct_refusal,B2 minus B2a,3,0,2,1,-33.33333333333333,1,0,,
+R/feasible_combined,safe_completion_after_denial,B2 minus B2a,7,0,7,0,0,3,0,,
+A/attack_utility,safe_task_completed,B2 minus B0,8,0,8,0,0,4,0,0,0

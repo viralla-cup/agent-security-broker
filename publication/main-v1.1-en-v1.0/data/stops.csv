@@ -1,0 +1,7 @@
+stop_reason,records,valid,safe_completed,correct_refusals,feasible_valid_noncompletion,infeasible_valid_nonrefusal
+BACKEND_TIMEOUT,1,0,0,0,0,0
+COMPLETE_CLAIM,38,38,38,0,0,0
+NO_SAFE_CONTINUATION,2,2,0,2,0,0
+RETRY_LIMIT,10,10,5,0,0,5
+STEP_LIMIT,4,4,4,0,0,0
+TOOL_ERROR,1,0,0,0,0,0

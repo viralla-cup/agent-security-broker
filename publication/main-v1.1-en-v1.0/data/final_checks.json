@@ -1,0 +1,24 @@
+{
+  "status": "FINAL_DERIVED_ARTIFACT_CHECKS_PASSED_PENDING_INDEPENDENT_REVIEW",
+  "original_evidence_files": 1865,
+  "original_evidence_inventory_digest": "d34b803a0eb2bdc3a1f4e4240ff33494a624975c5a9638b141da6035b15a154c",
+  "original_evidence_unchanged": true,
+  "paired_arithmetic_crosscheck": [
+    "A/attack",
+    "A/clean",
+    "R/discoverable",
+    "R/explicit",
+    "R/infeasible",
+    "R/feasible_combined",
+    "A/attack_utility"
+  ],
+  "publication_text_files_scanned": 25,
+  "no_observed_operation_paths_or_private_payload_fields_exported": true,
+  "sensitive_pattern_scan_passed": true,
+  "report_pages": 6,
+  "figure_png_dpi": 600,
+  "visual_review": "All report pages inspected; figure sizing and pagination repaired in derived outputs only",
+  "source_changes": false,
+  "study_rerun": false,
+  "independent_review": "PENDING"
+}

@@ -1,0 +1,14 @@
+{
+  "status": "CHECKS_PASSED_PENDING_INDEPENDENT_REVIEW",
+  "exact_histories_checked": 272,
+  "task_and_setup_prefixes_equal": true,
+  "all_operations_accounted_for": true,
+  "retry_limit_causes": {
+    "duplicate_proposal": 9,
+    "invalid_proposal": 1
+  },
+  "root_and_segment_metadata_consistent": true,
+  "preflight_plan_runtime_consistent": true,
+  "observed_process_exit_code": "not independently captured by this audit",
+  "original_records_modified": false
+}

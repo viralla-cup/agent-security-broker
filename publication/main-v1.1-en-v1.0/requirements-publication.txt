@@ -1,0 +1,8 @@
+# Offline presentation runtime tested with Python 3.12.14.
+reportlab==4.4.9
+pillow==12.3.0
+# External executable: Poppler pdftoppm 26.07.0.
+# Supply licensed Arial regular/bold font files; fonts are not distributed.
+# Verification-only mode and the public analyzer use the standard library.
+# The renderer also builds the findings PDF from Markdown.
+# Arial italic is optional; alternative fonts require visual review.

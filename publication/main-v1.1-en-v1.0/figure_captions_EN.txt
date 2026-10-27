@@ -1,0 +1,3 @@
+FIGURE 1. Observed outcome rates by condition and task stratum. Fractions use valid episodes only; invalid observations are explicit. Correct refusal is the endpoint for infeasible tasks. Feasible R measures safe completion after harness-seeded denial. Points are descriptive rates, not paired treatment effects; no inferential intervals are implied.
+
+FIGURE 2. All 56 planned positions. Numbers identify execution order. Colors distinguish 47 safe task completions, 2 correct refusals, 5 valid non-refusals on infeasible tasks, and 2 invalid observations. Purple outlines identify segment 2. Original validity is retained. No position was replaced.
